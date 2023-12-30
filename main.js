@@ -20,7 +20,8 @@ function createWindow () {
   })
 
   // 加载 index.html
-  mainWindow.loadFile('dist/index.html') // 此处跟electron官网路径不同，需要注意
+  // mainWindow.loadFile('dist/index.html') // 此处跟electron官网路径不同，需要注意
+  mainWindow.loadURL('http://127.0.0.1:5173/') 
 
   // 打开开发工具
   // mainWindow.webContents.openDevTools()
