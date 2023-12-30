@@ -6,6 +6,10 @@ const path = require('path')
 
 const { ipcMain  } = require('electron')
 
+// const NODE_ENV = 'production' //生产环境
+// const NODE_ENV = 'development' //开发环境
+const NODE_ENV = process.env.NODE_ENV  //通过配置文件
+
 function createWindow () {
   // 创建浏览器窗口
   const mainWindow = new BrowserWindow({
@@ -21,7 +25,13 @@ function createWindow () {
 
   // 加载 index.html
   // mainWindow.loadFile('dist/index.html') // 此处跟electron官网路径不同，需要注意
-  mainWindow.loadURL('http://127.0.0.1:5173/') 
+  // mainWindow.loadURL('http://127.0.0.1:5173/') 
+  mainWindow.loadURL(
+    NODE_ENV === 'development'
+    ? 'http://localhost:5173'
+    :`file://${path.join(__dirname, '../dist/index.html')}`
+  );
+  
 
   // 打开开发工具
   // mainWindow.webContents.openDevTools()
