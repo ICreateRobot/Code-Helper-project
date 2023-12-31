@@ -21,7 +21,7 @@ export default defineConfig({
     electronBuilder: {
       preload: 'preload.js',
       // Or, for multiple preload files:
-      // preload: { preload: 'src/preload.js', otherPreload: 'src/preload2.js' }
+      // preload: { preload: 'src/preload.js', otherPreload: 'src/preload2.js' 
     }
   }
 

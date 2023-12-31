@@ -1,5 +1,5 @@
 {
-  "name": "helpers-for-api",
+  "name": "code-helper",
   "version": "0.0.0",
   "private": true,
   "scripts": {
@@ -14,7 +14,8 @@
   "main": "electron/main.js",
   "build": {
     "appId": "com.dweb.demo",
-    "productName": "ElectronApp",
+    "productName": "CodeHelper",
+    "asar":false,
     "copyright": "Copyright © 2023 ICreate",
     "mac": {
       "category": "public.app-category.utilities"
@@ -33,9 +34,9 @@
     }
   },
   "dependencies": {
+    "fs": "^0.0.1-security",
     "vue": "^3.3.11",
     "vue-clipboard2": "^0.3.3",
-    "vue-pdf": "^4.3.0",
     "xml-js": "^1.6.11",
     "xml2js": "^0.6.2"
   },
