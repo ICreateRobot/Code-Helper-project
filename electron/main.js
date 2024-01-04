@@ -45,7 +45,7 @@ function createWindow () {
   
 
   // 打开开发工具
-  mainWindow.webContents.openDevTools()
+  // mainWindow.webContents.openDevTools()
 
   ipcMain.on('close',e=>{
     openFileDialog();
@@ -172,7 +172,7 @@ function importDeployFile(mainWindow) {
     if (!result.canceled && result.filePaths[0]) {
       let newFileUrl =result.filePaths[0];//资源管理器打开的文件
       // http://127.0.0.1:5173/assets/config_test.xml
-      let fileUrl =`${path.join(__dirname, '../public/config_test.xml')}`;//配置文件位置
+      let fileUrl =`${path.join(__dirname, '../dist/config_test.xml')}`;//配置文件位置
       
       
       try {

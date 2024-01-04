@@ -2,10 +2,10 @@
 
 <template>
   <div id="menu">
-    <Menu />
+    <Menu @customEvent="setDataType" />
   </div>
-  <div>
-    <Showdata/>
+  <div class="overflow_div">
+    <Showdata ref="showDataPage"/>
   </div>
   
 </template>
@@ -22,6 +22,17 @@ export default{
       return{
        context:"显示内容"
       }
+    },
+    methods:{
+      setDataType(data){
+        if (data == "Python") {
+          //转换为python模式
+          this.$refs.showDataPage.setShowDataType();    
+        }else if(data == "Arduion"){
+          //准换为arduino模式
+          this.$refs.showDataPage.setShowDataType(); 
+        }
+      },
     }
 }
 
@@ -30,5 +41,8 @@ export default{
 <style >
 #menu{
   margin-bottom: 10px;
+}
+.overflow_div{
+  overflow-y: hidden;
 }
 </style>

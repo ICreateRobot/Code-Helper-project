@@ -23,8 +23,10 @@
         //切换模式
         switchingMode(){
           if(this.showDate === 'Arduion'){
+            this.$emit("customEvent","Python");
             this.showDate ='Python'
           }else if(this.showDate ==='Python'){
+            this.$emit("customEvent","Arduion");
             this.showDate ='Arduion'
           }
         },

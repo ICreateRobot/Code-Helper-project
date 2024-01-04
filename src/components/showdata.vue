@@ -7,23 +7,45 @@
       <!-- <button @click="updataConfigFile">选择文件</button> -->
       <!-- <p v-if="selectedFileName !== ''" class="selected-filename">选择文件名{ selectedFileName }}</p> -->
 
-    <div class="module_main" v-for="(moduledata,index) in showDataOB" :key="index">
-      <!-- 模块 -->
-        <p>模块:{{ moduledata.moduleName }}</p>
+    <div v-if="showDataType">
+      <!-- arduino -->
+      <div class="module_main" v-for="(moduledata,index) in showDataOB" :key="index">
+        <!-- 模块 -->
+        <p class="textNotCopy">模块:{{ moduledata.moduleName }}</p>
         <div class="module_sub" v-for="(subModuledata,index_sub) in moduledata.submodule" :key="index_sub" >
           <!-- 子模块 -->
-            <p>子模块:{{ subModuledata.submoduleName }}</p>
+            <p class="textNotCopy">子模块:{{ subModuledata.submoduleName }}</p>
             <div class="module_code"  v-for="(subModulecode,index_code) in subModuledata.codes" :key="index_code" @mouseenter="handleMouseEnter" @mouseleave="handleMouseLeave">
               <!-- 代码 -->
-              <span>
+              <span v-if="subModulecode.explain != ''">
                 //{{ subModulecode.explain }}<br>
                 {{ subModulecode.code }}<br>
               </span>
             </div>
-        </div>
-        
-     
+        </div>     
+      </div>
     </div>
+    <div v-else>
+      <!-- python -->
+      <div class="module_main" v-for="(moduledata,index) in showPythonDataOB" :key="index">
+        <!-- 模块 -->
+        <p class="textNotCopy">模块:{{ moduledata.moduleName }}</p>
+        <div class="module_sub" v-for="(subModuledata,index_sub) in moduledata.submodule" :key="index_sub" >
+          <!-- 子模块 -->
+            <p class="textNotCopy">子模块:{{ subModuledata.submoduleName }}</p>
+            <div class="module_code"  v-for="(subModulecode,index_code) in subModuledata.codes" :key="index_code" @mouseenter="handleMouseEnter" @mouseleave="handleMouseLeave">
+              <!-- 代码 -->
+              <span v-if="subModulecode.explain != ''">
+                //{{ subModulecode.explain }}<br>
+                {{ subModulecode.code }}<br>
+              </span>
+            </div>
+        </div>     
+      </div>
+    </div>
+    
+    
+    
   </dev>
 </template>
 <script>
@@ -34,7 +56,9 @@ import * as convert from 'xml-js';
       return{
        context:"显示内容1",
        pdfUrl:"",
-       showDataOB:"",
+       showDataOB:"",//arduino
+       showPythonDataOB:"",//python
+       showDataType:true,//模式，默认为arduino
        selectedFileName: 'asdfg', // 存储已选择的文件名称
       }
     }
@@ -59,35 +83,48 @@ import * as convert from 'xml-js';
         // 将 XML 转换为 JSON
         const jsonData = convert.xml2json(xmlData, { compact: true, spaces: 4 });
         
-        let newdata = null;//读取配置;
-
+        let arduinoData = null;//读取arduino配置信息;
+        let pythonData = null;//读取python配置信息
         try {
-          newdata = JSON.parse(jsonData)['Workbook']['Worksheet']['Table']['Row']//读取配置
+          let worksheets =JSON.parse(jsonData)['Workbook']['Worksheet'];
+          if(worksheets.length<=2){
+            console.log("length",worksheets)
+          }
+          for(let index in worksheets){
+            if(worksheets[index]['_attributes']['ss:Name'] == "Arduino"){
+              arduinoData = worksheets[index]['Table']['Row']//读取配置
+            }else if(worksheets[index]['_attributes']['ss:Name'] == "Python"){
+              pythonData = worksheets[index]['Table']['Row']//读取配置
+            }
+          }
         } catch (error) {
           // alert(error)
           window.ipcRenderer.send('deployFileErr');
         }
-        console.log("数据",newdata)
+        // console.log("数据",arduinoData)
 
         //处理数据
         const showdata = new Array();
+        for (let index in arduinoData) {
+          if(arduinoData[index]['Cell'].length != 4 && arduinoData[index]['Cell'].length != 2){
+            continue;
+          }
 
-        for (let index in newdata) {
           if (index >= 1) {
             if (showdata.length > 0) {//判断数组是否为空
               
-              let moduleId = this.getModuleName(index, newdata);
-              let submoduleId = this.getSubmoduleName(index, newdata);
+              let moduleId = this.getModuleName(index, arduinoData);
+              let submoduleId = this.getSubmoduleName(index, arduinoData);
               let addModule = true;//是否新增模块标志位
               for (let Ob in showdata) {
                 if (showdata[Ob].moduleName == moduleId) {//模块相同
                   let addSubmodule = true;//是否新增子模块标志位
 
-                  for (let index in showdata[Ob].submodule) {
-                    if (showdata[Ob].submodule[index].submoduleName == submoduleId) {//子模块相同
-                      showdata[Ob].submodule[index].codes.push({
-                        code: newdata[index]['Cell'][2]["Data"]['_text'],//代码
-                        explain: newdata[index]['Cell'][3]["Data"]['_text']//注释
+                  for (let submodule_id in showdata[Ob].submodule) {
+                    if (showdata[Ob].submodule[submodule_id].submoduleName == submoduleId) {//子模块相同
+                      showdata[Ob].submodule[submodule_id].codes.push({
+                        code: this.getCode(index,arduinoData),//代码
+                        explain: this.getExplain(index, arduinoData)//注释
                       });
                       addSubmodule = false;//已有子模块
                     }
@@ -95,41 +132,85 @@ import * as convert from 'xml-js';
                   
                   if (addSubmodule) {//是否新增子模块
                     showdata[Ob].submodule.push({
-                      submoduleName: this.getSubmoduleName(index, newdata),
+                      submoduleName: this.getSubmoduleName(index, arduinoData),
                       codes: [{
-                        code: newdata[index]['Cell'][2]["Data"]['_text'],//代码
-                        explain: newdata[index]['Cell'][3]["Data"]['_text']//注释
+                        code: this.getCode(index, arduinoData),//代码
+                        explain: this.getExplain(index, arduinoData)//注释
                       }]
                     });
                   }
                   addModule = false;//已有模块
-
                 }
-                
               }
-              
               if (addModule) {//是否新增模块
-                showdata.push(this.getStructure(index, newdata));
+                showdata.push(this.getStructure(index, arduinoData));
               }
             } else {
-              showdata.push(this.getStructure(index, newdata));
+              showdata.push(this.getStructure(index, arduinoData));
             }
-
           }
         }
-        // console.log("A", showdata)//注释
-        // console.log("数据",newdata)
         this.showDataOB = showdata;
+
+        //处理python数据
+        const showdata_python = new Array();
+        // console.log("python数据",pythonData);
+        for (let index in pythonData) {
+          if(pythonData[index]['Cell'].length != 4 && pythonData[index]['Cell'].length != 2){
+            continue;
+          }
+          
+          if (index >= 1) {
+            if (showdata_python.length > 0) {//判断数组是否为空
+              // console.log("index：",index);
+              let moduleId = this.getModuleName(index, pythonData);
+              let submoduleId = this.getSubmoduleName(index, pythonData);
+              let addModule = true;//是否新增模块标志位
+              for (let Ob in showdata_python) {
+                if (showdata_python[Ob].moduleName == moduleId) {//模块相同
+                  let addSubmodule = true;//是否新增子模块标志位
+
+                  for (let submodule_id in showdata_python[Ob].submodule) {
+                    if (showdata_python[Ob].submodule[submodule_id].submoduleName == submoduleId) {//子模块相同
+                      showdata_python[Ob].submodule[submodule_id].codes.push({
+                        code: this.getCode(index,pythonData),//代码
+                        explain: this.getExplain(index, pythonData)//注释
+                      });
+                      addSubmodule = false;//已有子模块
+                    }
+                  }
+                  
+                  if (addSubmodule) {//是否新增子模块
+                    showdata_python[Ob].submodule.push({
+                      submoduleName: this.getSubmoduleName(index, pythonData),
+                      codes: [{
+                        code: this.getCode(index, pythonData),//代码
+                        explain: this.getExplain(index, pythonData)//注释
+                      }]
+                    });
+                  }
+                  addModule = false;//已有模块
+                }
+              }
+              if (addModule) {//是否新增模块
+                showdata_python.push(this.getStructure(index, pythonData));
+              }
+            } else {
+              showdata_python.push(this.getStructure(index, pythonData));
+            }
+          }
+        }
+        this.showPythonDataOB = showdata_python;
       },
-      getStructure(index, newdata) {
-        console.log("子模块",newdata);
+      getStructure(index, arduinoData) {
+        // console.log("子模块",arduinoData);
         let codeModule = {
-          moduleName: this.getModuleName(index, newdata),//模块
+          moduleName: this.getModuleName(index, arduinoData),//模块
           submodule: [{
-            submoduleName: this.getSubmoduleName(index, newdata),//子模块
+            submoduleName: this.getSubmoduleName(index, arduinoData),//子模块
             codes: [{
-              code: this.getCode(index, newdata),//代码
-              explain: this.getExplain(index, newdata)//注释
+              code: this.getCode(index, arduinoData),//代码
+              explain: this.getExplain(index, arduinoData)//注释
             }]
           }]
         }
@@ -137,53 +218,49 @@ import * as convert from 'xml-js';
       },
 
       //获取名称
-      getModuleName(index, newdata){
+      getModuleName(index, arduinoData){
         let name = "";
         try {
-          name=newdata[index]['Cell'][0]["Data"]['_text']//模块名称
+          name=arduinoData[index]['Cell'][0]["Data"]['_text']//模块名称
         } catch (error) {
           name="";
         }
         return name;
       },
       //获取子名称
-      getSubmoduleName(index, newdata){
+      getSubmoduleName(index, arduinoData){
         let name = "";
         try {
-          name=newdata[index]['Cell'][1]["Data"]['_text']//子模块
+          name=arduinoData[index]['Cell'][1]["Data"]['_text']//子模块
         } catch (error) {
           name="";
         }
         return name;
       },
       //获取代码
-      getCode(index, newdata){
+      getCode(index, arduinoData){
+        
         let name = "";
         try {
-          name=newdata[index]['Cell'][2]["Data"]['_text']//子模块
+          name=arduinoData[index]['Cell'][2]["Data"]['_text']//子模块
         } catch (error) {
           name="";
         }
+        // console.log("data",name)
+        // console.log("Data["+index+"]",name)
         return name;
       },
       //获取注释
-      getExplain(index, newdata){
+      getExplain(index, arduinoData){
         let name = "";
         try {
-          name=newdata[index]['Cell'][3]["Data"]['_text']//注释
+          name=arduinoData[index]['Cell'][3]["Data"]['_text']//注释
         } catch (error) {
           name="";
         }
         return name;
       },
-
-
-
-
-
-
-
-
+      
 
       //选中文本
       handleMouseEnter(event) {
@@ -200,6 +277,15 @@ import * as convert from 'xml-js';
         
         // 可以在这里清除之前添加的自定义样式或效果
       },
+
+      setShowDataType(){
+        this.showDataType = !this.showDataType ;
+      },
+
+      // setShowDataType_arduino(){
+      //   console.log("设为arduino")
+      //   this.showDataType = true;
+      // },
 
     }
 }
@@ -221,5 +307,10 @@ import * as convert from 'xml-js';
 }
 .selected-filename {
   color: green;
+}
+.textNotCopy{
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* Internet Explorer/Edge */
+  user-select: none; /* Non-prefixed version, currently supported by Chrome and Opera */
 }
 </style>
