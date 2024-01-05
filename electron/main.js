@@ -12,8 +12,10 @@ const NODE_ENV = process.env.NODE_ENV  //通过配置文件
 function createWindow () {
   // 创建浏览器窗口
   const mainWindow = new BrowserWindow({
-    width: 800,
+    width: 400,
     height: 600,
+    minWidth:300,//最小宽度
+    minHeight:600,//最小高度
     webPreferences: {
         nodeIntegration: process.env.ELECTRON_NODE_INTEGRATION,
         contextIsolation: !process.env.ELECTRON_NODE_INTEGRATION,
@@ -45,7 +47,7 @@ function createWindow () {
   
 
   // 打开开发工具
-  // mainWindow.webContents.openDevTools()
+  mainWindow.webContents.openDevTools()
 
   ipcMain.on('close',e=>{
     openFileDialog();

@@ -1,0 +1,9 @@
+{
+    "ui_bt_import":"导入",
+    "ui_bt_updata":"更新",
+    "ui_bt_module_arduino":"Arduino 模式",
+    "ui_bt_module_python":"Python 模式",
+    "ui_bt_initConfig":"初始化文件",
+    "ui_bt_languageChinese":"中文",
+    "ui_bt_languageEnglish":"英文"
+}

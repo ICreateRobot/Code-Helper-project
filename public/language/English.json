@@ -1,0 +1,9 @@
+{
+    "ui_bt_import":"import",
+    "ui_bt_updata":"updata",
+    "ui_bt_module_arduino":"Arduino Module",
+    "ui_bt_module_python":"Python Module",
+    "ui_bt_initConfig":"init config",
+    "ui_bt_languageChinese":"Chinese",
+    "ui_bt_languageEnglish":"English" 
+}

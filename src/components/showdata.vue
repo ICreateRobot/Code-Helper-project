@@ -17,7 +17,7 @@
             <p class="textNotCopy">子模块:{{ subModuledata.submoduleName }}</p>
             <div class="module_code"  v-for="(subModulecode,index_code) in subModuledata.codes" :key="index_code" @mouseenter="handleMouseEnter" @mouseleave="handleMouseLeave">
               <!-- 代码 -->
-              <span v-if="subModulecode.explain != ''">
+              <span :class="{ 'textNotCopy': isCopy }" v-if="subModulecode.explain != ''">
                 //{{ subModulecode.explain }}<br>
                 {{ subModulecode.code }}<br>
               </span>
@@ -35,7 +35,7 @@
             <p class="textNotCopy">子模块:{{ subModuledata.submoduleName }}</p>
             <div class="module_code"  v-for="(subModulecode,index_code) in subModuledata.codes" :key="index_code" @mouseenter="handleMouseEnter" @mouseleave="handleMouseLeave">
               <!-- 代码 -->
-              <span v-if="subModulecode.explain != ''">
+              <span :class="{ 'textNotCopy': isCopy }" v-if="subModulecode.explain != ''">
                 //{{ subModulecode.explain }}<br>
                 {{ subModulecode.code }}<br>
               </span>
@@ -59,7 +59,8 @@ import * as convert from 'xml-js';
        showDataOB:"",//arduino
        showPythonDataOB:"",//python
        showDataType:true,//模式，默认为arduino
-       selectedFileName: 'asdfg', // 存储已选择的文件名称
+       selectedFileName: 'asdfg', // 存储已选择的文件名称，
+       isCopy:false
       }
     }
     ,
@@ -279,13 +280,15 @@ import * as convert from 'xml-js';
       },
 
       setShowDataType(){
+        // 设置显示数据的类型
         this.showDataType = !this.showDataType ;
       },
-
-      // setShowDataType_arduino(){
-      //   console.log("设为arduino")
-      //   this.showDataType = true;
-      // },
+      setCopyDataState(){
+        console.log("不可q用");
+        this.isCopy = !this.isCopy;
+        console.log(this.isCopy);
+      }
+      
 
     }
 }
