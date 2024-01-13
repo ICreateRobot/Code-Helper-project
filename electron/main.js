@@ -12,10 +12,11 @@ const NODE_ENV = process.env.NODE_ENV  //通过配置文件
 function createWindow () {
   // 创建浏览器窗口
   const mainWindow = new BrowserWindow({
-    width: 400,
-    height: 600,
-    minWidth:300,//最小宽度
+    width: 450,
+    height: 850,
+    minWidth:380,//最小宽度
     minHeight:600,//最小高度
+    frame: false,
     webPreferences: {
         nodeIntegration: process.env.ELECTRON_NODE_INTEGRATION,
         contextIsolation: !process.env.ELECTRON_NODE_INTEGRATION,
@@ -24,18 +25,7 @@ function createWindow () {
     }
   })
 
-  // 创建自定义的菜单模板
-  const windowMenuData = [
-    // { label: '文件', submenu: [{ role: '导入' }] },
-    // { label: '模式', submenu: [{ role: 'Arduino' }, { role: 'Python' }] },
-    // { label: '视图', submenu: [{ role: 'togglefullscreen' }]}
-  ]
-  // 将菜单模板转换为菜单对象
-  const windowMenu = Menu.buildFromTemplate(windowMenuData)
-  // 设置应用程序菜单
-  Menu.setApplicationMenu(windowMenu)
-
-
+  
   // 加载 index.html
   // mainWindow.loadFile('dist/index.html') // 此处跟electron官网路径不同，需要注意
   // mainWindow.loadURL('http://127.0.0.1:5173/') 
@@ -50,7 +40,7 @@ function createWindow () {
   mainWindow.webContents.openDevTools()
 
   ipcMain.on('close',e=>{
-    openFileDialog();
+    app.quit();
   });
 
 
