@@ -1,29 +1,53 @@
 <!-- 信息展示页面 -->
 <template>
-  <div class="selectModule">
+  <div class="selectModule" :style="{width: leftDivW+'px'}">
     <!-- 模块 -->
     <div class="moduleDiv">
       <div class="moduleDiv_content" v-for="(moduledata,index) in showDataOB" :key="index">
+
         <div class="moduleName" @click="setShowDataModuleName(moduledata.moduleName)">
-          <span class="textNotCopy spanModuleName" :style="setSelectModuleNameText(moduledata.moduleName)">{{ moduledata.moduleName }}</span>
+          <!-- 模块名 -->
+          <span class="textNotCopy spanModuleName" :style="setSelectModuleNameText(moduledata.moduleName)">哈哈{{ moduledata.moduleName }}</span>
         </div>
+
         <div class="moduleAdorn">
+          <!-- 装饰 -->
           <div class="dot dot_1"></div>
           <div class="dot dot_2"></div>
           <div class="dot dot_3" :style="setSelectModuleNameDot(moduledata.moduleName)"></div>
           <div class="dot dot_4"></div>
         </div>
-      </div>
-     
-      
+
+      </div>     
+
     </div>
     
     
   </div>
-  <dev class="selectSubModule">
-   
+
+  <!-- 移动位置 -->
+  <div id="Mouse" :style="{left: centreDistanceLeft+'px'}">
+    <div id="mouseTop" @click="setDivWidthAugment"></div>
+    <div id="mouseDown" @click="setDivWidthDecrease"></div>
+  </div>
+
+
+  <dev class="selectSubModule" :style="{width: rightDivW+'px'}">
    <!-- 子模块 -->
-    
+    <div class="moduleDiv_subContent" >
+        
+        <div class="moduleSubName" >
+          <!-- 模块名 -->
+          <span class="textNotCopy">111</span>
+        </div>
+
+        <div class="moduleSubBt">
+          <!-- 装饰 -->
+        </div>
+
+    </div>  
+
+
   </dev>
 </template>
 <script>
@@ -43,6 +67,11 @@ import axios from 'axios';
        showDataTypes:"Arduino",//默认Arduino
        showModule:'基础内容',//显示模块
        moduleShowData:"subModule_0",//选中
+
+       leftDivW:91,//左侧div默认宽度
+       rightDivW:315,//右侧div默认宽度
+       centreDistanceLeft:103,//中间距离左侧的位置
+
       }
     }
     ,
@@ -72,8 +101,6 @@ import axios from 'axios';
             .catch((error) => {
               console.log('Error reading local JSON file', error);
             });
-        
-        
       },
       // 设置圆点是否被选中
       setSelectModuleNameDot(moduleSelectName){
@@ -94,13 +121,47 @@ import axios from 'axios';
       // 设置选中模块
       setShowDataModuleName(showName){
         this.showModule = showName;
-      }
-    }
+
+      },
+
+      // div右移
+      setDivWidthAugment(){
+        this.leftDivW =  this.leftDivW+10;
+        this.rightDivW =  this.rightDivW-10;
+        this.centreDistanceLeft=  this.centreDistanceLeft+10;
+      },
+      // div左移
+      setDivWidthDecrease(){
+        this.leftDivW =  this.leftDivW-10;
+        this.rightDivW =  this.rightDivW+10;
+        this.centreDistanceLeft=  this.centreDistanceLeft-10;
+      },
+
+      
+  }
+    
 }
 </script>
 
 <style>
-
+#Mouse{
+  width: 3px;
+  height: 100%;
+  position: absolute;
+  /* background-color: black; */
+  left: 103px;
+  cursor:pointer;
+}
+#mouseTop{
+  width: 3px;
+  height: 50%;
+  background-color: rgb(198, 0, 0);
+}
+#mouseDown{
+  width: 3px;
+  height: 50%;
+  background-color: rgb(233, 131, 131);
+}
 .module_sub{
   background-color: aquamarine;
   margin: 5px;
@@ -125,7 +186,7 @@ import axios from 'axios';
   /* 选择模块 */
   background-color: rgb(0, 255, 34);
   position: absolute;
-  width: 30%;
+  width: 91px;
   height: 676px;
   left: 10px;
   padding-top: 6px;
@@ -135,11 +196,14 @@ import axios from 'axios';
   /* 选择子模块 */
   background-color: rgb(62, 134, 198);
   position: absolute;
-  width: 70%;
+  width: 315px;
   height: 676px;
   right: 10px;
    /* 溢出滚动 */
    overflow: auto;
+   padding-top: 15px;
+   padding-left: 10px;
+   padding-right: 10px;
 }
 span{
   white-space:nowrap;
@@ -154,7 +218,7 @@ span{
   
 }
 .moduleName{
-  width: 62%;
+  width: 70%;
   height: 38px;
   background-color: rgb(98, 98, 98);
   position: relative;
@@ -194,12 +258,24 @@ span{
 .dot_3{
   width: 10px;
   height: 10px;
-  left: 29%;
+  left: 25%;
   top: 50%;
 }
 .dot_4{
   left: 40%;
   top: 80%;
 }
-
+/* 子模块 */
+.moduleDiv_subContent{
+  width: 100%;
+  height: 40px;
+  background-color: aliceblue;
+  position: relative;
+}
+.moduleSubName{
+  width: 200px;
+  height: 40px;
+  background-color: rgb(134, 198, 255);
+  position: relative;
+}
 </style>

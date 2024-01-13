@@ -14,8 +14,7 @@ function createWindow () {
   const mainWindow = new BrowserWindow({
     width: 450,
     height: 850,
-    minWidth:380,//最小宽度
-    minHeight:600,//最小高度
+    resizable:false,//禁止改变窗口大小
     frame: false,
     webPreferences: {
         nodeIntegration: process.env.ELECTRON_NODE_INTEGRATION,
