@@ -13,8 +13,11 @@
         <div class="alterContent">
           <!-- 内容 -->
           <div >
-            <div></div>
-            <span>语言</span>
+            <div class="selectBt_off"></div>
+            <div class="languageSetting">
+              <span class="textNotCopy">语言</span>
+            </div>
+           
           </div>
         </div>
 
@@ -35,7 +38,7 @@
       },  
       data(){
         return{
-         context:"头部导航",
+         context:"设置页面",
          
         }
       },
@@ -110,12 +113,35 @@
 .alterBtText{
   line-height: 30px;
 }
-.moduleSubBt_on{
-  width: 0;
-  height: 0;
-  border-left: 6px solid transparent; /* 左边透明 */
-  border-right: 6px solid transparent; /* 右边透明 */
-  border-bottom: 10px solid red; /* 底部为红色 */
+.selectBt_off{
+  width: 6px;
+  height: 6px;
+  /* background-color: black; */
+  border-top: 3px solid black; 
+  border-right: 3px solid black;
+  float: left;
+  transform: rotate(45deg);
+  position: relative;
+  left: 6px;
+  top: 7px;
 }
+.selectBt_on{
+  width: 6px;
+  height: 6px;
+  /* background-color: black; */
+  border-bottom: 3px solid black; 
+  border-right: 3px solid black;
+  float: left;
+  transform: rotate(45deg);
+  position: relative;
+  left: 6px;
+  top: 5px;
+}
+.languageSetting{
+  float: left;
+  position: relative;
+  left: 12px;
+}
+
 </style>
   
