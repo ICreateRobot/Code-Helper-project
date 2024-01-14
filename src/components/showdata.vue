@@ -7,21 +7,20 @@
 
         <div class="moduleName" @click="setShowDataModuleName(moduledata.moduleName)">
           <!-- 模块名 -->
-          <span class="textNotCopy spanModuleName" :style="setSelectModuleNameText(moduledata.moduleName)">哈哈{{ moduledata.moduleName }}</span>
+          <span class="textNotCopy spanModuleName" :style="setSelectModuleNameText(moduledata.moduleName)">{{ moduledata.moduleName }}</span>
         </div>
 
         <div class="moduleAdorn">
           <!-- 装饰 -->
           <div class="dot dot_1"></div>
           <div class="dot dot_2"></div>
-          <div class="dot dot_3" :style="setSelectModuleNameDot(moduledata.moduleName)"></div>
+          <div class="dot dot_3" :style="setSelectModuleNameDot(moduledata.moduleName)" @click="setShowDataModuleName(moduledata.moduleName)"></div>
           <div class="dot dot_4"></div>
         </div>
 
       </div>     
 
     </div>
-    
     
   </div>
 
@@ -34,19 +33,33 @@
 
   <dev class="selectSubModule" :style="{width: rightDivW+'px'}">
    <!-- 子模块 -->
-    <div class="moduleDiv_subContent" >
-        
-        <div class="moduleSubName" >
-          <!-- 模块名 -->
-          <span class="textNotCopy">111</span>
+    <div class="moduleDiv_subContent" v-for="(moduledata,index) in showSubData" :key="index">
+        <!-- 子模块 -->
+        <div class="moduleSubNameTitle">
+          <div class="moduleSubName" :style="{width:subModuleContentW+'px'}">
+            <!-- 模块名 -->
+            <span class="textNotCopy">{{ moduledata.submoduleName }}</span>
+          </div>
+          <div v-if="moduledata.codes[0].code != ''" style="position: relative;top:20%">
+            <div class="moduleSubBtContent" @click="selectSubModuleBt(moduledata.submoduleName )">
+              <!-- 按钮 -->
+              <div :class="atPresentSubMuduleName === moduledata.submoduleName? 'moduleSubBt_off' :'moduleSubBt_on' "></div>
+            </div>
+          </div>
+          
         </div>
-
-        <div class="moduleSubBt">
-          <!-- 装饰 -->
+        <!-- 代码区域 -->
+        <div class="codes" :style="setThisShowCodes(moduledata.submoduleName)">
+          <div class="code" @mouseenter="handleMouseEnter" @mouseleave="handleMouseLeave" v-for="(code,index) in moduledata.codes" :key="index">
+            <span class="codeText"> qqqqqqqqqq{{ code.code }}</span><br>
+            <span class="codeNote">/*{{ code.explain }}*/</span>
+          </div>
+         
         </div>
 
     </div>  
 
+   
 
   </dev>
 </template>
@@ -58,19 +71,23 @@ import axios from 'axios';
       return{
        context:"显示内容1",
        pdfUrl:"",
-       filePathName:"Arduino",
+       filePathName:"Arduino",//显示模式
        showDataOB:"",//显示数据
        showZhDataOB:"",//中文数据
        showEnDataOB:"",//英文数据
        showDataType:false,//模式，默认为中文
        isCopy:false,
        showDataTypes:"Arduino",//默认Arduino
-       showModule:'基础内容',//显示模块
+       showModule:'基础',//显示模块
+       showSubData:'',//显示代码数据
        moduleShowData:"subModule_0",//选中
 
        leftDivW:91,//左侧div默认宽度
        rightDivW:315,//右侧div默认宽度
        centreDistanceLeft:103,//中间距离左侧的位置
+       subModuleContentW:248,//子模块区域宽度
+
+       atPresentSubMuduleName:'',//当前子模块名称
 
       }
     }
@@ -80,22 +97,24 @@ import axios from 'axios';
     },
     methods:{
       readData(){
-        const filePath = '/config/'+this.filePathName+'.json'; // 指定本地JSON文件路径
+        const filePath = './config/'+this.filePathName+'.json'; // 指定本地JSON文件路径
         // console.log("文件地址",filePath)
         axios.get(filePath)
             .then((response) => {
-              console.log("文件地址",response.data)
+              // console.log("文件地址",response.data)
               this.showZhDataOB = response.data["chinese"]
               this.showEnDataOB = response.data["English"]
+              
               if(this.showDataType){
                 // 显示英文
                 this.showDataOB = this.showEnDataOB;
               }else{
                 this.showDataOB = this.showZhDataOB;
               }
-              console.log("数据：",this.showDataOB)
+              // console.log("数据：",this.showDataOB)
               if(this.showDataOB != null){
                 this.showModule = this.showDataOB[0].moduleName;
+                this.showSubData = this.showDataOB[0].submodule;
               }
             })
             .catch((error) => {
@@ -121,22 +140,64 @@ import axios from 'axios';
       // 设置选中模块
       setShowDataModuleName(showName){
         this.showModule = showName;
-
+        for(let data of this.showDataOB){
+          // console.log("遍历数据：",data);
+          if(data.moduleName == showName){
+            this.showSubData = data.submodule;
+          }
+        }
+        console.log("当前数据：",this.showSubData);
       },
 
       // div右移
       setDivWidthAugment(){
-        this.leftDivW =  this.leftDivW+10;
-        this.rightDivW =  this.rightDivW-10;
-        this.centreDistanceLeft=  this.centreDistanceLeft+10;
+        if(this.leftDivW<181){
+          this.leftDivW =  this.leftDivW+10;
+          this.rightDivW =  this.rightDivW-10;
+          this.centreDistanceLeft=  this.centreDistanceLeft+10;
+          this.subModuleContentW = this.subModuleContentW -10;
+        }
       },
       // div左移
       setDivWidthDecrease(){
-        this.leftDivW =  this.leftDivW-10;
-        this.rightDivW =  this.rightDivW+10;
-        this.centreDistanceLeft=  this.centreDistanceLeft-10;
+        if(this.leftDivW>71){
+          this.leftDivW =  this.leftDivW-10;
+          this.rightDivW =  this.rightDivW+10;
+          this.centreDistanceLeft=  this.centreDistanceLeft-10;
+          this.subModuleContentW = this.subModuleContentW +10;
+        }
+      },
+      // 选择子模块
+      selectSubModuleBt(subModuleName){
+        // console.log("传入：",subModuleName);
+        if(this.atPresentSubMuduleName == subModuleName){
+          this.atPresentSubMuduleName = '';
+        }else{
+          this.atPresentSubMuduleName = subModuleName;
+        }
+       
+      },
+      setThisShowCodes(subModuleName){
+        if(this.atPresentSubMuduleName == subModuleName){
+          return 'height: auto;'
+        }else{
+          return 'height: 0px'
+        }
       },
 
+      //单击选中文本
+      handleMouseEnter(event) {
+        // 获取到目标元素并修改样式-入
+        const targetElement = event.target;
+        targetElement.style.setProperty("user-select", "all");
+      },
+      handleMouseLeave(event) {
+        // 获取到目标元素并恢复原有样式-出
+        const targetElement = event.target;
+        targetElement.style.removeProperty("user-select");
+      },
+      
+      
       
   }
     
@@ -187,7 +248,7 @@ import axios from 'axios';
   background-color: rgb(0, 255, 34);
   position: absolute;
   width: 91px;
-  height: 676px;
+  height: 669px;
   left: 10px;
   padding-top: 6px;
   padding-left: 3px;
@@ -197,7 +258,7 @@ import axios from 'axios';
   background-color: rgb(62, 134, 198);
   position: absolute;
   width: 315px;
-  height: 676px;
+  height: 660px;
   right: 10px;
    /* 溢出滚动 */
    overflow: auto;
@@ -225,6 +286,7 @@ span{
   margin-top: 3px;
   top: 1px;
   float: left;
+  cursor:pointer;
 }
 .moduleAdorn{
   width: 20px;
@@ -233,6 +295,7 @@ span{
   position: relative;
   margin-top: 4px;
   float: left;
+ 
 }
 .spanModuleName{
   line-height:38px;
@@ -240,42 +303,125 @@ span{
 }
 /* 圆点 */
 .dot{
-  width: 5px; /* 或者其他适当的数值 */
-  height: 5px; /* 或者其他适当的数值 */
+  width: 2px; /* 或者其他适当的数值 */
+  height: 2px; /* 或者其他适当的数值 */
   border-radius: 50%; /* 将边界角度设置为50%，即等于高度/2 */
   background-color: rgb(255, 255, 255);
   position: absolute;
+  left: 45%;
 }
 .dot_1{
-  left: 40%;
+  
   top: 10%;
 }
 .dot_2{
-  left: 40%;
   top: 30%;
 }
 /* 大圆 */
 .dot_3{
   width: 10px;
   height: 10px;
-  left: 25%;
-  top: 50%;
+  left: 23%;
+  top: 45%;
+  cursor:pointer;
 }
 .dot_4{
-  left: 40%;
   top: 80%;
 }
 /* 子模块 */
 .moduleDiv_subContent{
   width: 100%;
-  height: 40px;
-  background-color: aliceblue;
+  height: auto;
+  /* 圆角 */
+  /* border-radius: 3px; */
+  /* background-color: rgb(0, 0, 0); */
   position: relative;
+}
+.moduleSubNameTitle{
+  width: 100%;
+  height: 40px;
+  /* 圆角 */
+  border-radius: 3px;
+  background-color: aliceblue;
+  float: left;
+  margin-top: 10px;
+  margin-bottom: 5px;
 }
 .moduleSubName{
   width: 200px;
   height: 40px;
   background-color: rgb(134, 198, 255);
   position: relative;
+  left: 30px;
+  line-height: 40px;
+  float: left;
+  white-space:nowrap;
+  overflow: auto;
 }
+/* 收起三角 */
+.moduleSubBt_on{
+  width: 0;
+  height: 0;
+  border-left: 6px solid transparent; /* 左边透明 */
+  border-right: 6px solid transparent; /* 右边透明 */
+  border-bottom: 10px solid red; /* 底部为红色 */
+}
+/* 打开三角 */
+.moduleSubBt_off{
+  width: 0;
+  height: 0;
+  border-left: 6px solid transparent; /* 左边透明 */
+  border-right: 6px solid transparent; /* 右边透明 */
+  border-top: 10px solid red; /* 底部为红色 */
+}
+.moduleSubBtContent{
+  width: 14px;
+  height: 15px;
+  /* background-color: black; */
+  float: left;
+  position: relative;
+  padding: 6px;
+  top: 20%;
+  left: 35px;
+  cursor:pointer;
+}
+/* 代码区域 */
+.codes{
+  width: 90%;
+  height: auto;
+  /* background-color:aqua; */
+  position: relative;
+  /* top: 45px; */
+  left: 5%;
+  /* padding: 2px; */
+  overflow: hidden;
+}
+/* 代码 */
+.code{
+  width: 100%;
+  height: 60px;
+  background-color:rgb(32, 230, 158);
+  line-height: 26px;
+  overflow-y: auto;
+  margin-top: 5px;
+  border-radius: 5px;
+  color: white;
+}
+.codeText{
+  white-space:nowrap;
+  cursor:move;
+  position: relative;
+  left: 6px;
+}
+.codeNote{
+  white-space:nowrap;
+  cursor:move;
+  position: relative;
+  left: 6px;
+}
+::-webkit-scrollbar{
+  height: 5px;
+  
+}
+
 </style>

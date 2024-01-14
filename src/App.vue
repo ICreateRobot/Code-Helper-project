@@ -10,8 +10,24 @@
      <!-- 主要内容 -->
      <div class="contentMenu">
        <!-- 按键 -->
-       <Menu />
+       <Menu @openImprotAlter="openImprotAlter" @openModuleAlter="openModuleAlter" @openSetAlter='openSetAlter'/>
      </div>
+
+     <!-- 弹窗遮罩 -->
+     <div v-if="isAlter" class="alterShade" @click="colseAlters"></div>
+     <!-- 弹窗 -->
+     <div v-if="isAlter" >
+        <div v-if="alterName == 'import'">
+          <importView @closeAlter="colseAlters" />
+        </div>
+        <div v-if="alterName == 'selectModel'">
+          <moduleView @closeAlter="colseAlters"/>
+        </div>
+        <div v-if="alterName == 'setView'">
+          <setView @closeAlter="colseAlters"/>
+        </div>
+     </div>
+
      <div class="contentData">
        <!-- 数据 -->
        <Showdata />
@@ -26,6 +42,9 @@
  import topContent from './components/topTitle.vue'
  import Menu from './components/menu.vue'
  import Showdata from './components/showdata.vue'
+ import importView from './components/alterView/importView.vue'
+ import moduleView from './components/alterView/moduleView.vue'
+ import setView from './components/alterView/setView.vue'
  
  export default{
    
@@ -33,6 +52,9 @@
      topContent,//顶部内容
      Menu,//菜单
      Showdata,//数据
+     importView,//导入弹窗
+     moduleView,//模式弹窗
+     setView,//设置
    },  
    mounted() {
         
@@ -40,16 +62,32 @@
      data(){
        return{
         context:"显示内容",
-        data:[1,2,3,3,3,3,3,3,3,3,3,3,3,3,123,3,5,5,45,46,56,45,64,676,35,243,25,2,34,5234,51,235,1,51,345,1,35,1,51,5,1,51,35,13,51,35,13,51]
+        isAlter:true,//是否打开弹窗
+        alterName:'import',//弹窗名称
        }
      },
      methods:{
-       setDataType(){
-         this.$refs.showDataPage.setShowDataTypeLanguage();
+       
+      //  关闭弹窗
+       colseAlters(){
+        this.isAlter = false;
+        this.alterName = '';
        },
-       setShowDataType(){
-         this.$refs.showDataPage.setShowDataType()
-       },
+      //  打开导入弹窗
+      openImprotAlter(alterName){
+        this.alterName = alterName;
+        this.isAlter=true;
+      },
+      // 打开选择模式
+      openModuleAlter(alterName){
+        this.alterName = alterName;
+        this.isAlter=true;
+      },
+      //打开设置页面
+      openSetAlter(alterName){
+        this.alterName = alterName;
+        this.isAlter=true;
+      },
        
      }
  }
@@ -120,12 +158,64 @@
      border-radius: 6px; /* 滑块边界圆角 */
      background-color: #dde5ff; /* 滑块颜色 */
  }
- 
+
  /* 文字不可选中 */
  .textNotCopy{
   -moz-user-select: none; /* Firefox */
   -ms-user-select: none; /* Internet Explorer/Edge */
   user-select: none; /* Non-prefixed version, currently supported by Chrome and Opera */
+}
+/* 弹窗遮罩 */
+.alterShade{
+  width: 100%;
+  height: 94%;
+  background-color: rgba(0, 0, 0, 0.5);
+  position: absolute;
+  top: 45px;
+  z-index: 2;
+}
+
+/* 弹窗框架 */
+.alterTitle{
+  width:260px;
+  height: 30px;
+  background-color: aqua;
+}
+.titleIcon{
+  width: 20px;
+  height: 20px;
+  background-color: aquamarine;
+  position: relative;
+  top: 5px;
+  left: 5px;
+  float: left;
+}
+.titleText{
+  height: 20px;
+  float: left;
+  position: relative;
+  margin-left: 10px;
+  line-height: 30px;
+}
+.alterContent{
+  width: 290px;
+  height: 200px;
+  background-color: beige;
+  position: relative;
+  top: 6px;
+  left: 5px;
+}
+.alterBt{
+  width: 100px;
+  height: 30px;
+  background-color: aquamarine;
+  position: relative;
+  top: 10px;
+  left: 100px;
+  text-align: center;
+}
+.alterBtText{
+  line-height: 30px;
 }
  </style>
  
