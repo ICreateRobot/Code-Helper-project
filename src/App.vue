@@ -175,47 +175,6 @@
   z-index: 2;
 }
 
-/* 弹窗框架 */
-.alterTitle{
-  width:260px;
-  height: 30px;
-  background-color: aqua;
-}
-.titleIcon{
-  width: 20px;
-  height: 20px;
-  background-color: aquamarine;
-  position: relative;
-  top: 5px;
-  left: 5px;
-  float: left;
-}
-.titleText{
-  height: 20px;
-  float: left;
-  position: relative;
-  margin-left: 10px;
-  line-height: 30px;
-}
-.alterContent{
-  width: 290px;
-  height: 200px;
-  background-color: beige;
-  position: relative;
-  top: 6px;
-  left: 5px;
-}
-.alterBt{
-  width: 100px;
-  height: 30px;
-  background-color: aquamarine;
-  position: relative;
-  top: 10px;
-  left: 100px;
-  text-align: center;
-}
-.alterBtText{
-  line-height: 30px;
-}
+
  </style>
  
