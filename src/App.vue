@@ -3,14 +3,14 @@
 <template>
   <div class="topContent">
      <!-- 顶部内容 -->
-     <topContent />
+     <topContent :appName="appName" :languageData="language" :configFileData="configFileData"/>
   </div>
  
   <div class="mainContent">
      <!-- 主要内容 -->
      <div class="contentMenu">
        <!-- 按键 -->
-       <Menu @openImprotAlter="openImprotAlter" @openModuleAlter="openModuleAlter" @openSetAlter='openSetAlter'/>
+       <Menu @openImprotAlter="openImprotAlter" @openModuleAlter="openModuleAlter" @openSetAlter='openSetAlter' :languageData="language"/>
      </div>
 
      <!-- 弹窗遮罩 -->
@@ -18,19 +18,19 @@
      <!-- 弹窗 -->
      <div v-if="isAlter" >
         <div v-if="alterName == 'import'">
-          <importView @closeAlter="colseAlters" />
+          <importView @closeAlter="colseAlters" :languageData="language" :configFileData="configFileData"/>
         </div>
         <div v-if="alterName == 'selectModel'">
-          <moduleView @closeAlter="colseAlters"/>
+          <moduleView @closeAlter="colseAlters" :languageData="language" :configFileData="configFileData"/>
         </div>
         <div v-if="alterName == 'setView'">
-          <setView @closeAlter="colseAlters"/>
+          <setView @closeAlter="colseAlters" :AppName="appName" :appVersion="version" :languageData="language" :configFileData="configFileData"/>
         </div>
      </div>
 
      <div class="contentData">
        <!-- 数据 -->
-       <Showdata />
+       <Showdata :thisMode="configFileData.mode"/>
      </div>
   </div>
   <div class="bottomContent">
@@ -45,8 +45,10 @@
  import importView from './components/alterView/importView.vue'
  import moduleView from './components/alterView/moduleView.vue'
  import setView from './components/alterView/setView.vue'
+ import axios from 'axios';
  
  export default{
+
    
    components:{
      topContent,//顶部内容
@@ -57,13 +59,18 @@
      setView,//设置
    },  
    mounted() {
-        
-       },    
+    this.getAppVersion();
+    this.readConfigData();
+   },    
      data(){
        return{
         context:"显示内容",
-        isAlter:true,//是否打开弹窗
+        isAlter:false,//是否打开弹窗
         alterName:'import',//弹窗名称
+        version:'出错了',//版本号
+        appName:"",//软件名称
+        language:'',//语言包
+        configFileData:'',//配置信息
        }
      },
      methods:{
@@ -88,6 +95,48 @@
         this.alterName = alterName;
         this.isAlter=true;
       },
+      getAppVersion(){
+          //获取版本号
+          let getVersion =window.electronAPI.getFile();
+          getVersion.then(data =>{
+            console.log("返回：",data);
+            this.version =data[0] ;
+            this.appName = data[1]
+          }); 
+      },
+      readConfigData(){
+        const filePath = './configData.json'; // 指定本地JSON文件路径
+        // console.log("文件地址",filePath)
+        axios.get(filePath)
+            .then((response) => {
+              let configData = response.data;
+              
+              console.log("配置信息：",configData.language);
+              if(configData.language == '中文'){
+                this.readLanguage('Chinese');
+              }else{
+                this.readLanguage('English');
+              }
+              this.configFileData=configData;
+            })
+            .catch((error) => {
+              console.log('Error reading local JSON file', error);
+            });
+      },
+      readLanguage(language){
+        const filePath = './language/'+language+'.json'; // 指定本地JSON文件路径
+        // console.log("文件地址",filePath)
+        axios.get(filePath)
+            .then((response) => {
+              let languageData = response.data;
+              console.log("语言信息：",languageData);
+              this.language =languageData;
+            })
+            .catch((error) => {
+              console.log('Error reading local JSON file', error);
+            });
+      },
+
        
      }
  }
@@ -173,6 +222,9 @@
   position: absolute;
   top: 45px;
   z-index: 2;
+}
+.btSuspensionEvent{
+  cursor:pointer;
 }
 
 

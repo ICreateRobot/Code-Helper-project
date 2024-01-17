@@ -5,15 +5,21 @@
     <div class="appTitle">
         <div class="appImg"></div>
         <div class="appName">
-            <span class="textNotCopy">Code Helper</span>
+            <span class="textNotCopy">{{ appName }}</span>
+        </div>
+        <div class="CurrentMode">
+            <span class="textNotCopy">
+             <b>{{ configFileData.mode }}</b> {{languageData.ui_text_mode}}
+            </span>
         </div>
     </div>
-    <div class="appExit">
+    <div class="appExit btSuspensionEvent">
        <button @click="exitApp"><span class="textNotCopy">退出</span></button>
     </div>
 </template>
 <script>
   export default{
+    props:['appName','languageData','configFileData'],
     components:{
       //注册
       },  
@@ -50,9 +56,11 @@
     top: 10px;
 }
 .appImg{
-    width: 35px;
-    height: 35px;
-    background-color: beige;
+    width: 23px;
+    height: 25px;
+    /* background-color: beige; */
+    background-image: url('./img/icon.svg');
+
     position: absolute;
     left: 10px;
     top: 5px;
@@ -67,6 +75,16 @@
     position: absolute;
     left: 50px;
     top: 8px;
+}
+.CurrentMode{
+  width: 120px;
+  height: 29px;
+  line-height:29px;
+  background-color: rgb(106, 106, 106);
+  position: absolute;
+  left: 172px;
+  top: 8px;
+  font-size: 12px;
 }
 
 </style>

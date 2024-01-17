@@ -5,7 +5,7 @@
     <div class="moduleDiv">
       <div class="moduleDiv_content" v-for="(moduledata,index) in showDataOB" :key="index">
 
-        <div class="moduleName" @click="setShowDataModuleName(moduledata.moduleName)">
+        <div class="moduleName btSuspensionEvent" @click="setShowDataModuleName(moduledata.moduleName)">
           <!-- 模块名 -->
           <span class="textNotCopy spanModuleName" :style="setSelectModuleNameText(moduledata.moduleName)">{{ moduledata.moduleName }}</span>
         </div>
@@ -25,7 +25,7 @@
   </div>
 
   <!-- 移动位置 -->
-  <div id="Mouse" :style="{left: centreDistanceLeft+'px'}">
+  <div id="btSuspensionEvent" :style="{left: centreDistanceLeft+'px'}">
     <div id="mouseTop" @click="setDivWidthAugment"></div>
     <div id="mouseDown" @click="setDivWidthDecrease"></div>
   </div>
@@ -67,11 +67,12 @@
 import axios from 'axios';
 // import ipcRenderer from 'electron'
   export default{    
+    props:["thisMode"],
     data(){
       return{
        context:"显示内容1",
        pdfUrl:"",
-       filePathName:"Arduino",//显示模式
+       filePathName:"",//显示模式
        showDataOB:"",//显示数据
        showZhDataOB:"",//中文数据
        showEnDataOB:"",//英文数据
@@ -97,6 +98,8 @@ import axios from 'axios';
     },
     methods:{
       readData(){
+        this.filePathName = this.thisMode
+        console.log("name",this.filePathName);
         const filePath = './config/'+this.filePathName+'.json'; // 指定本地JSON文件路径
         // console.log("文件地址",filePath)
         axios.get(filePath)
@@ -211,7 +214,6 @@ import axios from 'axios';
   position: absolute;
   /* background-color: black; */
   left: 103px;
-  cursor:pointer;
 }
 #mouseTop{
   width: 3px;
@@ -286,7 +288,6 @@ span{
   margin-top: 3px;
   top: 1px;
   float: left;
-  cursor:pointer;
 }
 .moduleAdorn{
   width: 20px;

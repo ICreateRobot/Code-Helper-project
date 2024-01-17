@@ -10,81 +10,96 @@
           <!-- 标题 -->
           <div class="titleIcon"></div>
           <div class="titleText">
-              <span class="textNotCopy">导入</span>
+              <span class="textNotCopy">{{languageData.ui_text_import}} {{ replaceModule }}</span>
           </div>
         </div>
 
         <div class="alterContent">
           <!-- 内容 -->
           <div class="selectContent">
-            <div>
-              <input type="radio" id="option1" value="option1" v-model="importType" :disabled="importNumber>=5">
-              <label for="option1"> <span class="textNotCopy">导入</span></label>
-              <span class="importNumberText textNotCopy">(可导入数量{{importNumber}}/5)</span>
+            <div >
+              <!-- 导入 -->
+              <input class="btSuspensionEvent" type="radio" id="option1" value="option1" v-model="importType" :disabled="importNumber>=5">
+              <label for="option1" class="btSuspensionEvent"> <span class="textNotCopy">{{languageData.ui_text_import}}</span></label>
+              <span class="importNumberText textNotCopy"> ({{languageData.ui_text_importNumber}} {{importNumber}}/5)</span>
             </div>
             <div>
-              <input type="radio" id="option2" value="option2" v-model="importType">
-              <label for="option2"><span class="textNotCopy">替换</span></label>
+              <!-- 替换 -->
+              <input class="btSuspensionEvent" type="radio" id="option2" value="option2" v-model="importType">
+              <label for="option2" class="btSuspensionEvent"><span class="textNotCopy">{{languageData.ui_text_replace}}</span></label>
             </div>
             
 
             <div class="replaceOptions"  >
-              <div >
-                <input type="radio" id="module1" value="module1" v-model="replaceModule" :disabled="importType != 'option2'">
-                <label for="module1"> <span class="textNotCopy">arduino</span></label>
+             
+              <div v-for="(mode,index) in modes" :key="index">
+                <input class="btSuspensionEvent" type="radio" :id=mode :value=mode v-model="replaceModule" :disabled="importType != 'option2'">
+                <label :for=mode class="btSuspensionEvent"> <span class="textNotCopy">{{mode}}</span></label>
               </div>
-              <div >
-                <input type="radio" id="module2" value="module2" v-model="replaceModule" :disabled="importType != 'option2'">
-                <label for="module3"><span class="textNotCopy">pythen</span></label>
-              </div>
-              <div >
-                <input type="radio" id="module2" value="module2" v-model="replaceModule" :disabled="importType != 'option2'">
-                <label for="module3"><span class="textNotCopy">pythen</span></label>
-              </div>
-              <div >
-                <input type="radio" id="module2" value="module2" v-model="replaceModule" :disabled="importType != 'option2'">
-                <label for="module3"><span class="textNotCopy">pythen</span></label>
-              </div>
-              <div >
-                <input type="radio" id="module2" value="module2" v-model="replaceModule" :disabled="importType != 'option2'">
-                <label for="module3"><span class="textNotCopy">pythen</span></label>
-              </div>
-
-
-              
             </div>
           </div>
           
 
         </div>
 
-        <div class="alterBt">
+        <div class="alterBt btSuspensionEvent" @click="importConfigFile">
           <!-- 按键 -->
-          <span class="alterBtText textNotCopy">确定</span>
+          <span class="alterBtText textNotCopy">{{languageData.ui_text_confirm}}</span>
         </div>
     </div>
    
 </template>
 <script>
   export default{
+    props:['languageData','configFileData'],
     components:{
       //注册
       },  
       mounted() {
-        
+        this.getConfigData();
+
       },  
       data(){
         return{
          context:"导入页面",
          importType:'option1',//默认导入
-         replaceModule:'module1',//默认替换名称
+         replaceModule:'',//默认替换名称
          importNumber:5,//已导入数量
+         modes:'',//已有模式
         }
       },
       methods:{
         closeAlter(){
           this.$emit("closeAlter");
         },
+        getConfigData(){
+          //获取配置文件夹数据files
+          this.replaceModule=this.configFileData.mode;//设置初始模式
+          const filePath = window.electronAPI.getModes();
+          filePath.then(data =>{
+            // console.log("配置文件模式：",data.length);
+            this.importNumber = data.length;
+            this.modes= data;
+            if(this.importNumber == 5){
+              this.importType='option2';
+            }
+          });
+        },
+        //导入配置文件
+        importConfigFile(){
+          if(this.importType == 'option1'){
+            //导入文件
+            // console.log("导入文件");
+            if(this.importNumber <5){
+              window.ipcRenderer.send('importDeployFile');
+            }
+            
+          }else if(this.importType == 'option2'){
+            //替换文件
+            // console.log("替换文件",this.replaceModule)
+            window.ipcRenderer.send('replaceModeConfigFile',this.replaceModule);
+          }
+        }
       }
   }
   
@@ -166,6 +181,7 @@
   top: 10px;
   left: 100px;
   text-align: center;
+ 
 }
 .alterBtText{
   line-height: 30px;

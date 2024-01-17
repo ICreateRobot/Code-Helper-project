@@ -4,21 +4,21 @@
         <div class="menuBt importBt" @click="openImportAlter">
           <div class="btIcon importBtIcon"></div>
           <div class="importBtText">
-            <span class="textNotCopy">导入</span>
+            <span class="textNotCopy">{{languageData.ui_text_import}}</span>
           </div>
         </div>
       <!-- 模式按钮 -->
         <div class="menuBt ModuleBt" @click="openSelectModelAlter">
           <div class="btIcon moduleBtIcon"></div>
           <div class="importBtText">
-            <span class="textNotCopy">模式</span>
+            <span class="textNotCopy">{{languageData.ui_text_mode}}</span>
           </div>
         </div>
       <!-- 设置按钮 -->
         <div class="menuBt setBt" @click="openSetAlter">
           <div class="btIcon setBtIcon"></div>
           <div class="importBtText">
-            <span class="textNotCopy">设置</span>
+            <span class="textNotCopy">{{languageData.ui_text_setting}}</span>
           </div>
         </div>
 
@@ -27,6 +27,7 @@
 <script>
 // import axios from 'axios';
   export default{
+    props:['languageData'],
     components:{
       },  
       mounted() {

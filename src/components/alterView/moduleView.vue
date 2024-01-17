@@ -6,38 +6,23 @@
           <!-- 标题 -->
           <div class="titleIcon"></div>
           <div class="titleText">
-              <span class="textNotCopy">模式</span>
+              <span class="textNotCopy">{{ languageData.ui_text_mode}}</span>
           </div>
         </div>
 
         <div class="alterContent2">
           <!-- 内容 -->
-            <div >
-              <input type="radio" id="module1" value="module1" v-model="atModule">
-              <label for="module1"> <span class="textNotCopy">arduinoqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq</span></label>
+            <div v-for="(mode,index) in modes" :key="index">
+              <input type="radio" :id=mode :value=mode v-model="atModule">
+              <label :for=mode> <span class="textNotCopy">{{ mode }}</span></label>
             </div>
-            <div >
-              <input type="radio" id="module2" value="module2" v-model="atModule">
-              <label for="module2"> <span class="textNotCopy">arduino</span></label>
-            </div>
-            <div >
-              <input type="radio" id="module3" value="module3" v-model="atModule">
-              <label for="module3"> <span class="textNotCopy">arduino</span></label>
-            </div>
-            <div >
-              <input type="radio" id="module4" value="module4" v-model="atModule">
-              <label for="module4"> <span class="textNotCopy">arduino</span></label>
-            </div>
-            <div >
-              <input type="radio" id="module5" value="module5" v-model="atModule">
-              <label for="module5"> <span class="textNotCopy">arduino</span></label>
-            </div>
+            
 
         </div>
 
-        <div class="alterBt2">
+        <div class="alterBt2 btSuspensionEvent" @click="setMode">
           <!-- 按键 -->
-          <span class="alterBtText textNotCopy">确定</span>
+          <span class="alterBtText textNotCopy">{{languageData.ui_text_confirm}}</span>
         </div>
     </div>
 
@@ -45,22 +30,37 @@
 </template>
 <script>
   export default{
+    props:['languageData','configFileData'],
     components:{
       //注册
       },  
       mounted() {
-        
+        this.getConfigData();
       },  
       data(){
         return{
          context:"选择模式",
          atModule:"",//当前模式
+         modes:'',//所有模式
         }
       },
       methods:{
         closeAlter(){
           this.$emit("closeAlter");
         },
+        getConfigData(){
+          //获取配置文件夹数据files
+          this.atModule=this.configFileData.mode;//设置初始模式
+          const filePath = window.electronAPI.getModes();
+          filePath.then(data =>{
+            this.modes= data;
+          });
+        },
+        setMode(){
+          // 设置默认模式
+          // console.log("mode:",this.atModule);
+          window.ipcRenderer.send('setDefaultModel',this.atModule);
+        }
       }
   }
   
