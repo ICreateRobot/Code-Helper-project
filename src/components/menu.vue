@@ -73,9 +73,9 @@
     width: auto;
     height: 26px;
     position: relative;
-    box-shadow:0px 0px 5px rgb(54, 84, 75);
+    box-shadow:0px 0px 5px rgb(78, 165, 139);
     border-radius: 5px;
-    border:2px rgb(54, 84, 75) solid;
+    border:2px rgb(74, 117, 104) solid;
     float: left;
     margin-left: 15px;
     cursor:pointer;
@@ -105,14 +105,21 @@
     margin-left: 6px;
   }
   .importBtIcon{
+    width: 19px;
     background-image: url('../img/import.svg');
   }
   .moduleBtIcon{
+    width: 19.5px;
+    height: 20px;
+    top:3px;
     background-image: url('../img/mode.svg');
     /* background-color: aliceblue; */
   }
   .setBtIcon{
+    width: 20px;
+    height: 20px;
     background-image: url('../img/setting.svg');
+    top:3px;
     /* background-color: aliceblue; */
   }
 </style>
