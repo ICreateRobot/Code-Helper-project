@@ -21,7 +21,7 @@
           <importView @closeAlter="colseAlters" :languageData="language" :configFileData="configFileData"/>
         </div>
         <div v-if="alterName == 'selectModel'">
-          <moduleView @closeAlter="colseAlters" :languageData="language" :configFileData="configFileData"/>
+          <moduleView @closeAlter="colseAlters" @refreshView="refreshView" :languageData="language" :configFileData="configFileData"/>
         </div>
         <div v-if="alterName == 'setView'">
           <setView @closeAlter="colseAlters" :AppName="appName" :appVersion="version" :languageData="language" :configFileData="configFileData"/>
@@ -30,7 +30,10 @@
 
      <div class="contentData">
        <!-- 数据 -->
-       <Showdata :thisMode="configFileData.mode"/>
+       <div>
+        <Showdata />
+       </div>
+       
      </div>
   </div>
   <div class="bottomContent">
@@ -59,8 +62,9 @@
      setView,//设置
    },  
    mounted() {
-    this.getAppVersion();
     this.readConfigData();
+    this.getAppVersion();
+    
    },    
      data(){
        return{
@@ -110,8 +114,7 @@
         axios.get(filePath)
             .then((response) => {
               let configData = response.data;
-              
-              console.log("配置信息：",configData.language);
+              console.log("配置信息",configData);
               if(configData.language == '中文'){
                 this.readLanguage('Chinese');
               }else{
@@ -123,19 +126,23 @@
               console.log('Error reading local JSON file', error);
             });
       },
+     
       readLanguage(language){
         const filePath = './language/'+language+'.json'; // 指定本地JSON文件路径
         // console.log("文件地址",filePath)
         axios.get(filePath)
             .then((response) => {
               let languageData = response.data;
-              console.log("语言信息：",languageData);
+              // console.log("语言信息：",languageData);
               this.language =languageData;
             })
             .catch((error) => {
               console.log('Error reading local JSON file', error);
             });
       },
+      refreshView(){
+        location.reload()
+      }
 
        
      }
@@ -148,7 +155,7 @@
    /* 顶部内容 */
    width: 100%;
    height: 50px;
-   background-color: red;
+   background-color: rgb(2, 21, 15);
    position: absolute ;
    top: 0px;
    left: 0px;
@@ -166,7 +173,8 @@
  .contentMenu{
    width: 100%;
    height: 45px;
-   background-color: aqua;
+   background-color: rgb(2, 21, 15);
+   /* background-color: aqua; */
  }
  .contentData{
    width: 100%;

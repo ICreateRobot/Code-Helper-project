@@ -13,10 +13,11 @@
   },
   "main": "electron/main.js",
   "build": {
-    "appId": "com.dweb.demo",
-    "productName": "CodeHelper",
+    "appId": "com.icreate.helperTools",
+    "productName": "Code Helper",
     "asar": false,
     "copyright": "Copyright © 2023 ICreate",
+    "icon":"dist/img/icon.ico",
     "mac": {
       "category": "public.app-category.utilities"
     },

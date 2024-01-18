@@ -25,7 +25,7 @@
   </div>
 
   <!-- 移动位置 -->
-  <div id="btSuspensionEvent" :style="{left: centreDistanceLeft+'px'}">
+  <div id="Mouse" :style="{left: centreDistanceLeft+'px'}">
     <div id="mouseTop" @click="setDivWidthAugment"></div>
     <div id="mouseDown" @click="setDivWidthDecrease"></div>
   </div>
@@ -67,12 +67,12 @@
 import axios from 'axios';
 // import ipcRenderer from 'electron'
   export default{    
-    props:["thisMode"],
+    components:{
+      },
     data(){
       return{
        context:"显示内容1",
        pdfUrl:"",
-       filePathName:"",//显示模式
        showDataOB:"",//显示数据
        showZhDataOB:"",//中文数据
        showEnDataOB:"",//英文数据
@@ -82,32 +82,28 @@ import axios from 'axios';
        showModule:'基础',//显示模块
        showSubData:'',//显示代码数据
        moduleShowData:"subModule_0",//选中
-
        leftDivW:91,//左侧div默认宽度
        rightDivW:315,//右侧div默认宽度
        centreDistanceLeft:103,//中间距离左侧的位置
        subModuleContentW:248,//子模块区域宽度
-
        atPresentSubMuduleName:'',//当前子模块名称
-
+       mode:''
       }
     }
     ,
     mounted() {
-      this.readData();
+      this.getConfigFile();
     },
     methods:{
       readData(){
-        this.filePathName = this.thisMode
-        console.log("name",this.filePathName);
-        const filePath = './config/'+this.filePathName+'.json'; // 指定本地JSON文件路径
+        const filePath = './config/'+this.showDataTypes+'.json'; // 指定本地JSON文件路径
         // console.log("文件地址",filePath)
         axios.get(filePath)
             .then((response) => {
-              // console.log("文件地址",response.data)
+              console.log("文件内容",response.data)
               this.showZhDataOB = response.data["chinese"]
               this.showEnDataOB = response.data["English"]
-              
+              console.log("显示模式：",this.showDataType);
               if(this.showDataType){
                 // 显示英文
                 this.showDataOB = this.showEnDataOB;
@@ -123,6 +119,26 @@ import axios from 'axios';
             .catch((error) => {
               console.log('Error reading local JSON file', error);
             });
+      },
+      getConfigFile() {
+        const filePath = './configData.json'; // 指定本地JSON文件路径
+        // console.log("文件地址",filePath)
+        axios.get(filePath)
+          .then((response) => {
+            let configData = response.data;//配置文件数据
+            this.showDataTypes = configData.mode;//显示模式
+            //显示中英文
+            if(configData.language == '中文'){
+                this.showDataType = false;
+            }else{
+                this.showDataType = true;
+            }
+
+            this.readData();//读取数据
+          })
+          .catch((error) => {
+            console.log('Error reading local JSON file', error);
+          });
       },
       // 设置圆点是否被选中
       setSelectModuleNameDot(moduleSelectName){
@@ -214,6 +230,7 @@ import axios from 'axios';
   position: absolute;
   /* background-color: black; */
   left: 103px;
+  cursor:pointer;
 }
 #mouseTop{
   width: 3px;

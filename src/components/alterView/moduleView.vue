@@ -53,6 +53,7 @@
           this.atModule=this.configFileData.mode;//设置初始模式
           const filePath = window.electronAPI.getModes();
           filePath.then(data =>{
+            console.log("配置文件夹",data)
             this.modes= data;
           });
         },

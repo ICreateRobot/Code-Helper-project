@@ -63,8 +63,9 @@
   .btContent{
     width: 80%;
     height: 34px;
-    background-color: aliceblue;
+    /* background-color: aliceblue; */
     position: relative;
+    color: rgb(224,230,222);
     top: 6px;
     left: 20px;
   }
@@ -72,33 +73,47 @@
     width: auto;
     height: 26px;
     position: relative;
-    box-shadow:0px 0px 5px blue;
+    box-shadow:0px 0px 5px rgb(54, 84, 75);
     border-radius: 5px;
-    border:2px blue solid;
+    border:2px rgb(54, 84, 75) solid;
     float: left;
     margin-left: 15px;
     cursor:pointer;
     top: 2px;
   }
+  .menuBt:hover{
+    box-shadow:3px 3px 5px rgb(54, 84, 75);
+  }
   .btIcon{
     width: 20px;
-    height: 20px;
+    height: 18px;
     background-color: black;
     float: left;
     position: relative;
-    top: 3px;
+    top: 5px;
     left: 3px;
   }
   .importBtText{
     width: auto;
     height: 20px;
-    background-color: aliceblue;
+    /* background-color: aliceblue; */
     float: left;
     text-align: center;
     position: relative;
     top: 3px;
     padding-right: 6px;
     margin-left: 6px;
+  }
+  .importBtIcon{
+    background-image: url('../img/import.svg');
+  }
+  .moduleBtIcon{
+    background-image: url('../img/mode.svg');
+    /* background-color: aliceblue; */
+  }
+  .setBtIcon{
+    background-image: url('../img/setting.svg');
+    /* background-color: aliceblue; */
   }
 </style>
   

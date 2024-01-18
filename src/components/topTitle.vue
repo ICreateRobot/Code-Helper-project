@@ -14,7 +14,7 @@
         </div>
     </div>
     <div class="appExit btSuspensionEvent">
-       <button @click="exitApp"><span class="textNotCopy">退出</span></button>
+       <div class="exitBt" @click="exitApp"></div>
     </div>
 </template>
 <script>
@@ -34,7 +34,6 @@
       },
       methods:{
         exitApp(){
-        console.log("带年纪");
           window.ipcRenderer.send('close');
         },
       }
@@ -45,10 +44,11 @@
 .appTitle{
     width: 300px;
     height: 45px;
-    background-color: rgb(75, 75, 29);
+    /* background-color: rgb(75, 75, 29); */
     position: absolute;
     top: 5px;
     left: 5px;
+    color: rgb(224,230,222);
 }
 .appExit{
     position: absolute;
@@ -56,10 +56,10 @@
     top: 10px;
 }
 .appImg{
-    width: 23px;
-    height: 25px;
+    width: 30px;
+    height: 32px;
     /* background-color: beige; */
-    background-image: url('./img/icon.svg');
+    background-image: url('../img/icon.svg');
 
     position: absolute;
     left: 10px;
@@ -71,20 +71,29 @@
     width: 120px;
     height: 29px;
     line-height:29px;
-    background-color: rgb(255, 94, 0);
+    /* background-color: rgb(255, 94, 0); */
+    font-size: 18px;
     position: absolute;
     left: 50px;
     top: 8px;
 }
 .CurrentMode{
   width: 120px;
-  height: 29px;
-  line-height:29px;
-  background-color: rgb(106, 106, 106);
+  height: 24px;
+  line-height:24px;
+  /* background-color: rgb(106, 106, 106); */
   position: absolute;
   left: 172px;
-  top: 8px;
+  top: 12px;
   font-size: 12px;
+}
+.exitBt{
+  width: 20px;
+  height: 20px;
+  background-image: url('../img/close.svg');
+  position: relative;
+  top:6px
+  /* background-color: brown; */
 }
 
 </style>

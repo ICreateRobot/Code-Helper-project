@@ -17,6 +17,7 @@ function createWindow () {
     height: 850,
     resizable:false,//禁止改变窗口大小
     frame: false,
+    icon:  path.join(__dirname, '../dist/img/icon.ico'),
     webPreferences: {
         nodeIntegration: process.env.ELECTRON_NODE_INTEGRATION,
         contextIsolation: !process.env.ELECTRON_NODE_INTEGRATION,
@@ -175,7 +176,7 @@ function getAppVersion(){
     files = fs.readFileSync(url,"utf8");
     const jsonData = JSON.parse(files);
     versions.push(jsonData.version);
-    versions.push(jsonData.name);
+    versions.push(jsonData.build.productName);
     // console.log("版本号",versions)
 
     
@@ -233,16 +234,19 @@ function saveModuleFile(){
 
 //获取所有配置文件
 function getModes(){
+  console.log("getModes-log1")
+  let configfilesUrl = `${path.join(__dirname, '../dist/config')}`;//配置文件夹位置
   let files = null
   try { 
-      files = fs.readdirSync('./dist/config');
+      files = fs.readdirSync(configfilesUrl);
       // fileName.substring(0, fileName.lastIndexOf('.')) ; // 返回不包含扩展名的文件名
-      // console.log("目录下的所有文件名称：");
+      console.log("目录下的所有文件名称：");
       for (let fileIndex in files) {
+          console.log(files[fileIndex].substring(0,files[fileIndex].lastIndexOf('.')));
           files[fileIndex] = files[fileIndex].substring(0,files[fileIndex].lastIndexOf('.'))
       }
   } catch (error) {
-    
+    console.log("err:",error)
   }
   return files;
 }
@@ -315,7 +319,7 @@ function replaceModeConfigFile(fileName, mainWindow) {
 }
 //设置默认模式
 function setDefaultModel(mode,mainWindow){
-  let url  = `${path.join(__dirname, '../public/configData.json')}`
+  let url  = `${path.join(__dirname, '../dist/configData.json')}`
   try { 
     files = fs.readFileSync(url,"utf8");
     let jsonData = JSON.parse(files);
@@ -339,7 +343,8 @@ function setDefaultModel(mode,mainWindow){
 
 //设置语言和风格
 function setLanguageAndStyle(data,mainWindow){
-  let url  = `${path.join(__dirname, '../public/configData.json')}`
+  
+  let url  = `${path.join(__dirname, '../dist/configData.json')}`
   let language = '';//语言
   let style = "";//风格
   if(data[0] == 'Chinese'){
