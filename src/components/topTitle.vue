@@ -2,7 +2,7 @@
 <!-- 标题按钮栏 -->
 <template>
 
-    <div class="appTitle">
+    <div class="appTitle" :class="(configFileData.style == 'style1') ? 'textColorStyle1':(configFileData.style == 'style2'?'textColorStyle2':'textColorStyle3')">
         <div class="appImg"></div>
         <div class="appName">
             <span class="textNotCopy">{{ appName }}</span>
@@ -29,7 +29,7 @@
       data(){
         return{
          context:"头部导航",
-         
+         style:"style1"
         }
       },
       methods:{
@@ -48,7 +48,7 @@
     position: absolute;
     top: 5px;
     left: 5px;
-    color: rgb(224,230,222);
+    /* color: rgb(224,230,222); */
 }
 .appExit{
     position: absolute;

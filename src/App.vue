@@ -1,14 +1,14 @@
 
 
 <template>
-  <div class="topContent">
+  <div class="topContent" :class="(configFileData.style == 'style1') ? 'backgroundColor1':(configFileData.style == 'style2'?'backgroundColor2':'backgroundColor3')">
      <!-- 顶部内容 -->
      <topContent :appName="appName" :languageData="language" :configFileData="configFileData"/>
   </div>
  
   <div class="mainContent">
      <!-- 主要内容 -->
-     <div class="contentMenu">
+     <div class="contentMenu" :class="(configFileData.style == 'style1') ? 'backgroundColor1':(configFileData.style == 'style2'?'backgroundColor2':'backgroundColor3')">
        <!-- 按键 -->
        <Menu @openImprotAlter="openImprotAlter" @openModuleAlter="openModuleAlter" @openSetAlter='openSetAlter' :languageData="language"/>
      </div>
@@ -28,17 +28,19 @@
         </div>
      </div>
 
-     <div class="contentData">
+     <div class="contentData" :class="(configFileData.style == 'style1') ? 'backgroundColor1':(configFileData.style == 'style2'?'backgroundColor2':'backgroundColor3')">
        <!-- 数据 -->
-       <div>
+       <div class="constentBg">
         <Showdata />
        </div>
        
      </div>
   </div>
-  <div class="bottomContent">
+  <div class="bottomContent" :class="(configFileData.style == 'style1') ? 'backgroundColor1':(configFileData.style == 'style2'?'backgroundColor2':'backgroundColor3')">
    <!-- 版权 -->
-   <span>山东艾克瑞特教育科技有限公司</span>
+    <span :class="(configFileData.style == 'style1') ? 'textColorStyle1':(configFileData.style == 'style2'?'textColorStyle2':'textColorStyle3')">
+      山东艾克瑞特教育科技有限公司
+    </span>
   </div>
  </template>
  <script>
@@ -155,7 +157,7 @@
    /* 顶部内容 */
    width: 100%;
    height: 50px;
-   background-color: rgb(2, 21, 15);
+   /* background-color: rgb(2, 21, 15); */
    position: absolute ;
    top: 0px;
    left: 0px;
@@ -173,20 +175,18 @@
  .contentMenu{
    width: 100%;
    height: 45px;
-   background-color: rgb(2, 21, 15);
+   /* background-color: rgb(2, 21, 15); */
    /* background-color: aqua; */
  }
  .contentData{
    width: 100%;
    height: 676px;
-   background-color: rgb(249, 249, 42);
+   /* background-color: rgb(249, 249, 42); */
    /* padding: 10px; */
    /* 溢出滚动 */
    overflow: auto;
    position: relative;
    top: 0px;
- 
-   
  }
  
  
@@ -235,6 +235,90 @@
   cursor:pointer;
 }
 
-
+/* 样式 */
+  /* 字体颜色 */
+    /* 酷黑 */
+    .textColorStyle1{
+      color: rgb(224,230,222);
+    }
+    /* 清新 */
+    .textColorStyle2{
+      color: rgb(45, 179, 0);
+    }
+    /* 欢快 */
+    .textColorStyle3{
+      color: rgb(53, 0, 245);
+    }
+  /* 背景颜色 */
+    /* 酷黑 */
+    .backgroundColor1{
+      background-color: rgb(2, 21, 15);
+    }
+    /* 清新 */
+    .backgroundColor2{
+      background-color: rgb(2, 21, 15);
+    }
+    /* 欢快 */
+    .backgroundColor3{
+      background-color: rgb(2, 21, 15);
+    }
+  /* 数据页 */
+    /* 酷黑 */
+    .dataBackgroundColor1{
+      background-color: rgb(15, 30, 26);
+      border: 2px rgb(14, 58, 45) solid;
+    }
+    /* 清新 */
+    .dataBackgroundColor2{
+      background-color: rgb(2, 21, 15);
+    }
+    /* 欢快 */
+    .dataBackgroundColor3{
+      background-color: rgb(2, 21, 15);
+    }
+  /* 圆点背景 */
+    .backgroundColorO1{
+      background-color: rgb(15, 30, 26);
+    }
+    .backgroundColorO2{
+      background-color: rgb(15, 30, 26);
+    }
+    .backgroundColorO3{
+      background-color: rgb(15, 30, 26);
+    }
+  /* 子模块名框背景 */
+    .subModeBg1{
+      background-color: rgb(15, 30, 26);
+      border: 2px rgb(0, 110, 77) solid;
+    }
+    .subModeBg2{
+      background-color: rgb(15, 30, 26);
+      border: 2px rgb(0, 110, 77) solid;
+    }
+    .subModeBg3{
+      background-color: rgb(15, 30, 26);
+      border: 2px rgb(0, 110, 77) solid;
+    }
+  /* 子模块名框圆点背景 */
+    .subModeDctBg1{
+      background-color: rgb(0, 255, 195);
+    }
+    .subModeDctBg2{
+      background-color: rgb(15, 30, 26);
+    }
+    .subModeDctBg3{
+      background-color: rgb(15, 30, 26);
+    }
+  /* 子模块名称框背景 */
+    .subModeNameBg1{
+      background-color: rgb(15, 30, 26);
+      border-left: 2px rgb(0, 110, 77) solid;
+    }
+    .subModeNameBg2{
+      background-color: rgb(15, 30, 26);
+    }
+    .subModeNameBg3{
+      background-color: rgb(15, 30, 26);
+    }
  </style>
  

@@ -1,16 +1,16 @@
 <!-- 信息展示页面 -->
 <template>
-  <div class="selectModule" :style="{width: leftDivW+'px'}">
+  <div class="selectModule" :class="(myStyle == 'style1') ? 'dataBackgroundColor1':(myStyle == 'style2'?'dataBackgroundColor2':'dataBackgroundColor3')"  :style="{width: leftDivW+'px'}">
     <!-- 模块 -->
     <div class="moduleDiv">
       <div class="moduleDiv_content" v-for="(moduledata,index) in showDataOB" :key="index">
 
-        <div class="moduleName btSuspensionEvent" @click="setShowDataModuleName(moduledata.moduleName)">
+        <div class="moduleName btSuspensionEvent" :style="setSelectModuleNameBg(moduledata.moduleName)" @click="setShowDataModuleName(moduledata.moduleName)">
           <!-- 模块名 -->
           <span class="textNotCopy spanModuleName" :style="setSelectModuleNameText(moduledata.moduleName)">{{ moduledata.moduleName }}</span>
         </div>
 
-        <div class="moduleAdorn">
+        <div class="moduleAdorn" :class="(myStyle == 'style1') ? 'backgroundColorO1':(myStyle == 'style2'?'backgroundColorO2':'backgroundColorO3')">
           <!-- 装饰 -->
           <div class="dot dot_1"></div>
           <div class="dot dot_2"></div>
@@ -31,19 +31,24 @@
   </div>
 
 
-  <dev class="selectSubModule" :style="{width: rightDivW+'px'}">
+  <dev class="selectSubModule" :class="(myStyle == 'style1') ? 'dataBackgroundColor1':(myStyle == 'style2'?'dataBackgroundColor2':'dataBackgroundColor3')" :style="{width: rightDivW+'px'}">
    <!-- 子模块 -->
     <div class="moduleDiv_subContent" v-for="(moduledata,index) in showSubData" :key="index">
         <!-- 子模块 -->
-        <div class="moduleSubNameTitle">
-          <div class="moduleSubName" :style="{width:subModuleContentW+'px'}">
+        <div class="moduleSubNameTitle" :class="(myStyle == 'style1') ? 'subModeBg1':(myStyle == 'style2'?'subModeBg2':'subModeBg3')">
+          <div class="titleDots">
+            <div class="titleDot1" :class="(myStyle == 'style1') ? 'subModeDctBg1':(myStyle == 'style2'?'subModeDctBg2':'subModeDctBg3')"></div>
+            <div class="titleDot1" :class="(myStyle == 'style1') ? 'subModeDctBg1':(myStyle == 'style2'?'subModeDctBg2':'subModeDctBg3')"></div>
+            <div class="titleDot1" :class="(myStyle == 'style1') ? 'subModeDctBg1':(myStyle == 'style2'?'subModeDctBg2':'subModeDctBg3')"></div>
+          </div>
+          <div class="moduleSubName" :class="(myStyle == 'style1') ? 'subModeNameBg1':(myStyle == 'style2'?'subModeNameBg2':'subModeNameBg3')" :style="{width:subModuleContentW+'px'}">
             <!-- 模块名 -->
-            <span class="textNotCopy">{{ moduledata.submoduleName }}</span>
+            <span class="subNames textNotCopy" :class="(myStyle == 'style1') ? 'textColorStyle1':(myStyle == 'style2'?'textColorStyle2':'textColorStyle3')">{{ moduledata.submoduleName }}</span>
           </div>
           <div v-if="moduledata.codes[0].code != ''" style="position: relative;top:20%">
             <div class="moduleSubBtContent" @click="selectSubModuleBt(moduledata.submoduleName )">
               <!-- 按钮 -->
-              <div :class="atPresentSubMuduleName === moduledata.submoduleName? 'moduleSubBt_off' :'moduleSubBt_on' "></div>
+              <div :class="atPresentSubMuduleName === moduledata.submoduleName? 'moduleSubBt_off' :'moduleSubBt_on'" :style="setTriangleStyle(moduledata.submoduleName)"></div>
             </div>
           </div>
           
@@ -87,7 +92,9 @@ import axios from 'axios';
        centreDistanceLeft:103,//中间距离左侧的位置
        subModuleContentW:248,//子模块区域宽度
        atPresentSubMuduleName:'',//当前子模块名称
-       mode:''
+       mode:'',
+       myStyle:"",//样式
+
       }
     }
     ,
@@ -127,6 +134,7 @@ import axios from 'axios';
           .then((response) => {
             let configData = response.data;//配置文件数据
             this.showDataTypes = configData.mode;//显示模式
+            this.myStyle = configData.style;//样式
             //显示中英文
             if(configData.language == '中文'){
                 this.showDataType = false;
@@ -142,19 +150,50 @@ import axios from 'axios';
       },
       // 设置圆点是否被选中
       setSelectModuleNameDot(moduleSelectName){
-        if(this.showModule == moduleSelectName){
-          return 'background-color: rgb(0, 255, 161);';
-        }else{
-          return 'background-color: rgb(255, 255, 255);';
+        // 酷黑
+        if(this.myStyle == 'style1'){
+           if(this.showModule == moduleSelectName){
+              return 'background-color:  rgb(20, 197, 144);';
+            }else{
+              return 'background-color: rgb(255, 255, 255);';
+            }
+        }
+       
+      },
+      //选中文字背景
+      setSelectModuleNameBg(showNameText){
+        // 酷黑
+        if(this.myStyle == 'style1'){
+          if(this.showModule == showNameText){
+            return 'background-color: rgb(20, 197, 144);';
+          }else{
+            return 'background-color: rgb(15, 30, 26)';
+          }
+        }
+        
+      },
+      //设置三角
+      setTriangleStyle(modeName){
+        // 酷黑
+        if(this.myStyle == 'style1'){
+          if(this.atPresentSubMuduleName == modeName){
+            return 'border-top: 10px solid rgb(0, 255, 195);  border-bottom: 0px;';
+          }else{
+            return 'border-bottom: 10px solid rgb(0, 255, 195);  border-top: 0px;';
+          }
         }
       },
       // 设置文字是否被选中
       setSelectModuleNameText(showNameText){
-        if(this.showModule == showNameText){
-          return 'color: rgb(0, 255, 161);';
-        }else{
-          return 'color: white;';
+        // 酷黑
+        if(this.myStyle == 'style1'){
+          if(this.showModule == showNameText){
+            return 'color: rgb(250, 250, 250);';
+          }else{
+            return 'color:  rgb(121, 124, 123);;';
+          }
         }
+        
       },
       // 设置选中模块
       setShowDataModuleName(showName){
@@ -233,57 +272,52 @@ import axios from 'axios';
   cursor:pointer;
 }
 #mouseTop{
-  width: 3px;
+  width: 6px;
   height: 50%;
-  background-color: rgb(198, 0, 0);
+  /* background-color: rgb(198, 0, 0); */
+  position: fixed;
+  z-index: 2;
+  right: 3px;
 }
 #mouseDown{
-  width: 3px;
+  width: 6px;
   height: 50%;
-  background-color: rgb(233, 131, 131);
+  /* background-color: rgb(233, 131, 131); */
+  position: fixed;
+  z-index: 2;
+  left: 2px;
 }
-.module_sub{
-  background-color: aquamarine;
-  margin: 5px;
-  padding: 5px;
-  overflow:auto;
-  max-height: 0;
-}
-.module_code{
-  background-color: antiquewhite;
-  margin: 5px;
-  overflow:auto;
-}
-.selected-filename {
-  color: rgb(255, 255, 255);
-}
-.textNotCopy{
-  -moz-user-select: none; /* Firefox */
-  -ms-user-select: none; /* Internet Explorer/Edge */
-  user-select: none; /* Non-prefixed version, currently supported by Chrome and Opera */
-}
+
 .selectModule{
   /* 选择模块 */
-  background-color: rgb(0, 255, 34);
+  /* background-color: rgb(0, 255, 34); */
   position: absolute;
   width: 91px;
-  height: 669px;
+  height: 659px;
   left: 10px;
+  top: 6px;
   padding-top: 6px;
   padding-left: 3px;
+  border-top-left-radius:8px;
+  border-bottom-left-radius:8px;
+  
+
 }
 .selectSubModule{
   /* 选择子模块 */
-  background-color: rgb(62, 134, 198);
+  /* background-color: rgb(62, 134, 198); */
   position: absolute;
   width: 315px;
-  height: 660px;
+  height: 650px;
   right: 10px;
+  top: 6px;
    /* 溢出滚动 */
    overflow: auto;
    padding-top: 15px;
    padding-left: 10px;
    padding-right: 10px;
+   border-top-right-radius:8px;
+   border-bottom-right-radius:8px;
 }
 span{
   white-space:nowrap;
@@ -300,16 +334,20 @@ span{
 .moduleName{
   width: 70%;
   height: 38px;
-  background-color: rgb(98, 98, 98);
+  /* background-color: rgb(98, 98, 98); */
   position: relative;
-  margin-top: 3px;
   top: 1px;
   float: left;
+  margin-left: 3px;
+  margin-top: 3px;
+  margin-right: 2px;
+  text-align: center;
+  border-radius:4px;
 }
 .moduleAdorn{
   width: 20px;
   height: 38px;
-  background-color: rgb(0, 0, 0);
+  /* background-color: rgb(0, 0, 0); */
   position: relative;
   margin-top: 4px;
   float: left;
@@ -359,8 +397,8 @@ span{
   width: 100%;
   height: 40px;
   /* 圆角 */
-  border-radius: 3px;
-  background-color: aliceblue;
+  border-radius: 6px;
+  /* background-color: aliceblue; */
   float: left;
   margin-top: 10px;
   margin-bottom: 5px;
@@ -368,9 +406,8 @@ span{
 .moduleSubName{
   width: 200px;
   height: 40px;
-  background-color: rgb(134, 198, 255);
+  /* background-color: rgb(134, 198, 255); */
   position: relative;
-  left: 30px;
   line-height: 40px;
   float: left;
   white-space:nowrap;
@@ -382,7 +419,7 @@ span{
   height: 0;
   border-left: 6px solid transparent; /* 左边透明 */
   border-right: 6px solid transparent; /* 右边透明 */
-  border-bottom: 10px solid red; /* 底部为红色 */
+  /* border-bottom: 10px solid red;  */
 }
 /* 打开三角 */
 .moduleSubBt_off{
@@ -390,7 +427,7 @@ span{
   height: 0;
   border-left: 6px solid transparent; /* 左边透明 */
   border-right: 6px solid transparent; /* 右边透明 */
-  border-top: 10px solid red; /* 底部为红色 */
+  /* border-top: 10px solid red;  */
 }
 .moduleSubBtContent{
   width: 14px;
@@ -400,7 +437,7 @@ span{
   position: relative;
   padding: 6px;
   top: 20%;
-  left: 35px;
+  left: 0px;
   cursor:pointer;
 }
 /* 代码区域 */
@@ -441,5 +478,25 @@ span{
   height: 5px;
   
 }
-
+.titleDots{
+  width: 10px;
+  height: 36px;
+  /* background-color: brown; */
+  margin-left: 8px;
+  margin-right: 6px;
+  margin-top: 2px;
+  padding: 0px;
+  float: left;
+}
+.titleDot1{
+  width: 8px;
+  height: 8px;
+  margin-top: 3px;
+  /* background-color: rgb(0, 255, 195); */
+  border-radius: 50%; /* 将边界角度设置为50%，即等于高度/2 */
+}
+.subNames{
+  position: relative;
+  left: 20px;
+}
 </style>
