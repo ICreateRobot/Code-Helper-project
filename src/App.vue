@@ -204,31 +204,10 @@
  
  /* 滚动条 */
  
- ::-webkit-scrollbar {
-    
-     width: 8px;
-     height: 8px;
-     /* border: 2px white solid; */
-     /* background-color: #dde5ff; 滚动条背景色 */
- }
+
  /* 滑块样式 */
- ::-webkit-scrollbar-thumb {
-     border-radius: 6px; /* 滑块边界圆角 */
-     background-color: #fe0000; /* 滑块颜色 */
-     border: 2px solid #ffffff; 
-     /* border-left: 2px solid #ffffff;
-     border-right: 2px solid #ffffff; */
+ 
 
-     width: 10px;
-     background-clip:content-box;
-     /* height: 20px; */
- }
- ::-webkit-scrollbar-track-piece { 
-  border-radius: 8px; /* 轨道边界圆角 */
-  border: 2px solid #ffffff;
-  /* background-color:#f8f8f8; */
-
-}
  
 
  
@@ -347,6 +326,31 @@
     }
     .codeBg3{
       background-color:rgb(32, 230, 158);
+    }
+
+    /* 滚动条 */
+    /* 代码滚动条 */
+    .codeBg1::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+      /* border: 2px white solid; */
+      background-color: rgb(2, 21, 15);
+    }
+    .codeBg1::-webkit-scrollbar-thumb {
+      border-radius: 6px; /* 滑块边界圆角 */
+      background-color: rgb(20, 197, 144); /* 滑块颜色 */
+      border: 1px solid #ffffff; 
+      /* border-left: 2px solid #ffffff;
+      border-right: 2px solid #ffffff; */
+
+      width: 10px;
+      background-clip:content-box;
+      /* height: 20px; */
+    }
+    .codeBg1::-webkit-scrollbar-track-piece { 
+      border-radius: 8px; /* 轨道边界圆角 */
+      border: 2px solid rgb(20, 197, 144);
+      /* background-color:#f8f8f8; */
     }
  </style>
  
