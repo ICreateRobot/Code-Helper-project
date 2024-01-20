@@ -54,9 +54,9 @@
           
         </div>
         <!-- 代码区域 -->
-        <div class="codes" :style="setThisShowCodes(moduledata.submoduleName)">
-          <div class="code" @mouseenter="handleMouseEnter" @mouseleave="handleMouseLeave" v-for="(code,index) in moduledata.codes" :key="index">
-            <span class="codeText"> qqqqqqqqqq{{ code.code }}</span><br>
+        <div class="codes" :style="setThisShowCodes(moduledata.submoduleName)" :class="(myStyle == 'style1') ? 'textColorStyle1':(myStyle == 'style2'?'textColorStyle2':'textColorStyle3')">
+          <div class="code" :class="(myStyle == 'style1') ? 'codeBg1':(myStyle == 'style2'?'codeBg2':'codeBg3')" @mouseenter="handleMouseEnter" @mouseleave="handleMouseLeave" v-for="(code,index) in moduledata.codes" :key="index">
+            <span class="codeText">qqqqqqqqqqqqqqqqqqq{{ code.code }}</span><br>
             <span class="codeNote">/*{{ code.explain }}*/</span>
           </div>
          
@@ -455,12 +455,12 @@ span{
 .code{
   width: 100%;
   height: 60px;
-  background-color:rgb(32, 230, 158);
+  /* background-color:rgb(32, 230, 158); */
   line-height: 26px;
   overflow-y: auto;
   margin-top: 5px;
   border-radius: 5px;
-  color: white;
+  /* color: white; */
 }
 .codeText{
   white-space:nowrap;
@@ -473,11 +473,9 @@ span{
   cursor:move;
   position: relative;
   left: 6px;
+  font-size: 14px;
 }
-::-webkit-scrollbar{
-  height: 5px;
-  
-}
+
 .titleDots{
   width: 10px;
   height: 36px;

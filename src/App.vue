@@ -205,16 +205,33 @@
  /* 滚动条 */
  
  ::-webkit-scrollbar {
-     border-radius: 8px; /* 轨道边界圆角 */
-     width: 16px; /* 滚动条宽度 */
-     background-color: #ffffff;
+    
+     width: 8px;
+     height: 8px;
+     /* border: 2px white solid; */
      /* background-color: #dde5ff; 滚动条背景色 */
  }
  /* 滑块样式 */
  ::-webkit-scrollbar-thumb {
      border-radius: 6px; /* 滑块边界圆角 */
-     background-color: #dde5ff; /* 滑块颜色 */
+     background-color: #fe0000; /* 滑块颜色 */
+     border: 2px solid #ffffff; 
+     /* border-left: 2px solid #ffffff;
+     border-right: 2px solid #ffffff; */
+
+     width: 10px;
+     background-clip:content-box;
+     /* height: 20px; */
  }
+ ::-webkit-scrollbar-track-piece { 
+  border-radius: 8px; /* 轨道边界圆角 */
+  border: 2px solid #ffffff;
+  /* background-color:#f8f8f8; */
+
+}
+ 
+
+ 
 
  /* 文字不可选中 */
  .textNotCopy{
@@ -319,6 +336,17 @@
     }
     .subModeNameBg3{
       background-color: rgb(15, 30, 26);
+    }
+  /* 代码背景 */
+    .codeBg1{
+      color: rgb(250, 250, 250);
+      background-color:rgb(20, 197, 144);
+    }
+    .codeBg2{
+      background-color:rgb(32, 230, 158);
+    }
+    .codeBg3{
+      background-color:rgb(32, 230, 158);
     }
  </style>
  
