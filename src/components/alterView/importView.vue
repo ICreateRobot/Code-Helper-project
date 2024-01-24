@@ -1,6 +1,6 @@
 
 <template>
-    <div class="importAlter">
+    <div class="importAlter" :class="(configFileData.style == 'style1') ? 'backgroundColor1':(configFileData.style == 'style2'?'backgroundColor2':'backgroundColor3')">
       
         <div class="closeAlter" @click="closeAlter">
           <!-- 关闭 -->
@@ -9,14 +9,15 @@
         <div class="alterTitle">
           <!-- 标题 -->
           <div class="titleIcon"></div>
-          <div class="titleText">
-              <span class="textNotCopy">{{languageData.ui_text_import}} {{ replaceModule }}</span>
+          <div class="titleText" :class="(configFileData.style == 'style1') ? 'textColorStyle1':(configFileData.style == 'style2'?'textColorStyle2':'textColorStyle3')">
+              <span class="textNotCopy">{{languageData.ui_text_import}} </span>
           </div>
         </div>
 
-        <div class="alterContent">
+        <div class="alterContent" :class="(configFileData.style == 'style1') ? 'dataBackgroundColor1':(configFileData.style == 'style2'?'dataBackgroundColor2':'dataBackgroundColor3')">
           <!-- 内容 -->
-          <div class="selectContent">
+          <div class="clipBorder" :class="(configFileData.style == 'style1') ? 'dataBackgroundColor1':(configFileData.style == 'style2'?'dataBackgroundColor2':'dataBackgroundColor3')"></div>
+          <div class="selectContent" :class="(configFileData.style == 'style1') ? 'textColorStyle1':(configFileData.style == 'style2'?'textColorStyle2':'textColorStyle3')">
             <div >
               <!-- 导入 -->
               <input class="btSuspensionEvent" type="radio" id="option1" value="option1" v-model="importType" :disabled="importNumber>=5">
@@ -42,9 +43,9 @@
 
         </div>
 
-        <div class="alterBt btSuspensionEvent" @click="importConfigFile">
+        <div class="alterBt btSuspensionEvent" @click="importConfigFile" :class="(configFileData.style == 'style1') ? 'alterBtBg1':(configFileData.style == 'style2'?'alterBtBg1':'alterBtBg1')">
           <!-- 按键 -->
-          <span class="alterBtText textNotCopy">{{languageData.ui_text_confirm}}</span>
+          <span class="alterBtText textNotCopy" :class="(configFileData.style == 'style1') ? 'textColorStyle1':(configFileData.style == 'style2'?'textColorStyle2':'textColorStyle3')">{{languageData.ui_text_confirm}}</span>
         </div>
     </div>
    
@@ -119,15 +120,17 @@
 .closeAlter{
   width: 20px;
   height: 20px;
-  background-color: rgb(0, 0, 0);
+  /* background-color: rgb(0, 0, 0); */
+  background-image: url('../../img/close.svg');
+  transform: scaleX(-1);
   position: absolute;
-  top: 0px;
-  right: 0px;
+  top: 2px;
+  right: 3px;
   cursor:pointer;
 }
 .selectContent{
   position: relative;
-  top: 20px;
+  top: 10px;
   left: 10px;
 }
 .replaceOptions{
@@ -136,7 +139,7 @@
     position: relative;
     top: 5px;
     left: 20px;
-    background-color: rgb(143, 255, 152);
+    /* background-color: rgb(143, 255, 152); */
 }
 .importNumberText{
   color: rgb(154, 154, 154);
@@ -147,12 +150,15 @@
 .alterTitle{
   width:260px;
   height: 30px;
-  background-color: aqua;
+  position: relative;
+  left: 10px;
+  top: 2px;
+  /* background-color: aqua; */
 }
 .titleIcon{
   width: 20px;
-  height: 20px;
-  background-color: aquamarine;
+  height: 19px;
+  background-image: url('../../img/import.svg');
   position: relative;
   top: 5px;
   left: 5px;
@@ -166,22 +172,31 @@
   line-height: 30px;
 }
 .alterContent{
-  width: 290px;
+  width: 270px;
   height: 200px;
-  background-color: beige;
+  /* background-color: beige; */
   position: relative;
-  top: 6px;
-  left: 5px;
+  top: 5px;
+  left: 15px;
+  clip-path: polygon(0% 0%, 85% 0%, 100% 15%, 100% 100%, 0% 100%);/**截取多边形 */
+}
+.clipBorder{
+  width: 50px;
+  height: 20px;
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  background-color: red;
+  transform: rotate(35deg);
 }
 .alterBt{
   width: 100px;
   height: 30px;
-  background-color: aquamarine;
+  /* background-color: aquamarine; */
   position: relative;
   top: 10px;
   left: 100px;
   text-align: center;
- 
 }
 .alterBtText{
   line-height: 30px;

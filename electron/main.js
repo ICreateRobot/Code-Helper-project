@@ -1,91 +1,104 @@
 // main.js
 
 // 控制应用生命周期和创建原生浏览器窗口的模组
-const { app, BrowserWindow,dialog,ipcMain,shell  } = require('electron')
+const { app, BrowserWindow, dialog, ipcMain, shell } = require('electron')
 const path = require('path');
 const fs = require('fs');
 const data_processing = require('./data_processing');
+const http = require('http');
 
 // const NODE_ENV = 'production' //生产环境
 // const NODE_ENV = 'development' //开发环境
 const NODE_ENV = process.env.NODE_ENV  //通过配置文件
 
-function createWindow () {
+function createWindow() {
   // 创建浏览器窗口
   const mainWindow = new BrowserWindow({
     width: 450,
     height: 850,
-    resizable:false,//禁止改变窗口大小
+    resizable: false,//禁止改变窗口大小
     frame: false,
-    icon:  path.join(__dirname, '../dist/img/icon.ico'),
+    icon: path.join(__dirname, '../dist/img/icon.ico'),
     webPreferences: {
-        nodeIntegration: process.env.ELECTRON_NODE_INTEGRATION,
-        contextIsolation: !process.env.ELECTRON_NODE_INTEGRATION,
-        enableRemoteModule: true,
-        preload: path.join(__dirname, 'preload.js'),
+      nodeIntegration: process.env.ELECTRON_NODE_INTEGRATION,
+      contextIsolation: !process.env.ELECTRON_NODE_INTEGRATION,
+      enableRemoteModule: true,
+      preload: path.join(__dirname, 'preload.js'),
     }
   })
 
-  
+
   // 加载 index.html
   // mainWindow.loadFile('dist/index.html') // 此处跟electron官网路径不同，需要注意
   // mainWindow.loadURL('http://127.0.0.1:5173/') 
   mainWindow.loadURL(
     NODE_ENV === 'development'
-    ? 'http://localhost:5173'
-    :`file://${path.join(__dirname, '../dist/index.html')}`
+      ? 'http://localhost:5173'
+      : `file://${path.join(__dirname, '../dist/index.html')}`
   );
   // app.setAppUserModelId("明治") //在主进程的app这里修改
   app.setName("名字");
   // 打开开发工具
   mainWindow.webContents.openDevTools()
 
-  ipcMain.on('close',e=>{
+  ipcMain.on('close', e => {
     app.quit();
   });
 
 
   //配置文件错误
-  ipcMain.on('deployFileErr',e=>{
-    dialog.showMessageBox({ type: 'warning',title: '提示', message: '配置文件错误，请重新导入或初始化' })
+  ipcMain.on('deployFileErr', e => {
+    dialog.showMessageBox({ type: 'warning', title: '提示', message: '配置文件错误，请重新导入或初始化' })
   });
 
   //导入配置文件
-  ipcMain.on('importDeployFile',e=>{
+  ipcMain.on('importDeployFile', e => {
     importDeployFile(mainWindow);
   });
 
   //导入网络配置文件
-  ipcMain.on('importWebDeployFile',e=>{
+  ipcMain.on('importWebDeployFile', e => {
     openFileDialog();
   });
   // 打开产品官网
-  ipcMain.on('openNewWindows',e=>{
+  ipcMain.on('openNewWindows', e => {
     getNewwindows();
   })
   //保存模板到本地
-  ipcMain.on('saveModuleFile',e=>{
+  ipcMain.on('saveModuleFile', e => {
     saveModuleFile();
   })
-   //替换配置文件
-  ipcMain.on('replaceModeConfigFile',(e,fileName)=>{
-    replaceModeConfigFile(fileName,mainWindow);
+  //替换配置文件
+  ipcMain.on('replaceModeConfigFile', (e, fileName) => {
+    replaceModeConfigFile(fileName, mainWindow);
   })
   //设置默认模式
-  ipcMain.on('setDefaultModel',(e,mode)=>{
+  ipcMain.on('setDefaultModel', (e, mode) => {
     // console.log("mode:",mode)
-    setDefaultModel(mode,mainWindow)
+    setDefaultModel(mode, mainWindow)
   })
   //设置语言和风格
-  ipcMain.on('setLanguageAndStyle',(e,data)=>{
-    setLanguageAndStyle(data,mainWindow)
+  ipcMain.on('setLanguageAndStyle', (e, data) => {
+    setLanguageAndStyle(data, mainWindow)
+  })
+  //设置是否可复制
+  ipcMain.on('setReproducibility', (e, data) => {
+    setReproducibility(data, mainWindow)
+  })
+  //无互联网连接
+  ipcMain.on('noInternetLink', (e) => {
+    noInternetLink();
+  })
+  //网络连接-请求版本
+  ipcMain.on('internetLink', (e, version) => {
+    internetLink(version);
   })
 
   //获取版本号
   ipcMain.handle('getAppVersion', getAppVersion);
   //获取模式
   ipcMain.handle('getModes', getModes);
-  
+
 
 
 
@@ -115,7 +128,7 @@ app.on('window-all-closed', function () {
 
 //网络文件
 function openFileDialog() {
- 
+
 }
 
 //导入配置文件
@@ -127,10 +140,10 @@ function importDeployFile(mainWindow) {
 
   dialog.showOpenDialog(options).then((result) => {
     if (!result.canceled && result.filePaths[0]) {
-      let newFileUrl =result.filePaths[0];//资源管理器打开的文件
+      let newFileUrl = result.filePaths[0];//资源管理器打开的文件
       let fileName = newFileUrl.split("\\").pop().split('.')[0];//导入文件名
       // http://127.0.0.1:5173/assets/config_test.xml
-      let fileUrl =`${path.join(__dirname, '../dist/config/'+fileName+'.json')}`;//配置文件位置      
+      let fileUrl = `${path.join(__dirname, '../dist/config/' + fileName + '.json')}`;//配置文件位置      
       try {
         const fileData = fs.readFileSync(newFileUrl);//获取用户文件数据
         const deployFileState = fs.createWriteStream(fileUrl);//创建写入流
@@ -160,51 +173,52 @@ function importDeployFile(mainWindow) {
         console.error(`无法读取文件：${err}`);
       }
     } else {
-        console.log("取消了选择");
+      console.log("取消了选择");
     }
   }).catch((err) => {
-      console.error("发生错误：", err);
+    console.error("发生错误：", err);
   });
 
 }
 
 // 获取文件名和软件版本
-function getAppVersion(){
+function getAppVersion() {
   let versions = new Array();
-  let url  = `${path.join(__dirname, '../package.json')}`
-  try { 
-    files = fs.readFileSync(url,"utf8");
+  let url = `${path.join(__dirname, '../package.json')}`
+  try {
+    files = fs.readFileSync(url, "utf8");
     const jsonData = JSON.parse(files);
     versions.push(jsonData.version);
     versions.push(jsonData.build.productName);
     // console.log("版本号",versions)
 
-    
+
   } catch (error) {
-    console.log("报错：",error)
+    console.log("报错：", error)
   }
-  if(versions.length>0)
+  if (versions.length > 0)
     return versions;
   else
-    return -1;  
+    return -1;
 }
 
 //打开外部网站
-function getNewwindows(){
+function getNewwindows() {
   shell.openExternal("https://www.icrobot.com/www/cn/index.html#/index")
 }
 
 // 保存模板
-function saveModuleFile(){
-  let configFileUrl  = `${path.join(__dirname, '../dist/configModule.xml')}`
-  dialog.showSaveDialog({ 
+function saveModuleFile() {
+  let configFileUrl = `${path.join(__dirname, '../dist/configModule.xml')}`
+  dialog.showSaveDialog({
     filters: [
       { name: 'Config Files', extensions: ['xml'] }, // 可选择的文本文件格式
       { name: 'All Files', extensions: ['*'] } // 所有文件格式
     ],
     title: '保存模板',
-    defaultPath: '~/configModuleFile' 
+    defaultPath: '~/configModuleFile'
   }).then(result => {
+    if (!result.canceled && result.filePaths[0]) {
       // result.filePath 为用户选择的文件保存路径
       let saveFileUrl = result.filePath;
       // console.log("用户选择的文件保存路径：", saveFileUrl)
@@ -226,27 +240,31 @@ function saveModuleFile(){
           console.log(err);
         });
       })
+    } else {
+      console.log("取消了保存")
+    }
+
 
   }).catch(err => {
-      console.error("发生错误：", err)
+    console.error("发生错误：", err)
   })
 }
 
 //获取所有配置文件
-function getModes(){
+function getModes() {
   console.log("getModes-log1")
   let configfilesUrl = `${path.join(__dirname, '../dist/config')}`;//配置文件夹位置
   let files = null
-  try { 
-      files = fs.readdirSync(configfilesUrl);
-      // fileName.substring(0, fileName.lastIndexOf('.')) ; // 返回不包含扩展名的文件名
-      console.log("目录下的所有文件名称：");
-      for (let fileIndex in files) {
-          console.log(files[fileIndex].substring(0,files[fileIndex].lastIndexOf('.')));
-          files[fileIndex] = files[fileIndex].substring(0,files[fileIndex].lastIndexOf('.'))
-      }
+  try {
+    files = fs.readdirSync(configfilesUrl);
+    // fileName.substring(0, fileName.lastIndexOf('.')) ; // 返回不包含扩展名的文件名
+    console.log("目录下的所有文件名称：");
+    for (let fileIndex in files) {
+      console.log(files[fileIndex].substring(0, files[fileIndex].lastIndexOf('.')));
+      files[fileIndex] = files[fileIndex].substring(0, files[fileIndex].lastIndexOf('.'))
+    }
   } catch (error) {
-    console.log("err:",error)
+    console.log("err:", error)
   }
   return files;
 }
@@ -318,66 +336,248 @@ function replaceModeConfigFile(fileName, mainWindow) {
   });
 }
 //设置默认模式
-function setDefaultModel(mode,mainWindow){
-  let url  = `${path.join(__dirname, '../dist/configData.json')}`
-  try { 
-    files = fs.readFileSync(url,"utf8");
+function setDefaultModel(mode, mainWindow) {
+  let url = `${path.join(__dirname, '../dist/configData.json')}`
+  try {
+    files = fs.readFileSync(url, "utf8");
     let jsonData = JSON.parse(files);
     jsonData.mode = mode;
     jsonData.modificationTime = getTodayTime();
     let json_dataString = JSON.stringify(jsonData);//将对象转换为字符串
-    
-    fs.writeFile(url,json_dataString, err => {
+
+    fs.writeFile(url, json_dataString, err => {
       //如果写入失败，则回调函数调用时，会传入错误对象，如写入成功，会传入 null
-      if(err == null){
+      if (err == null) {
         mainWindow.webContents.reload();//刷新页面
-      }else{
+      } else {
         console.log(err);
       }
     });
   } catch (error) {
-    console.log("报错：",error)
+    console.log("报错：", error)
   }
 }
 
+// 无互联网连接
+function noInternetLink() {
+  dialog.showMessageBox({
+    type: 'info',
+    title: '提示',
+    defaultId: 0,
+    message: "无互联网连接",
+    buttons: ['确定']
+  }).then(result => {
+    console.log("无互联网连接弹窗");
+  }).catch(err => {
+    console.log(err);
+  });
+}
+
+
+
+// 互联网连接-请求版本
+function internetLink(version) {
+  // 要发送的数据对象
+  const sendData = { appName: "'CodeHelper'", AppVersion: "'" + version + "'" };
+  const url = 'http://119.3.123.115:8080/appVersionManage/getAppState'; // 修改为目标API的URL
+
+  // 将参数转换成查询字符串格式
+  let queryString = '';
+  for (const [key, value] of Object.entries(sendData)) {
+    if (queryString !== '') {
+      queryString += '&';
+    }
+    queryString += `${encodeURIComponent(key)}=${encodeURIComponent(value)}`;
+  }
+
+  // 构建完整的URL（包括查询字符串）
+  const fullUrl = `${url}?${queryString}`;
+  // 创建HTTP请求选项
+  const options = {
+    method: 'POST', // 可以根据需要设置其他HTTP方法，比如POST、PUT等
+  };
+
+  // 发起HTTP请求
+  const req = http.request(fullUrl, options, res => {
+    let data = '';
+
+    // 接收服务器返回的数据流
+    res.on('data', chunk => {
+      data += chunk;
+    });
+
+    // 当数据接收完全后进行处理
+    res.on('end', () => {
+      let receiveData = JSON.parse(data);
+      if (receiveData.code == 200) {
+        // 请求成功
+        if (!receiveData.data.appState) {
+          dialog.showMessageBox({
+            type: 'info',
+            title: '提示',
+            defaultId: 0,
+            message: "当前版本不可用，请下载最新版本 ",
+            buttons: ['确定']
+          }).then(result => {
+            shell.openExternal("https://www.icrobot.com/www/cn/index.html#/file/index?type1=%E8%BD%AF%E4%BB%B6%E8%B5%84%E6%96%99")
+            app.exit();
+          }).catch(err => {
+            console.log(err);
+          });
+        } else {
+          // 当前版本->最新版本：
+          //0.0.1->1.0.0:-1,当前版本低
+          //1.0.1->1.0.0:1，当前版本高
+          //1.0.0->1.0.0:0，当前版本一致
+          let state = compareVersions(receiveData.data.appVersion, receiveData.data.newAppVersion);
+          if (state == 0) {
+            //当前是最新版本
+            dialog.showMessageBox({
+              type: 'info',
+              title: '提示',
+              defaultId: 0,
+              message: "当前是最新版本 ",
+              buttons: ['确定']
+            }).then(result => {
+              console.log("最新版本");
+            }).catch(err => {
+              console.log(err);
+            });
+
+          } else if (state == -1) {
+            //当前有更新版本
+            dialog.showMessageBox({
+              type: 'info',
+              title: '提示',
+              defaultId: 0,
+              message: "当前软件有更新：" + receiveData.data.newAppVersion,
+              buttons: ['确定']
+            }).then(result => {
+              shell.openExternal("https://www.icrobot.com/www/cn/index.html#/file/index?type1=%E8%BD%AF%E4%BB%B6%E8%B5%84%E6%96%99")
+            }).catch(err => {
+              console.log(err);
+            });
+
+          } else {
+            //当前版本比更新版本高
+            dialog.showMessageBox({
+              type: 'info',
+              title: '提示',
+              defaultId: 0,
+              message: "当前软件最新版本为：#" + receiveData.data.appVersion + "#\n请联系管理员进行更新",
+              buttons: ['确定']
+            }).then(result => {
+              app.exit();
+            }).catch(err => {
+              console.log(err);
+            });
+          }
+        }
+      } else {
+        // 请求失败
+        dialog.showMessageBox({
+          type: 'info',
+          title: '提示',
+          defaultId: 0,
+          message: "检查更新失败：#" + receiveData.msg + "#\n请联系管理员",
+          buttons: ['确定']
+        }).then(result => {
+          // app.exit();
+        }).catch(err => {
+          console.log(err);
+        });
+      }
+      console.log(`Response from ${req.method}:`, JSON.parse(data));
+    });
+  });
+
+  req.on('error', (err) => {
+    console.error(`Request error: ${err}`);
+  });
+
+  // 结束请求
+  req.end();
+}
+
+
+function compareVersions(version1, version2) {
+  let v1 = version1.split(".");
+  let v2 = version2.split(".");
+
+  for (let i = 0; i < v1.length; i++) {
+    if (parseInt(v1[i]) > parseInt(v2[i])) return 1;
+    if (parseInt(v1[i]) < parseInt(v2[i])) return -1;
+  }
+
+  if (v1.length < v2.length) return -1;
+  if (v1.length > v2.length) return 1;
+
+  return 0;
+}
 
 //设置语言和风格
-function setLanguageAndStyle(data,mainWindow){
-  
-  let url  = `${path.join(__dirname, '../dist/configData.json')}`
+function setLanguageAndStyle(data, mainWindow) {
+
+  let url = `${path.join(__dirname, '../dist/configData.json')}`
   let language = '';//语言
   let style = "";//风格
-  if(data[0] == 'Chinese'){
-    language ='中文';
-  }else{
-    language ='英文';
+  if (data[0] == 'Chinese') {
+    language = '中文';
+  } else {
+    language = '英文';
   }
-
-  if(data[1] == "style1"){
-    style = '酷黑';
-  }else if(data[1] == "style2"){
-    style = '清新';
-  }else{
-    style = '欢快';
-  }
-  try { 
-    files = fs.readFileSync(url,"utf8");
+  style = data[1];
+  // if(data[1] == "style1"){
+  //   style = '酷黑';
+  // }else if(data[1] == "style2"){
+  //   style = '清新';
+  // }else{
+  //   style = '欢快';
+  // }
+  try {
+    files = fs.readFileSync(url, "utf8");
     jsonData = JSON.parse(files);
     jsonData.language = language;
     jsonData.style = style;
     jsonData.modificationTime = getTodayTime();
     let json_dataString = JSON.stringify(jsonData);//将对象转换为字符串
-    
-    fs.writeFile(url,json_dataString, err => {
+
+    fs.writeFile(url, json_dataString, err => {
       //如果写入失败，则回调函数调用时，会传入错误对象，如写入成功，会传入 null
-      if(err == null){
+      if (err == null) {
         mainWindow.webContents.reload();//刷新页面
-      }else{
+      } else {
         console.log(err);
       }
     });
   } catch (error) {
-    console.log("报错：",error)
+    console.log("报错：", error)
+  }
+}
+
+//设置代码是否可复制
+function setReproducibility(data, mainWindow) {
+
+  let url = `${path.join(__dirname, '../dist/configData.json')}`
+  let reproducibility = data;
+  console.log(reproducibility);
+  try {
+    let files = fs.readFileSync(url, "utf8");
+    jsonData = JSON.parse(files);
+    jsonData.reproducibleOrNot = reproducibility;
+    jsonData.modificationTime = getTodayTime();
+    let json_dataString = JSON.stringify(jsonData);//将对象转换为字符串
+
+    fs.writeFile(url, json_dataString, err => {
+      //如果写入失败，则回调函数调用时，会传入错误对象，如写入成功，会传入 null
+      if (err == null) {
+        mainWindow.webContents.reload();//刷新页面
+      } else {
+        console.log(err);
+      }
+    });
+  } catch (error) {
+    console.log("报错：", error)
   }
 }
 
@@ -399,8 +599,8 @@ function getTodayTime() {
   }
   let month = day.getMonth()
   if (month < 10) {
-  month = "0" + month;
+    month = "0" + month;
   }
-  let time = day.getFullYear() + "年" + (day.getMonth() + 1) + "月" + day.getDate() + "日 " + day.getHours() + ":" + minutes + ":"     + seconds;
+  let time = day.getFullYear() + "年" + (day.getMonth() + 1) + "月" + day.getDate() + "日 " + day.getHours() + ":" + minutes + ":" + seconds;
   return time
 }

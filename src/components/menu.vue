@@ -87,7 +87,7 @@
   .btIcon{
     width: 20px;
     height: 18px;
-    background-color: black;
+    /* background-color: black; */
     float: left;
     position: relative;
     top: 5px;

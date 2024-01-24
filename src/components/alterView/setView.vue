@@ -1,21 +1,21 @@
 
 <template>
-    <div class="setAlter">
-        <div class="closeAlter" @click="closeAlter"></div>
-        <div class="alterTitle">
+    <div class="setAlter" :class="(configFileData.style == 'style1') ? 'backgroundColor1':(configFileData.style == 'style2'?'backgroundColor2':'backgroundColor3')">
+        <div class="closeAlter" @click="closeAlter" ></div>
+        <div class="alterTitle" :class="(configFileData.style == 'style1') ? 'textColorStyle1':(configFileData.style == 'style2'?'textColorStyle2':'textColorStyle3')">
           <!-- 标题 -->
-          <div class="titleIcon"></div>
+          <div class="titleIcon2"></div>
           <div class="titleText">
               <span class="textNotCopy">{{languageData.ui_text_setting}}</span>
           </div>
         </div>
 
-        <div class="alterContent">
+        <div class="alterContent3" :class="(configFileData.style == 'style1') ? 'dataBackgroundColor1':(configFileData.style == 'style2'?'dataBackgroundColor2':'dataBackgroundColor3')">
           <!-- 内容 -->
           <!-- 语言 -->
-          <div class="subSeclet">
-            <div class="selectBt" :class="languageSettingOf ? 'selectBt_on' : 'selectBt_off'" @click="setSelectlanguageState()"></div>
-            <div class="languageSetting">
+          <div class="subSeclet" :class="(configFileData.style == 'style1') ? 'textColorStyle1':(configFileData.style == 'style2'?'textColorStyle2':'textColorStyle3')" >
+            <div class="selectBt" :class="languageSettingOf ? 'selectBt_on'+returnOnData(configFileData.style) : 'selectBt_off'+returnOnData(configFileData.style)" @click="setSelectlanguageState()"></div>
+            <div class="selectBt languageSetting" @click="setSelectlanguageState()">
               <span class="textNotCopy">{{languageData.ui_text_language}}</span>
             </div>
             <div class="languageContent" :style="getLanguageState()">
@@ -30,12 +30,13 @@
             </div>
           </div>
            <!-- 风格 -->
-          <div class="subSeclet" >
-            <div class="selectBt" :class="viewStyleSettingOf ? 'selectBt_on' : 'selectBt_off'" @click="setSelectStyleState()"></div>
-            <div class="languageSetting">
+          <div class="subSeclet" :class="(configFileData.style == 'style1') ? 'textColorStyle1':(configFileData.style == 'style2'?'textColorStyle2':'textColorStyle3')">
+            <div class="selectBt" :class="viewStyleSettingOf ? 'selectBt_on'+returnOnData(configFileData.style) : 'selectBt_off'+returnOnData(configFileData.style)" @click="setSelectStyleState()"></div>
+            <div class="selectBt languageSetting" @click="setSelectStyleState()">
               <span class="textNotCopy">{{languageData.ui_text_style}}</span>
             </div>
             <div class="styleContent" :style="getStyleState()">
+              {{ viewStyle }}
               <div class="styleSelect">
                 <!-- 酷黑 -->
                 <input type="radio" id="style1" value="style1" v-model="viewStyle" :disabled="!viewDisabled">
@@ -54,9 +55,9 @@
             </div>
           </div>
            <!-- 版本更新 -->
-          <div class="subSeclet">
-            <div class="selectBt" :class="detectionUpdate ? 'selectBt_on' : 'selectBt_off'" @click="setUpdateState()"></div>
-            <div class="languageSetting">
+          <div class="subSeclet" :class="(configFileData.style == 'style1') ? 'textColorStyle1':(configFileData.style == 'style2'?'textColorStyle2':'textColorStyle3')">
+            <div class="selectBt" :class="detectionUpdate ? 'selectBt_on'+returnOnData(configFileData.style) : 'selectBt_off'+returnOnData(configFileData.style)" @click="setUpdateState()"></div>
+            <div class="selectBt languageSetting" @click="setUpdateState()">
               <span class="textNotCopy">{{languageData.ui_text_versionUpdata}}</span>
             </div>
             <div class="updateContent" :style="getUpdateState()">
@@ -73,9 +74,9 @@
             </div>
           </div>
           <!-- 关于我们 -->
-          <div class="subSeclet">
-            <div class="selectBt" :class="AboutUsOf ? 'selectBt_on' : 'selectBt_off'" @click="setAboutState()"></div>
-            <div class="languageSetting">
+          <div class="subSeclet" :class="(configFileData.style == 'style1') ? 'textColorStyle1':(configFileData.style == 'style2'?'textColorStyle2':'textColorStyle3')">
+            <div class="selectBt" :class="AboutUsOf ? 'selectBt_on'+returnOnData(configFileData.style) : 'selectBt_off'+returnOnData(configFileData.style)" @click="setAboutState()"></div>
+            <div class="selectBt languageSetting" @click="setAboutState()">
               <span class="textNotCopy">{{languageData.ui_text_aboutUs}}</span>
             </div>
             <div class="aboutContent" :style="getAboutState()">
@@ -86,9 +87,9 @@
           </div>
         </div>
 
-        <div class="alterBt btSuspensionEvent" @click="setLanguageAndStyle()">
+        <div class="alterBt btSuspensionEvent" @click="setLanguageAndStyle()" :class="(configFileData.style == 'style1') ? 'alterBtBg1':(configFileData.style == 'style2'?'alterBtBg1':'alterBtBg1')">
           <!-- 按键 -->
-          <span class="alterBtText textNotCopy">{{languageData.ui_text_confirm}}</span>
+          <span class="alterBtText textNotCopy" :class="(configFileData.style == 'style1') ? 'textColorStyle1':(configFileData.style == 'style2'?'textColorStyle2':'textColorStyle3')">{{languageData.ui_text_confirm}}</span>
         </div>
     </div>
    
@@ -114,7 +115,7 @@
          version:'出错了',//版本号
          appName:"",//软件名称
          AboutUsOf:false,//关于我们是否打开
-         viewDisabled:false,//风格是否可选
+         viewDisabled:true,//风格是否可选
         }
       },
       methods:{
@@ -158,8 +159,13 @@
           this.version = this.appVersion;
           this.appName = this.AppName;
         },
+        returnOnData(strStyle){
+          // 返回样式最后一位
+          return strStyle.charAt(strStyle.length - 1);
+        },
         updateClick(){
-          alert("该功能正在开发，敬请期待")
+          this.$emit("check_for_updates");
+          // alert("该功能正在开发，敬请期待")
         },
         getAboutState(){
            // 是否打开关于我们
@@ -188,13 +194,9 @@
           }
 
           //初始化页面风格
-          if(this.configFileData.style == "酷黑"){
-            this.viewStyle = 'style1'
-          }else if(this.configFileData.style == "清新"){
-            this.viewStyle = 'style2'
-          }else{
-            this.viewStyle = 'style3'
-          }
+          this.viewStyle=this.configFileData.style;
+          // console.log("风格：",this.viewStyle)
+          
 
         },
         setLanguageAndStyle(){
@@ -203,7 +205,7 @@
           let LanguageAndStyle = new Array();
           LanguageAndStyle.push(this.language);
           LanguageAndStyle.push(this.viewStyle);
-          console.log("数据：",this.LanguageAndStyle);
+          // console.log("数据1：",this.LanguageAndStyle);
           window.ipcRenderer.send('setLanguageAndStyle',LanguageAndStyle);
         }
 
@@ -227,22 +229,23 @@
 .closeAlter{
   width: 20px;
   height: 20px;
-  background-color: rgb(0, 0, 0);
+  /* background-color: rgb(0, 0, 0); */
   position: absolute;
-  top: 0px;
-  right: 0px;
+  top: 2px;
+  right: 3px;
   cursor:pointer;
 }
 /* 弹窗框架 */
 .alterTitle{
   width:260px;
   height: 30px;
-  background-color: aqua;
+  /* background-color: aqua; */
 }
-.titleIcon{
+.titleIcon2{
   width: 20px;
   height: 20px;
-  background-color: aquamarine;
+  /* background-color: aquamarine; */
+  background-image: url('../../img/setting.svg');
   position: relative;
   top: 5px;
   left: 5px;
@@ -255,13 +258,13 @@
   margin-left: 10px;
   line-height: 30px;
 }
-.alterContent{
-  width: 290px;
+.alterContent3{
+  width: 280px;
   height: 200px;
   background-color: beige;
   position: relative;
   top: 6px;
-  left: 5px;
+  left: 8px;
   overflow: auto;
 }
 .alterBt{
@@ -279,10 +282,55 @@
 .selectBt{
   cursor:pointer;
 }
-.selectBt_off{
+.selectBt_off1{
   width: 6px;
   height: 6px;
-  /* background-color: black; */
+  border-top: 3px solid rgb(20, 197, 144); 
+  border-right: 3px solid rgb(20, 197, 144);
+  float: left;
+  transform: rotate(45deg);
+  position: relative;
+  left: 6px;
+  top: 7px;
+}
+.selectBt_on1{
+  width: 6px;
+  height: 6px;
+  border-bottom: 3px solid rgb(20, 197, 144); 
+  border-right: 3px solid rgb(20, 197, 144);
+  float: left;
+  transform: rotate(45deg);
+  position: relative;
+  left: 6px;
+  top: 5px;
+}
+
+.selectBt_off2{
+  width: 6px;
+  height: 6px;
+  border-top: 3px solid rgb(255, 255, 255); 
+  border-right: 3px solid rgb(255, 255, 255);
+  float: left;
+  transform: rotate(45deg);
+  position: relative;
+  left: 6px;
+  top: 7px;
+}
+.selectBt_on2{
+  width: 6px;
+  height: 6px;
+  border-bottom: 3px solid rgb(255, 255, 255); 
+  border-right: 3px solid rgb(255, 255, 255);
+  float: left;
+  transform: rotate(45deg);
+  position: relative;
+  left: 6px;
+  top: 5px;
+}
+
+.selectBt_off3{
+  width: 6px;
+  height: 6px;
   border-top: 3px solid black; 
   border-right: 3px solid black;
   float: left;
@@ -291,10 +339,9 @@
   left: 6px;
   top: 7px;
 }
-.selectBt_on{
+.selectBt_on3{
   width: 6px;
   height: 6px;
-  /* background-color: black; */
   border-bottom: 3px solid black; 
   border-right: 3px solid black;
   float: left;
@@ -303,6 +350,7 @@
   left: 6px;
   top: 5px;
 }
+
 .languageSetting{
   float: left;
   position: relative;

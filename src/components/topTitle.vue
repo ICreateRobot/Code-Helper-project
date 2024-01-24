@@ -3,7 +3,7 @@
 <template>
 
     <div class="appTitle" :class="(configFileData.style == 'style1') ? 'textColorStyle1':(configFileData.style == 'style2'?'textColorStyle2':'textColorStyle3')">
-        <div class="appImg"></div>
+        <div class="appImg"  @click="setClickNumber"></div>
         <div class="appName">
             <span class="textNotCopy">{{ appName }}</span>
         </div>
@@ -29,13 +29,33 @@
       data(){
         return{
          context:"头部导航",
-         style:"style1"
+         style:"style1",
+         clickNumber:0//点击次数
         }
       },
       methods:{
         exitApp(){
           window.ipcRenderer.send('close');
         },
+        setClickNumber(){
+          // console.log("点击",this.clickNumber);
+          if (this.clickNumber <= 5) {
+            if(this.clickNumber == 0){
+                // 第一次点击，启动延时清零
+                setTimeout(() => {
+                  this.clickNumber = 0;
+                }, 1000); // 设置延迟时间为3秒（单位为毫秒）
+              }
+            this.clickNumber++;
+            
+          }else{
+            let newReproducibleOrNot = !this.configFileData.reproducibleOrNot;
+            window.ipcRenderer.send('setReproducibility',newReproducibleOrNot);
+          }
+
+          
+          
+        }
       }
   }
   
@@ -49,6 +69,8 @@
     top: 5px;
     left: 5px;
     /* color: rgb(224,230,222); */
+     /* 拖动窗口 */
+     -webkit-app-region: drag;
 }
 .appExit{
     position: absolute;
@@ -64,8 +86,7 @@
     position: absolute;
     left: 10px;
     top: 5px;
-     /* 拖动窗口 */
-     -webkit-app-region: drag
+    -webkit-app-region: no-drag;
 }
 .appName{
     width: 120px;

@@ -1,1 +1,830 @@
-{"chinese":[{"moduleName":"基础","submodule":[{"submoduleName":"PinMode(针脚号，OUTPUT);","codes":[{"code":"","explain":""}]},{"submoduleName":"PinMode(针脚号，OUTP23UT);","codes":[{"code":"","explain":""}]},{"submoduleName":"PinMode(针脚号，OUTP2UT);","codes":[{"code":"","explain":""}]}]},{"moduleName":"传感器","submodule":[{"submoduleName":"超声波","codes":[{"code":"#include <SR04.h>","explain":"导入库文件"},{"code":"对象名.Distance();","explain":"获得超声波探测距离"}]},{"submoduleName":"DHT11温湿度传感器","codes":[{"code":"#include <DHT.h>","explain":"导入库文件"},{"code":"对象名.begin();","explain":"进行初始设置"}]}]},{"moduleName":"执行器","submodule":[{"submoduleName":"蜂鸣器","codes":[{"code":"tone(针脚号,发声频率)","explain":"以一定频率发出声音"},{"code":"noTone(针脚号)","explain":"停止"}]},{"submoduleName":"LCD1602显示屏","codes":[{"code":"#include <LiquidCrystal_I2C.h>","explain":"导入库文件"},{"code":"对象名.init();","explain":"初始化"},{"code":"对象名.setCursor(x,y);","explain":"设置光标位置"},{"code":"对象名.clear();","explain":"清除屏幕内容"}]}]},{"moduleName":"通信","submodule":[{"submoduleName":"IIC通信","codes":[{"code":"#include <Wire.h>","explain":"导入库文件"},{"code":"#include <I2Cdev.h>","explain":"导入库文件"},{"code":"Wire.begin();","explain":"初始化设置"}]},{"submoduleName":"Serial通信","codes":[{"code":"Serial.begin();","explain":"初始化设置"},{"code":"Serial.print();","explain":"打印信息"},{"code":"Serial.println();","explain":"打印信息并换行"}]}]}],"English":[{"moduleName":"python基础1","submodule":[{"submoduleName":"输入输出模块","codes":[{"code":"out();","explain":"输出"},{"code":"write();","explain":"输入"}]},{"submoduleName":"print()","codes":[{"code":"","explain":""}]}]},{"moduleName":"python基础2","submodule":[{"submoduleName":"输入输出模块12","codes":[{"code":"11111111122222222233333333333444444444445555555555556666666666666777777777777777788888888888888888999999999999999900000000000000000888888888888666666666の","explain":"测试"}]}]}]}
+{
+    "chinese": [
+        {
+            "moduleName": "基础",
+            "submodule": [
+                {
+                    "submoduleName": "PinMode(针脚号，OUTPUT);",
+                    "codes": [
+                        {
+                            "code": "",
+                            "explain": ""
+                        }
+                    ]
+                },
+                {
+                    "submoduleName": "PinMode(针脚号，OUTP23UT);",
+                    "codes": [
+                        {
+                            "code": "",
+                            "explain": ""
+                        }
+                    ]
+                },
+                {
+                    "submoduleName": "PinMode(针脚号，OUTP2UT);",
+                    "codes": [
+                        {
+                            "code": "",
+                            "explain": ""
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "moduleName": "传感器",
+            "submodule": [
+                {
+                    "submoduleName": "超声波",
+                    "codes": [
+                        {
+                            "code": "#include <SR04.h>",
+                            "explain": "导入库文件"
+                        },
+                        {
+                            "code": "对象名.Distance();",
+                            "explain": "获得超声波探测距离"
+                        }
+                    ]
+                },
+                {
+                    "submoduleName": "DHT11温湿度传感器",
+                    "codes": [
+                        {
+                            "code": "#include <DHT.h>",
+                            "explain": "导入库文件"
+                        },
+                        {
+                            "code": "对象名.begin();",
+                            "explain": "进行初始设置"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "moduleName": "执行器",
+            "submodule": [
+                {
+                    "submoduleName": "蜂鸣器",
+                    "codes": [
+                        {
+                            "code": "tone(针脚号,发声频率)",
+                            "explain": "以一定频率发出声音"
+                        },
+                        {
+                            "code": "noTone(针脚号)",
+                            "explain": "停止"
+                        }
+                    ]
+                },
+                {
+                    "submoduleName": "LCD1602显示屏",
+                    "codes": [
+                        {
+                            "code": "#include <LiquidCrystal_I2C.h>",
+                            "explain": "导入库文件"
+                        },
+                        {
+                            "code": "对象名.init();",
+                            "explain": "初始化"
+                        },
+                        {
+                            "code": "对象名.setCursor(x,y);",
+                            "explain": "设置光标位置"
+                        },
+                        {
+                            "code": "对象名.clear();",
+                            "explain": "清除屏幕内容"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "moduleName": "通信",
+            "submodule": [
+                {
+                    "submoduleName": "IIC通信",
+                    "codes": [
+                        {
+                            "code": "#include <Wire.h>",
+                            "explain": "导入库文件"
+                        },
+                        {
+                            "code": "#include <I2Cdev.h>",
+                            "explain": "导入库文件"
+                        },
+                        {
+                            "code": "Wire.begin();",
+                            "explain": "初始化设置"
+                        }
+                    ]
+                },
+                {
+                    "submoduleName": "Serial通信",
+                    "codes": [
+                        {
+                            "code": "Serial.begin();",
+                            "explain": "初始化设置"
+                        },
+                        {
+                            "code": "Serial.print();",
+                            "explain": "打印信息"
+                        },
+                        {
+                            "code": "Serial.println();",
+                            "explain": "打印信息并换行"
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "English": [
+        {
+            "moduleName": "python基础1",
+            "submodule": [
+                {
+                    "submoduleName": "输入输出模块",
+                    "codes": [
+                        {
+                            "code": "out();",
+                            "explain": "输出"
+                        },
+                        {
+                            "code": "write();",
+                            "explain": "输入"
+                        }
+                    ]
+                },
+                {
+                    "submoduleName": "print()",
+                    "codes": [
+                        {
+                            "code": "",
+                            "explain": ""
+                        }
+                    ]
+                },{
+                    "submoduleName": "输入输出模块",
+                    "codes": [
+                        {
+                            "code": "out();",
+                            "explain": "输出"
+                        },
+                        {
+                            "code": "write();",
+                            "explain": "输入"
+                        }
+                    ]
+                },
+                {
+                    "submoduleName": "print()",
+                    "codes": [
+                        {
+                            "code": "",
+                            "explain": ""
+                        }
+                    ]
+                },{
+                    "submoduleName": "输入输出模块",
+                    "codes": [
+                        {
+                            "code": "out();",
+                            "explain": "输出"
+                        },
+                        {
+                            "code": "write();",
+                            "explain": "输入"
+                        }
+                    ]
+                },
+                {
+                    "submoduleName": "print()",
+                    "codes": [
+                        {
+                            "code": "",
+                            "explain": ""
+                        }
+                    ]
+                },{
+                    "submoduleName": "输入输出模块",
+                    "codes": [
+                        {
+                            "code": "out();",
+                            "explain": "输出"
+                        },
+                        {
+                            "code": "write();",
+                            "explain": "输入"
+                        }
+                    ]
+                },
+                {
+                    "submoduleName": "print()",
+                    "codes": [
+                        {
+                            "code": "",
+                            "explain": ""
+                        }
+                    ]
+                },{
+                    "submoduleName": "输入输出模块",
+                    "codes": [
+                        {
+                            "code": "out();",
+                            "explain": "输出"
+                        },
+                        {
+                            "code": "write();",
+                            "explain": "输入"
+                        }
+                    ]
+                },
+                {
+                    "submoduleName": "print()",
+                    "codes": [
+                        {
+                            "code": "",
+                            "explain": ""
+                        }
+                    ]
+                },{
+                    "submoduleName": "输入输出模块",
+                    "codes": [
+                        {
+                            "code": "out();",
+                            "explain": "输出"
+                        },
+                        {
+                            "code": "write();",
+                            "explain": "输入"
+                        }
+                    ]
+                },
+                {
+                    "submoduleName": "print()",
+                    "codes": [
+                        {
+                            "code": "",
+                            "explain": ""
+                        }
+                    ]
+                },{
+                    "submoduleName": "输入输出模块",
+                    "codes": [
+                        {
+                            "code": "out();",
+                            "explain": "输出"
+                        },
+                        {
+                            "code": "write();",
+                            "explain": "输入"
+                        }
+                    ]
+                },
+                {
+                    "submoduleName": "print()",
+                    "codes": [
+                        {
+                            "code": "",
+                            "explain": ""
+                        }
+                    ]
+                },{
+                    "submoduleName": "输入输出模块",
+                    "codes": [
+                        {
+                            "code": "out();",
+                            "explain": "输出"
+                        },
+                        {
+                            "code": "write();",
+                            "explain": "输入"
+                        }
+                    ]
+                },
+                {
+                    "submoduleName": "print()",
+                    "codes": [
+                        {
+                            "code": "",
+                            "explain": ""
+                        }
+                    ]
+                },{
+                    "submoduleName": "输入输出模块",
+                    "codes": [
+                        {
+                            "code": "out();",
+                            "explain": "输出"
+                        },
+                        {
+                            "code": "write();",
+                            "explain": "输入"
+                        }
+                    ]
+                },
+                {
+                    "submoduleName": "print()",
+                    "codes": [
+                        {
+                            "code": "",
+                            "explain": ""
+                        }
+                    ]
+                },{
+                    "submoduleName": "输入输出模块",
+                    "codes": [
+                        {
+                            "code": "out();",
+                            "explain": "输出"
+                        },
+                        {
+                            "code": "write();",
+                            "explain": "输入"
+                        }
+                    ]
+                },
+                {
+                    "submoduleName": "print()",
+                    "codes": [
+                        {
+                            "code": "",
+                            "explain": ""
+                        }
+                    ]
+                },{
+                    "submoduleName": "输入输出模块",
+                    "codes": [
+                        {
+                            "code": "out();",
+                            "explain": "输出"
+                        },
+                        {
+                            "code": "write();",
+                            "explain": "输入"
+                        }
+                    ]
+                },
+                {
+                    "submoduleName": "print()",
+                    "codes": [
+                        {
+                            "code": "",
+                            "explain": ""
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "moduleName": "python基础2",
+            "submodule": [
+                {
+                    "submoduleName": "输入输出模块12",
+                    "codes": [
+                        {
+                            "code": "11111111122222222233333333333444444444445555555555556666666666666777777777777777788888888888888888999999999999999900000000000000000888888888888666666666の",
+                            "explain": "测试"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "moduleName": "123",
+            "submodule": [
+                {
+                    "submoduleName": "输入输出模块",
+                    "codes": [
+                        {
+                            "code": "out();",
+                            "explain": "输出"
+                        },
+                        {
+                            "code": "write();",
+                            "explain": "输入"
+                        }
+                    ]
+                },
+                {
+                    "submoduleName": "print()",
+                    "codes": [
+                        {
+                            "code": "",
+                            "explain": ""
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "moduleName": "123",
+            "submodule": [
+                {
+                    "submoduleName": "输入输出模块",
+                    "codes": [
+                        {
+                            "code": "out();",
+                            "explain": "输出"
+                        },
+                        {
+                            "code": "write();",
+                            "explain": "输入"
+                        }
+                    ]
+                },
+                {
+                    "submoduleName": "print()",
+                    "codes": [
+                        {
+                            "code": "",
+                            "explain": ""
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "moduleName": "123",
+            "submodule": [
+                {
+                    "submoduleName": "输入输出模块",
+                    "codes": [
+                        {
+                            "code": "out();",
+                            "explain": "输出"
+                        },
+                        {
+                            "code": "write();",
+                            "explain": "输入"
+                        }
+                    ]
+                },
+                {
+                    "submoduleName": "print()",
+                    "codes": [
+                        {
+                            "code": "",
+                            "explain": ""
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "moduleName": "123",
+            "submodule": [
+                {
+                    "submoduleName": "输入输出模块",
+                    "codes": [
+                        {
+                            "code": "out();",
+                            "explain": "输出"
+                        },
+                        {
+                            "code": "write();",
+                            "explain": "输入"
+                        }
+                    ]
+                },
+                {
+                    "submoduleName": "print()",
+                    "codes": [
+                        {
+                            "code": "",
+                            "explain": ""
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "moduleName": "123",
+            "submodule": [
+                {
+                    "submoduleName": "输入输出模块",
+                    "codes": [
+                        {
+                            "code": "out();",
+                            "explain": "输出"
+                        },
+                        {
+                            "code": "write();",
+                            "explain": "输入"
+                        }
+                    ]
+                },
+                {
+                    "submoduleName": "print()",
+                    "codes": [
+                        {
+                            "code": "",
+                            "explain": ""
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "moduleName": "123",
+            "submodule": [
+                {
+                    "submoduleName": "输入输出模块",
+                    "codes": [
+                        {
+                            "code": "out();",
+                            "explain": "输出"
+                        },
+                        {
+                            "code": "write();",
+                            "explain": "输入"
+                        }
+                    ]
+                },
+                {
+                    "submoduleName": "print()",
+                    "codes": [
+                        {
+                            "code": "",
+                            "explain": ""
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "moduleName": "123",
+            "submodule": [
+                {
+                    "submoduleName": "输入输出模块",
+                    "codes": [
+                        {
+                            "code": "out();",
+                            "explain": "输出"
+                        },
+                        {
+                            "code": "write();",
+                            "explain": "输入"
+                        }
+                    ]
+                },
+                {
+                    "submoduleName": "print()",
+                    "codes": [
+                        {
+                            "code": "",
+                            "explain": ""
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "moduleName": "123",
+            "submodule": [
+                {
+                    "submoduleName": "输入输出模块",
+                    "codes": [
+                        {
+                            "code": "out();",
+                            "explain": "输出"
+                        },
+                        {
+                            "code": "write();",
+                            "explain": "输入"
+                        }
+                    ]
+                },
+                {
+                    "submoduleName": "print()",
+                    "codes": [
+                        {
+                            "code": "",
+                            "explain": ""
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "moduleName": "123",
+            "submodule": [
+                {
+                    "submoduleName": "输入输出模块",
+                    "codes": [
+                        {
+                            "code": "out();",
+                            "explain": "输出"
+                        },
+                        {
+                            "code": "write();",
+                            "explain": "输入"
+                        }
+                    ]
+                },
+                {
+                    "submoduleName": "print()",
+                    "codes": [
+                        {
+                            "code": "",
+                            "explain": ""
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "moduleName": "123",
+            "submodule": [
+                {
+                    "submoduleName": "输入输出模块",
+                    "codes": [
+                        {
+                            "code": "out();",
+                            "explain": "输出"
+                        },
+                        {
+                            "code": "write();",
+                            "explain": "输入"
+                        }
+                    ]
+                },
+                {
+                    "submoduleName": "print()",
+                    "codes": [
+                        {
+                            "code": "",
+                            "explain": ""
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "moduleName": "123",
+            "submodule": [
+                {
+                    "submoduleName": "输入输出模块",
+                    "codes": [
+                        {
+                            "code": "out();",
+                            "explain": "输出"
+                        },
+                        {
+                            "code": "write();",
+                            "explain": "输入"
+                        }
+                    ]
+                },
+                {
+                    "submoduleName": "print()",
+                    "codes": [
+                        {
+                            "code": "",
+                            "explain": ""
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "moduleName": "123",
+            "submodule": [
+                {
+                    "submoduleName": "输入输出模块",
+                    "codes": [
+                        {
+                            "code": "out();",
+                            "explain": "输出"
+                        },
+                        {
+                            "code": "write();",
+                            "explain": "输入"
+                        }
+                    ]
+                },
+                {
+                    "submoduleName": "print()",
+                    "codes": [
+                        {
+                            "code": "",
+                            "explain": ""
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "moduleName": "123",
+            "submodule": [
+                {
+                    "submoduleName": "输入输出模块",
+                    "codes": [
+                        {
+                            "code": "out();",
+                            "explain": "输出"
+                        },
+                        {
+                            "code": "write();",
+                            "explain": "输入"
+                        }
+                    ]
+                },
+                {
+                    "submoduleName": "print()",
+                    "codes": [
+                        {
+                            "code": "",
+                            "explain": ""
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "moduleName": "123",
+            "submodule": [
+                {
+                    "submoduleName": "输入输出模块",
+                    "codes": [
+                        {
+                            "code": "out();",
+                            "explain": "输出"
+                        },
+                        {
+                            "code": "write();",
+                            "explain": "输入"
+                        }
+                    ]
+                },
+                {
+                    "submoduleName": "print()",
+                    "codes": [
+                        {
+                            "code": "",
+                            "explain": ""
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "moduleName": "123",
+            "submodule": [
+                {
+                    "submoduleName": "输入输出模块",
+                    "codes": [
+                        {
+                            "code": "out();",
+                            "explain": "输出"
+                        },
+                        {
+                            "code": "write();",
+                            "explain": "输入"
+                        }
+                    ]
+                },
+                {
+                    "submoduleName": "print()",
+                    "codes": [
+                        {
+                            "code": "",
+                            "explain": ""
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "moduleName": "123",
+            "submodule": [
+                {
+                    "submoduleName": "输入输出模块",
+                    "codes": [
+                        {
+                            "code": "out();",
+                            "explain": "输出"
+                        },
+                        {
+                            "code": "write();",
+                            "explain": "输入"
+                        }
+                    ]
+                },
+                {
+                    "submoduleName": "print()",
+                    "codes": [
+                        {
+                            "code": "",
+                            "explain": ""
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

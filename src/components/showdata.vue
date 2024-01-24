@@ -55,9 +55,11 @@
         </div>
         <!-- 代码区域 -->
         <div class="codes" :style="setThisShowCodes(moduledata.submoduleName)" :class="(myStyle == 'style1') ? 'textColorStyle1':(myStyle == 'style2'?'textColorStyle2':'textColorStyle3')">
-          <div class="code" :class="(myStyle == 'style1') ? 'codeBg1':(myStyle == 'style2'?'codeBg2':'codeBg3')" @mouseenter="handleMouseEnter" @mouseleave="handleMouseLeave" v-for="(code,index) in moduledata.codes" :key="index">
-            <span class="codeText">qqqqqqqqqqqqqqqqqqq{{ code.code }}</span><br>
-            <span class="codeNote">/*{{ code.explain }}*/</span>
+          <div class="code " :class="(myStyle == 'style1') ? 'codeBg1':(myStyle == 'style2'?'codeBg2':'codeBg3')"  @mouseenter="handleMouseEnter" @mousemove="mousemoveEv" @mouseleave="handleMouseLeave" v-for="(code,index) in moduledata.codes" :key="index">
+            <div :class="isCopy ? '':'textNotCopy'">
+              <span class="codeText" :style="isCopy ? 'cursor:move;':'cursor:default;'">{{ code.code }}</span><br>
+              <span class="codeNote" :style="isCopy ? 'cursor:move;':'cursor:default;'">/*{{ code.explain }}*/</span>
+            </div>
           </div>
          
         </div>
@@ -88,8 +90,8 @@ import axios from 'axios';
        showSubData:'',//显示代码数据
        moduleShowData:"subModule_0",//选中
        leftDivW:91,//左侧div默认宽度
-       rightDivW:315,//右侧div默认宽度
-       centreDistanceLeft:103,//中间距离左侧的位置
+       rightDivW:310,//右侧div默认宽度
+       centreDistanceLeft:0,//中间距离左侧的位置
        subModuleContentW:248,//子模块区域宽度
        atPresentSubMuduleName:'',//当前子模块名称
        mode:'',
@@ -135,6 +137,7 @@ import axios from 'axios';
             let configData = response.data;//配置文件数据
             this.showDataTypes = configData.mode;//显示模式
             this.myStyle = configData.style;//样式
+            this.isCopy=configData.reproducibleOrNot;//是否可复制
             //显示中英文
             if(configData.language == '中文'){
                 this.showDataType = false;
@@ -158,6 +161,22 @@ import axios from 'axios';
               return 'background-color: rgb(255, 255, 255);';
             }
         }
+        // 清新
+        if(this.myStyle == 'style2'){
+           if(this.showModule == moduleSelectName){
+              return 'background-color:  rgb(20, 197, 144);';
+            }else{
+              return 'background-color: rgb(255, 255, 255);';
+            }
+        }
+         // 欢快
+         if(this.myStyle == 'style3'){
+           if(this.showModule == moduleSelectName){
+              return 'background-color:  rgb(50, 143, 206);';
+            }else{
+              return 'background-color: rgb(255, 255, 255);';
+            }
+        }
        
       },
       //选中文字背景
@@ -168,6 +187,22 @@ import axios from 'axios';
             return 'background-color: rgb(20, 197, 144);';
           }else{
             return 'background-color: rgb(15, 30, 26)';
+          }
+        }
+        // 清新
+        if(this.myStyle == 'style2'){
+          if(this.showModule == showNameText){
+            return 'background-color: rgb(20, 197, 144);';
+          }else{
+            return 'background-color: rgb(23, 160, 166)';
+          }
+        }
+          // 欢快
+        if(this.myStyle == 'style3'){
+          if(this.showModule == showNameText){
+            return 'background-color: rgb(50, 143, 206);';
+          }else{
+            return 'background-color: rgb(100, 199, 253)';
           }
         }
         
@@ -182,6 +217,22 @@ import axios from 'axios';
             return 'border-bottom: 10px solid rgb(0, 255, 195);  border-top: 0px;';
           }
         }
+         // 清新
+         if(this.myStyle == 'style2'){
+          if(this.atPresentSubMuduleName == modeName){
+            return 'border-top: 10px solid rgb(0, 255, 195);  border-bottom: 0px;';
+          }else{
+            return 'border-bottom: 10px solid rgb(0, 255, 195);  border-top: 0px;';
+          }
+        }
+         // 欢快
+         if(this.myStyle == 'style3'){
+          if(this.atPresentSubMuduleName == modeName){
+            return 'border-top: 10px solid rgb(0, 143, 219);  border-bottom: 0px;';
+          }else{
+            return 'border-bottom: 10px solid rgb(0, 143, 219);  border-top: 0px;';
+          }
+        }
       },
       // 设置文字是否被选中
       setSelectModuleNameText(showNameText){
@@ -190,7 +241,15 @@ import axios from 'axios';
           if(this.showModule == showNameText){
             return 'color: rgb(250, 250, 250);';
           }else{
-            return 'color:  rgb(121, 124, 123);;';
+            return 'color:  rgb(121, 124, 123);';
+          }
+        }
+         // 欢快
+         if(this.myStyle == 'style2'){
+          if(this.showModule == showNameText){
+            return 'color: rgb(250, 250, 250);';
+          }else{
+            return 'color:  rgb(255, 255, 255);';
           }
         }
         
@@ -209,7 +268,7 @@ import axios from 'axios';
 
       // div右移
       setDivWidthAugment(){
-        if(this.leftDivW<181){
+        if(this.leftDivW<161){
           this.leftDivW =  this.leftDivW+10;
           this.rightDivW =  this.rightDivW-10;
           this.centreDistanceLeft=  this.centreDistanceLeft+10;
@@ -218,7 +277,7 @@ import axios from 'axios';
       },
       // div左移
       setDivWidthDecrease(){
-        if(this.leftDivW>71){
+        if(this.leftDivW>91){
           this.leftDivW =  this.leftDivW-10;
           this.rightDivW =  this.rightDivW+10;
           this.centreDistanceLeft=  this.centreDistanceLeft-10;
@@ -248,13 +307,17 @@ import axios from 'axios';
         // 获取到目标元素并修改样式-入
         const targetElement = event.target;
         targetElement.style.setProperty("user-select", "all");
+        
       },
       handleMouseLeave(event) {
         // 获取到目标元素并恢复原有样式-出
         const targetElement = event.target;
         targetElement.style.removeProperty("user-select");
       },
-      
+      mousemoveEv(event){
+        console.log("进入拖动事件");
+        
+      }
       
       
   }
@@ -263,6 +326,11 @@ import axios from 'axios';
 </script>
 
 <style>
+
+/* CSS */
+::selection {
+    background-color: transparent; /* 这里可以根据需求自行更改背景颜色 */
+}
 #Mouse{
   width: 3px;
   height: 100%;
@@ -329,7 +397,7 @@ span{
   /* height: 90px; */
   background-color:aliceblue;
   position: relative;
-  
+
 }
 .moduleName{
   width: 70%;
@@ -419,6 +487,7 @@ span{
   height: 0;
   border-left: 6px solid transparent; /* 左边透明 */
   border-right: 6px solid transparent; /* 右边透明 */
+  transform: rotate(90deg);
   /* border-bottom: 10px solid red;  */
 }
 /* 打开三角 */
@@ -464,13 +533,13 @@ span{
 }
 .codeText{
   white-space:nowrap;
-  cursor:move;
+  /* cursor:move; */
   position: relative;
   left: 6px;
 }
 .codeNote{
   white-space:nowrap;
-  cursor:move;
+  /* cursor:move; */
   position: relative;
   left: 6px;
   font-size: 14px;
@@ -496,5 +565,8 @@ span{
 .subNames{
   position: relative;
   left: 20px;
+}
+.moduleDiv_content{
+  
 }
 </style>
