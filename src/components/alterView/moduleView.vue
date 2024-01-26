@@ -100,7 +100,7 @@
   width: 19px;
   height: 20px;
   /* background-color: aquamarine; */
-  background-image: url('../../img/mode.svg');
+  background-image: url('../img/mode.svg');
   position: relative;
   top: 5px;
   left: 5px;

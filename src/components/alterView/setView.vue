@@ -36,7 +36,6 @@
               <span class="textNotCopy">{{languageData.ui_text_style}}</span>
             </div>
             <div class="styleContent" :style="getStyleState()">
-              {{ viewStyle }}
               <div class="styleSelect">
                 <!-- 酷黑 -->
                 <input type="radio" id="style1" value="style1" v-model="viewStyle" :disabled="!viewDisabled">
@@ -81,7 +80,9 @@
             </div>
             <div class="aboutContent" :style="getAboutState()">
               <span>{{languageData.ui_text_appName}}：{{ appName }}</span>&nbsp;&nbsp;
-              <span @click="openIcrobotWeb()" class="selectBt"><b>{{languageData.ui_text_learnMore}}</b></span>&nbsp;&nbsp;|&nbsp;&nbsp;
+              <span @click="openIcrobotWeb()" class="selectBt"><b>{{languageData.ui_text_learnMore}}</b></span>
+              <span v-if="configFileData.language == '中文'">&nbsp;&nbsp;|&nbsp;&nbsp;</span>
+              <span v-else><br></span>
               <span @click="saveModuleFile()" class="selectBt"><b>{{languageData.ui_text_downloadTemplate}}</b></span>
             </div>
           </div>
@@ -164,8 +165,9 @@
           return strStyle.charAt(strStyle.length - 1);
         },
         updateClick(){
-          this.$emit("check_for_updates");
+          // this.$emit("check_for_updates");
           // alert("该功能正在开发，敬请期待")
+          window.ipcRenderer.send('internetLink',{version:this.appVersion,isOpen:true});
         },
         getAboutState(){
            // 是否打开关于我们
@@ -245,7 +247,7 @@
   width: 20px;
   height: 20px;
   /* background-color: aquamarine; */
-  background-image: url('../../img/setting.svg');
+  background-image: url('../img/setting.svg');
   position: relative;
   top: 5px;
   left: 5px;

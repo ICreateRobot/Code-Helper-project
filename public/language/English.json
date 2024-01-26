@@ -20,5 +20,6 @@
     "ui_text_learnMore":"Learn More",
     "ui_text_downloadTemplate":"Download Template",
     "ui_text_requestNotResponded":"Request not responded",
-    "ui_text_appIsNotCorrectInstallation":"Check whether the software is installed correctly"
+    "ui_text_appIsNotCorrectInstallation":"Check whether the software is installed correctly",
+    "ui_text_copyright":"ICreate Robot"
 }

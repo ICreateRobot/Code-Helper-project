@@ -121,7 +121,7 @@
   width: 20px;
   height: 20px;
   /* background-color: rgb(0, 0, 0); */
-  background-image: url('../../img/close.svg');
+  background-image: url('../img/close.svg');
   transform: scaleX(-1);
   position: absolute;
   top: 2px;
@@ -158,7 +158,7 @@
 .titleIcon{
   width: 20px;
   height: 19px;
-  background-image: url('../../img/import.svg');
+  background-image: url('../img/import.svg');
   position: relative;
   top: 5px;
   left: 5px;

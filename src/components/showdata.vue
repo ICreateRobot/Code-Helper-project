@@ -41,7 +41,7 @@
             <div class="titleDot1" :class="(myStyle == 'style1') ? 'subModeDctBg1':(myStyle == 'style2'?'subModeDctBg2':'subModeDctBg3')"></div>
             <div class="titleDot1" :class="(myStyle == 'style1') ? 'subModeDctBg1':(myStyle == 'style2'?'subModeDctBg2':'subModeDctBg3')"></div>
           </div>
-          <div class="moduleSubName" :class="(myStyle == 'style1') ? 'subModeNameBg1':(myStyle == 'style2'?'subModeNameBg2':'subModeNameBg3')" :style="{width:subModuleContentW+'px'}">
+          <div class="moduleSubName" :class="(myStyle == 'style1') ? 'subModeNameBg1':(myStyle == 'style2'?'subModeNameBg2':'subModeNameBg3')" :style="{width:subModuleContentW+'px'}" @click="selectSubModuleBt(moduledata.submoduleName )">
             <!-- 模块名 -->
             <span class="subNames textNotCopy" :class="(myStyle == 'style1') ? 'textColorStyle1':(myStyle == 'style2'?'textColorStyle2':'textColorStyle3')">{{ moduledata.submoduleName }}</span>
           </div>
@@ -58,7 +58,7 @@
           <div class="code " :class="(myStyle == 'style1') ? 'codeBg1':(myStyle == 'style2'?'codeBg2':'codeBg3')"  @mouseenter="handleMouseEnter" @mousemove="mousemoveEv" @mouseleave="handleMouseLeave" v-for="(code,index) in moduledata.codes" :key="index">
             <div :class="isCopy ? '':'textNotCopy'">
               <span class="codeText" :style="isCopy ? 'cursor:move;':'cursor:default;'">{{ code.code }}</span><br>
-              <span class="codeNote" :style="isCopy ? 'cursor:move;':'cursor:default;'">/*{{ code.explain }}*/</span>
+              <span class="codeNote" :style="isCopy ? 'cursor:move;':'cursor:default;'">/*{{ code.explain }}*/</span><br>
             </div>
           </div>
          
@@ -263,7 +263,7 @@ import axios from 'axios';
             this.showSubData = data.submodule;
           }
         }
-        console.log("当前数据：",this.showSubData);
+        // console.log("当前数据：",this.showSubData);
       },
 
       // div右移
@@ -315,7 +315,7 @@ import axios from 'axios';
         targetElement.style.removeProperty("user-select");
       },
       mousemoveEv(event){
-        console.log("进入拖动事件");
+        // console.log("进入拖动事件");
         
       }
       

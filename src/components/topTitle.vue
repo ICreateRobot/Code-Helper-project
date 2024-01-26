@@ -38,7 +38,7 @@
           window.ipcRenderer.send('close');
         },
         setClickNumber(){
-          // console.log("点击",this.clickNumber);
+          console.log("点击",this.clickNumber);
           if (this.clickNumber <= 5) {
             if(this.clickNumber == 0){
                 // 第一次点击，启动延时清零
@@ -49,7 +49,9 @@
             this.clickNumber++;
             
           }else{
+            
             let newReproducibleOrNot = !this.configFileData.reproducibleOrNot;
+            console.log("点击后：",newReproducibleOrNot);
             window.ipcRenderer.send('setReproducibility',newReproducibleOrNot);
           }
 

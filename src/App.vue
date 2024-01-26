@@ -39,7 +39,7 @@
   <div class="bottomContent" :class="(configFileData.style == 'style1') ? 'backgroundColor1':(configFileData.style == 'style2'?'backgroundColor2':'backgroundColor3')">
    <!-- 版权 -->
     <span class="textSize" :class="(configFileData.style == 'style1') ? 'textColorStyle1':(configFileData.style == 'style2'?'textColorStyle2':'textColorStyle3')">
-      © ICreate Robot
+      © {{language.ui_text_copyright}}
     </span>
   </div>
  </template>
@@ -149,12 +149,16 @@
           
           // service.post('http://119.3.123.115:8080/appVersionManage/getAppState',{appName:"'测试软件'",AppVersion:"'1.0.0'"}) // 发起GET请求到"/api/users"路由
              //无互联网连接
-          window.ipcRenderer.send('internetLink',this.version);
+          window.ipcRenderer.send('internetLink',{version:this.version,isOpen:false});
         } else {
           //无互联网连接
           window.ipcRenderer.send('noInternetLink');
         }
-      }
+      },
+      set_display_mode(){
+        // this.configFileData
+      },
+
 
        
      }

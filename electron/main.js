@@ -39,7 +39,11 @@ function createWindow() {
   // app.setAppUserModelId("明治") //在主进程的app这里修改
   app.setName("名字");
   // 打开开发工具
-  mainWindow.webContents.openDevTools()
+  // mainWindow.webContents.openDevTools()
+
+  
+  // 设置初始显示模式
+  set_display_mode(mainWindow);
 
   ipcMain.on('close', e => {
     app.quit();
@@ -109,8 +113,7 @@ function createWindow() {
 // 和创建浏览器窗口的时候调用
 // 部分 API 在 ready 事件触发后才能使用。
 app.whenReady().then(() => {
-  createWindow()
-
+  createWindow();
   app.on('activate', function () {
     // 通常在 macOS 上，当点击 dock 中的应用程序图标时，如果没有其他
     // 打开的窗口，那么程序会重新创建一个窗口。
@@ -146,31 +149,72 @@ function importDeployFile(mainWindow) {
       let fileUrl = `${path.join(__dirname, '../dist/config/' + fileName + '.json')}`;//配置文件位置      
       try {
         const fileData = fs.readFileSync(newFileUrl);//获取用户文件数据
-        const deployFileState = fs.createWriteStream(fileUrl);//创建写入流
-        deployFileState.write(data_processing.dataAnalysis(fileData));//写入数据
-        deployFileState.end();//写入完成标记
+        let importData =data_processing.dataAnalysis(fileData);//初始化数据
+        if(importData != false){
+          const deployFileState = fs.createWriteStream(fileUrl);//创建写入流
+          deployFileState.write(importData);//写入数据
+          deployFileState.end();//写入完成标记
+          //标记写入完成    监听写入完成情况前必须标记写入完成
+          deployFileState.on('finish', () => {
+            dialog.showMessageBox({
+              type: 'info',
+              title: '提示',
+              defaultId: 0,
+              message: "导入成功",
+              buttons: ['确定']
+            }).then(result => {
+              let response = result.response;//取消为0.确定为1
+              if (response) {
+                // console.log("初始化完成")
+              } else {
+                setDefaultModel(fileName,mainWindow);//设置默认模式
+                mainWindow.webContents.reload();//刷新页面
+              }
+            }).catch(err => {
+              console.log(err);
+            });
+          })
 
-        //标记写入完成    监听写入完成情况前必须标记写入完成
-        deployFileState.on('finish', () => {
+        }else{
+          // 数据导入失败
           dialog.showMessageBox({
             type: 'info',
             title: '提示',
             defaultId: 0,
-            message: "导入完成",
+            message: "导入失败，导入格式不正确",
             buttons: ['确定']
           }).then(result => {
             let response = result.response;//取消为0.确定为1
             if (response) {
               // console.log("初始化完成")
             } else {
-              mainWindow.webContents.reload();//刷新页面
+              // mainWindow.webContents.reload();//刷新页面
             }
           }).catch(err => {
             console.log(err);
           });
-        })
+          
+        }
+        
       } catch (err) {
         console.error(`无法读取文件：${err}`);
+         // 数据导入失败
+         dialog.showMessageBox({
+          type: 'info',
+          title: '提示',
+          defaultId: 0,
+          message: "导入失败:"+err,
+          buttons: ['确定']
+        }).then(result => {
+          let response = result.response;//取消为0.确定为1
+          if (response) {
+            // console.log("初始化完成")
+          } else {
+            // mainWindow.webContents.reload();//刷新页面
+          }
+        }).catch(err => {
+          console.log(err);
+        });
       }
     } else {
       console.log("取消了选择");
@@ -178,6 +222,7 @@ function importDeployFile(mainWindow) {
   }).catch((err) => {
     console.error("发生错误：", err);
   });
+
 
 }
 
@@ -189,7 +234,7 @@ function getAppVersion() {
     files = fs.readFileSync(url, "utf8");
     const jsonData = JSON.parse(files);
     versions.push(jsonData.version);
-    versions.push(jsonData.build.productName);
+    versions.push(jsonData.productName);
     // console.log("版本号",versions)
 
 
@@ -204,12 +249,18 @@ function getAppVersion() {
 
 //打开外部网站
 function getNewwindows() {
-  shell.openExternal("https://www.icrobot.com/www/cn/index.html#/index")
+  console.log("open web");
+  shell.openExternal("https://www.icrobot.com/www/cn/index.html#/index").then(()=>{
+    console.log("open-yes")
+  }).catch(()=>{
+    console.log("open-no")
+  });
 }
 
 // 保存模板
 function saveModuleFile() {
   let configFileUrl = `${path.join(__dirname, '../dist/configModule.xml')}`
+  console.log("用户选择的文件保存路径1：", configFileUrl)
   dialog.showSaveDialog({
     filters: [
       { name: 'Config Files', extensions: ['xml'] }, // 可选择的文本文件格式
@@ -218,11 +269,14 @@ function saveModuleFile() {
     title: '保存模板',
     defaultPath: '~/configModuleFile'
   }).then(result => {
-    if (!result.canceled && result.filePaths[0]) {
+    console.log("path", result)
+    if (!result.canceled) {
       // result.filePath 为用户选择的文件保存路径
       let saveFileUrl = result.filePath;
-      // console.log("用户选择的文件保存路径：", saveFileUrl)
+      
+      console.log("用户选择的文件保存路径2：", saveFileUrl)
       const fileData = fs.readFileSync(configFileUrl);//获取配置文件数据
+      console.log("data:", fileData)
       const deployFileState = fs.createWriteStream(saveFileUrl);//创建写入流
       deployFileState.write(fileData);//写入数据
       deployFileState.end();//写入完成标记
@@ -280,53 +334,100 @@ function replaceModeConfigFile(fileName, mainWindow) {
       let newFileUrl = result.filePaths[0];//资源管理器打开的文件
       let fileName = newFileUrl.split("\\").pop().split('.')[0];//导入文件名
       // http://127.0.0.1:5173/assets/config_test.xml
-      let fileUrl = `${path.join(__dirname, '../dist/config/' + fileName + '.json')}`;//配置文件位置      
+      let fileUrl = `${path.join(__dirname, '../dist/config/' + fileName + '.json')}`;//配置文件位置   
+      let fileData;//获取用户文件数据
+      let importData;//导入的数据
+      let isLose = false;//是否失败
       try {
-        fs.unlink(oldConfigfileUrl, err => {
-          if (err == null) {
-            console.log("删除成功");
-            // importDeployFile(mainWindow);
-            const fileData = fs.readFileSync(newFileUrl);//获取用户文件数据
-            const deployFileState = fs.createWriteStream(fileUrl);//创建写入流
-            deployFileState.write(data_processing.dataAnalysis(fileData));//写入数据
-            deployFileState.end();//写入完成标记
-            //标记写入完成    监听写入完成情况前必须标记写入完成
-            deployFileState.on('finish', () => {
+        fileData = fs.readFileSync(newFileUrl);//获取用户文件数据
+        importData = data_processing.dataAnalysis(fileData)
+      } catch (error) {
+        isLose = true;
+      }
+      if(isLose){
+        // 数据导入失败
+        dialog.showMessageBox({
+          type: 'info',
+          title: '提示',
+          defaultId: 0,
+          message: "导入失败，文件格式不正确",
+          buttons: ['确定']
+        }).then(result => {
+          let response = result.response;//取消为0.确定为1
+          if (response) {
+            // console.log("初始化完成")
+          } else {
+            // mainWindow.webContents.reload();//刷新页面
+          }
+        }).catch(err => {
+          console.log(err);
+        });
+        
+      }else{
+        try {
+          fs.unlink(oldConfigfileUrl, err => {
+            if (err == null) {
+              console.log("删除成功");
+              // importDeployFile(mainWindow);
+              const deployFileState = fs.createWriteStream(fileUrl);//创建写入流
+              deployFileState.write(importData);//写入数据
+              deployFileState.end();//写入完成标记
+              //标记写入完成    监听写入完成情况前必须标记写入完成
+              deployFileState.on('finish', () => {
+                dialog.showMessageBox({
+                  type: 'info',
+                  title: '提示',
+                  defaultId: 0,
+                  message: "导入完成",
+                  buttons: ['确定']
+                }).then(result => {
+                  let response = result.response;//取消为0.确定为1
+                  if (response) {
+                    // console.log("初始化完成")
+                  } else {
+                    setDefaultModel(fileName,mainWindow);//设置默认模式
+                    mainWindow.webContents.reload();//刷新页面
+                  }
+                }).catch(err => {
+                  console.log(err);
+                });
+              })
+
+            } else {
+              console.log("删除失败")
               dialog.showMessageBox({
-                type: 'info',
-                title: '提示',
+                type: 'error',
+                title: '错误',
                 defaultId: 0,
-                message: "导入完成",
+                message: "无法替换文件",
                 buttons: ['确定']
               }).then(result => {
-                let response = result.response;//取消为0.确定为1
-                if (response) {
-                  // console.log("初始化完成")
-                } else {
-                  mainWindow.webContents.reload();//刷新页面
-                }
+                console.log("报错弹窗");
               }).catch(err => {
                 console.log(err);
               });
-            })
-
-          } else {
-            console.log("删除失败")
-            dialog.showMessageBox({
-              type: 'error',
-              title: '错误',
-              defaultId: 0,
-              message: "无法替换文件",
-              buttons: ['确定']
-            }).then(result => {
-              console.log("报错弹窗");
-            }).catch(err => {
-              console.log(err);
-            });
-          }
-        });
-      } catch (err) {
-        console.error(`无法读取文件：${err}`);
+            }
+          });
+        } catch (err) {
+          console.error(`无法读取文件：${err}`);
+          // 数据导入失败
+          dialog.showMessageBox({
+            type: 'info',
+            title: '提示',
+            defaultId: 0,
+            message: "导入失败:"+err,
+            buttons: ['确定']
+          }).then(result => {
+            let response = result.response;//取消为0.确定为1
+            if (response) {
+              // console.log("初始化完成")
+            } else {
+              // mainWindow.webContents.reload();//刷新页面
+            }
+          }).catch(err => {
+            console.log(err);
+          });
+        }
       }
     } else {
       console.log("取消了选择");
@@ -334,6 +435,7 @@ function replaceModeConfigFile(fileName, mainWindow) {
   }).catch((err) => {
     console.error("发生错误：", err);
   });
+  
 }
 //设置默认模式
 function setDefaultModel(mode, mainWindow) {
@@ -376,9 +478,11 @@ function noInternetLink() {
 
 
 // 互联网连接-请求版本
-function internetLink(version) {
+function internetLink(versions) {
   // 要发送的数据对象
-  const sendData = { appName: "'CodeHelper'", AppVersion: "'" + version + "'" };
+  // console.log("sss",versions);
+  // return ;
+  const sendData = { appName: "'CodeHelper'", AppVersion: "'" + versions.version + "'" };
   const url = 'http://119.3.123.115:8080/appVersionManage/getAppState'; // 修改为目标API的URL
 
   // 将参数转换成查询字符串格式
@@ -432,6 +536,9 @@ function internetLink(version) {
           let state = compareVersions(receiveData.data.appVersion, receiveData.data.newAppVersion);
           if (state == 0) {
             //当前是最新版本
+            if(!versions.isOpen){
+              return ;
+            }
             dialog.showMessageBox({
               type: 'info',
               title: '提示',
@@ -557,7 +664,7 @@ function setLanguageAndStyle(data, mainWindow) {
 
 //设置代码是否可复制
 function setReproducibility(data, mainWindow) {
-
+  console.log("点击data：",data);
   let url = `${path.join(__dirname, '../dist/configData.json')}`
   let reproducibility = data;
   console.log(reproducibility);
@@ -603,4 +710,32 @@ function getTodayTime() {
   }
   let time = day.getFullYear() + "年" + (day.getMonth() + 1) + "月" + day.getDate() + "日 " + day.getHours() + ":" + minutes + ":" + seconds;
   return time
+}
+
+//设置初始模式
+function set_display_mode(mainWindow){
+  console.log("infunction");
+  let modeName = readConfigModeName();
+  let configs = getModes();
+  console.log('modeName',modeName);
+  console.log('configs',configs);
+  for(let name in configs){
+    console.log('['+modeName+'-'+configs[name]+':'+configs[name] == modeName+']');
+    if(configs[name] == modeName){
+      return;
+    }
+  }
+  setDefaultModel(configs[0],mainWindow);
+}
+function readConfigModeName(){
+  let configName;
+  let url = `${path.join(__dirname, '../dist/configData.json')}`
+  try {
+    files = fs.readFileSync(url, "utf8");
+    const jsonData = JSON.parse(files);
+    configName = jsonData.mode;
+  } catch (error) {
+    console.log("报错：", error)
+  }
+  return configName;
 }
