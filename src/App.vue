@@ -38,7 +38,7 @@
   </div>
   <div class="bottomContent" :class="(configFileData.style == 'style1') ? 'backgroundColor1':(configFileData.style == 'style2'?'backgroundColor2':'backgroundColor3')">
    <!-- 版权 -->
-    <span class="textSize" :class="(configFileData.style == 'style1') ? 'textColorStyle1':(configFileData.style == 'style2'?'textColorStyle2':'textColorStyle3')">
+    <span class="textSize btSuspensionEvent textNotCopy" :class="(configFileData.style == 'style1') ? 'textColorStyle1':(configFileData.style == 'style2'?'textColorStyle2':'textColorStyle3')" @click="openIcrobotWeb">
       © {{language.ui_text_copyright}}
     </span>
   </div>
@@ -155,8 +155,8 @@
           window.ipcRenderer.send('noInternetLink');
         }
       },
-      set_display_mode(){
-        // this.configFileData
+      openIcrobotWeb(){
+        window.ipcRenderer.send('openNewWindows');
       },
 
 

@@ -16,9 +16,9 @@ function createWindow() {
   const mainWindow = new BrowserWindow({
     width: 450,
     height: 850,
-    resizable: false,//禁止改变窗口大小
+    resizable: true,//禁止改变窗口大小
     frame: false,
-    icon: path.join(__dirname, '../dist/img/icon.ico'),
+    icon: path.join(__dirname, '../dist/img/code2.ico'),
     webPreferences: {
       nodeIntegration: process.env.ELECTRON_NODE_INTEGRATION,
       contextIsolation: !process.env.ELECTRON_NODE_INTEGRATION,
@@ -146,7 +146,21 @@ function importDeployFile(mainWindow) {
       let newFileUrl = result.filePaths[0];//资源管理器打开的文件
       let fileName = newFileUrl.split("\\").pop().split('.')[0];//导入文件名
       // http://127.0.0.1:5173/assets/config_test.xml
-      let fileUrl = `${path.join(__dirname, '../dist/config/' + fileName + '.json')}`;//配置文件位置      
+      let fileUrl = `${path.join(__dirname, '../dist/config/' + fileName + '.json')}`;//配置文件位置    
+      
+      let newFileUrlArrs = newFileUrl.split('.')
+      if(newFileUrlArrs[newFileUrlArrs.length - 1] != 'xml'){
+         // 数据导入失败
+         dialog.showMessageBox({
+          type: 'info',
+          title: '提示',
+          defaultId: 0,
+          message: "导入失败，文件扩展名应为“xml”格式",
+          buttons: ['确定']
+        }).then(result => {
+        }).catch(err => {console.log(err);});
+        return;
+      }
       try {
         const fileData = fs.readFileSync(newFileUrl);//获取用户文件数据
         let importData =data_processing.dataAnalysis(fileData);//初始化数据
@@ -259,11 +273,11 @@ function getNewwindows() {
 
 // 保存模板
 function saveModuleFile() {
-  let configFileUrl = `${path.join(__dirname, '../dist/configModule.xml')}`
+  let configFileUrl = `${path.join(__dirname, '../dist/configModule.xlsm')}`
   console.log("用户选择的文件保存路径1：", configFileUrl)
   dialog.showSaveDialog({
     filters: [
-      { name: 'Config Files', extensions: ['xml'] }, // 可选择的文本文件格式
+      { name: 'Config Files', extensions: ['xlsm'] }, // 可选择的文本文件格式
       { name: 'All Files', extensions: ['*'] } // 所有文件格式
     ],
     title: '保存模板',
@@ -333,6 +347,19 @@ function replaceModeConfigFile(fileName, mainWindow) {
     if (!result.canceled && result.filePaths[0]) {
       let newFileUrl = result.filePaths[0];//资源管理器打开的文件
       let fileName = newFileUrl.split("\\").pop().split('.')[0];//导入文件名
+      let newFileUrlArrs = newFileUrl.split('.')
+      if(newFileUrlArrs[newFileUrlArrs.length - 1] != 'xml'){
+         // 数据导入失败
+         dialog.showMessageBox({
+          type: 'info',
+          title: '提示',
+          defaultId: 0,
+          message: "导入失败，文件扩展名应为“xml”格式",
+          buttons: ['确定']
+        }).then(result => {
+        }).catch(err => {console.log(err);});
+        return;
+      }
       // http://127.0.0.1:5173/assets/config_test.xml
       let fileUrl = `${path.join(__dirname, '../dist/config/' + fileName + '.json')}`;//配置文件位置   
       let fileData;//获取用户文件数据

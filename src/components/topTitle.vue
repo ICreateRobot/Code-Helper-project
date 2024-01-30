@@ -83,11 +83,13 @@
     width: 30px;
     height: 32px;
     /* background-color: beige; */
-    background-image: url('../img/icon.svg');
-
+    background-image: url('../img/code2.png');
     position: absolute;
     left: 10px;
     top: 5px;
+    background-repeat: no-repeat; /* 防止图片重复 */
+   background-position: center; /* 将图片居中对齐 */
+   background-size: cover; /* 确保图片完全显示且不会被拉伸或压缩 */
     -webkit-app-region: no-drag;
 }
 .appName{

@@ -55,10 +55,13 @@
         </div>
         <!-- 代码区域 -->
         <div class="codes" :style="setThisShowCodes(moduledata.submoduleName)" :class="(myStyle == 'style1') ? 'textColorStyle1':(myStyle == 'style2'?'textColorStyle2':'textColorStyle3')">
-          <div class="code " :class="(myStyle == 'style1') ? 'codeBg1':(myStyle == 'style2'?'codeBg2':'codeBg3')"  @mouseenter="handleMouseEnter" @mousemove="mousemoveEv" @mouseleave="handleMouseLeave" v-for="(code,index) in moduledata.codes" :key="index">
-            <div :class="isCopy ? '':'textNotCopy'">
-              <span class="codeText" :style="isCopy ? 'cursor:move;':'cursor:default;'">{{ code.code }}</span><br>
-              <span class="codeNote" :style="isCopy ? 'cursor:move;':'cursor:default;'">/*{{ code.explain }}*/</span><br>
+          <div class="code " :class="(myStyle == 'style1') ? 'codeBg1':(myStyle == 'style2'?'codeBg2':'codeBg3')"  v-for="(code,index) in moduledata.codes" :key="index">
+            <div class="textNotCopy" :class="isCopy ? '':'textNotCopy'" @mouseenter="handleMouseEnter" @mousemove="mousemoveEv" @mouseleave="handleMouseLeave">
+              <span :style="isCopy ? 'cursor:move;':'cursor:default;'" >
+                <span class="codeText" :class="isCopy ? '':'textNotCopy'">{{ code.code }}</span>
+                <span :class="isCopy ? '':'textNotCopy'" style=" opacity:0;">{{ code.explain }}</span>
+              </span><br>
+              <span class="textNotCopy codeNote">{{ code.explain }}</span><br>
             </div>
           </div>
          
@@ -113,13 +116,19 @@ import axios from 'axios';
               this.showZhDataOB = response.data["chinese"]
               this.showEnDataOB = response.data["English"]
               console.log("显示模式：",this.showDataType);
+              
               if(this.showDataType){
                 // 显示英文
-                this.showDataOB = this.showEnDataOB;
+                console.log("英文数据",this.showEnDataOB);
+                if(this.showEnDataOB.length != 0){
+                  this.showDataOB = this.showEnDataOB;
+                }else{
+                  this.showDataOB = this.showZhDataOB;//默认显示模式
+                }
               }else{
                 this.showDataOB = this.showZhDataOB;
               }
-              // console.log("数据：",this.showDataOB)
+              console.log("数据：",this.showDataOB)
               if(this.showDataOB != null){
                 this.showModule = this.showDataOB[0].moduleName;
                 this.showSubData = this.showDataOB[0].submodule;
@@ -543,6 +552,7 @@ span{
   position: relative;
   left: 6px;
   font-size: 14px;
+  color: #016469;
 }
 
 .titleDots{

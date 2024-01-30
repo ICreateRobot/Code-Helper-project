@@ -1,6 +1,6 @@
 {
   "name": "code-helper",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "productName": "Code Helper",
   "private": true,
   "scripts": {
@@ -18,7 +18,7 @@
     "productName": "Code Helper",
     "asar": false,
     "copyright": "Copyright © 2023 ICreate",
-    "icon":"dist/img/icon.ico",
+    "icon":"dist/img/code2.ico",
     "mac": {
       "category": "public.app-category.utilities"
     },
