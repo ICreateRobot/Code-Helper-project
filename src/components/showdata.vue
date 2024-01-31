@@ -322,6 +322,10 @@ import axios from 'axios';
         targetElement.style.setProperty("user-select", "all");        
       },
       copyCodeText(code,text){
+        // console.log(this.isCopy);
+        if(!this.isCopy){
+          return;
+        }
         let textData = code+text;      
           try {
             const text = navigator.clipboard.readText();
