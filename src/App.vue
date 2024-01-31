@@ -356,7 +356,7 @@
         .codeBg1::-webkit-scrollbar-thumb {
           border-radius: 6px; /* 滑块边界圆角 */
           background-color: rgb(20, 197, 144); /* 滑块颜色 */
-          border: 1px solid #ffffff; 
+          border: 1px solid  rgb(59, 221, 172); 
           width: 10px;
           background-clip:content-box;
         }

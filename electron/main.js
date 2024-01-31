@@ -15,7 +15,7 @@ function createWindow() {
   // 创建浏览器窗口
   const mainWindow = new BrowserWindow({
     width: 450,
-    height: 850,
+    height: 800,
     minWidth:450,
     minHeight:290,
     resizable: true,//禁止改变窗口大小

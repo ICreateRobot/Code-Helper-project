@@ -15,9 +15,8 @@
     </div>
     <div class="appExit btSuspensionEvent">
       <div class="windowsMini" @click="setWindowsMini">—</div>
-      <div class="windowsMax" @click="setWindowsMax">
-      </div>
-       <div class="exitBt" @click="exitApp"></div>
+      <div class="windowsMax" :class="windowsMaxState? 'windowsMaxBg1_1':'windowsMaxBg2_1'" @click="setWindowsMax"></div>
+      <div class="exitBt" @click="exitApp"></div>
     </div>
 </template>
 <script>
@@ -33,7 +32,8 @@
         return{
          context:"头部导航",
          style:"style1",
-         clickNumber:0//点击次数
+         clickNumber:0,//点击次数
+         windowsMaxState:false//窗口是否全屏
         }
       },
       methods:{
@@ -44,6 +44,7 @@
           window.ipcRenderer.send("windowsMini");
         },
         setWindowsMax(){
+          this.windowsMaxState = !this.windowsMaxState;
           window.ipcRenderer.send("windowsMax");
         },
         setClickNumber(){
@@ -146,13 +147,19 @@
   height: 20px;
   /* background-color: red; */
   position: relative;
-  background-image: url('../img/recoverBt.png');
+  background-repeat: no-repeat; /* 防止图片重复 */
+   background-position: center; /* 将图片居中对齐 */
+   background-size: cover; /* 确保图片完全显示且不会被拉伸或压缩 */
   right: 5px;
   top: 6px;
   float: left;
   /* background-color: white; */
 }
-
-
+.windowsMaxBg1_1{
+  background-image: url('../img/recoverBt.png');
+}
+.windowsMaxBg2_1{
+  background-image: url('../img/maxBt.png');
+}
 </style>
   

@@ -56,7 +56,7 @@
         <!-- 代码区域 -->
         <div class="codes" :style="setThisShowCodes(moduledata.submoduleName)" :class="(myStyle == 'style1') ? 'textColorStyle1':(myStyle == 'style2'?'textColorStyle2':'textColorStyle3')">
           <div class="code " :class="(myStyle == 'style1') ? 'codeBg1':(myStyle == 'style2'?'codeBg2':'codeBg3')"  v-for="(code,index) in moduledata.codes" :key="index">
-            <div class="textNotCopy" :class="isCopy ? '':'textNotCopy'" @mouseenter="handleMouseEnter" @mousemove="mousemoveEv" @mouseleave="handleMouseLeave">
+            <div class="textNotCopy" :class="isCopy ? '':'textNotCopy'" @click="copyCodeText(code.code,code.explain)" @mouseenter="handleMouseEnter" @mousemove="mousemoveEv" @mouseleave="handleMouseLeave">
               <span :style="isCopy ? 'cursor:move;':'cursor:default;'" >
                 <span class="codeText" :class="isCopy ? '':'textNotCopy'">{{ code.code }}</span>
                 <span :class="isCopy ? '':'textNotCopy'" style=" opacity:0;">{{ code.explain }}</span>
@@ -319,8 +319,30 @@ import axios from 'axios';
       handleMouseEnter(event) {
         // 获取到目标元素并修改样式-入
         const targetElement = event.target;
-        targetElement.style.setProperty("user-select", "all");
-        
+        targetElement.style.setProperty("user-select", "all");        
+      },
+      copyCodeText(code,text){
+        let textData = code+text;      
+          try {
+            const text = navigator.clipboard.readText();
+            text.then((result) =>{
+              // console.log("剪切板",result); // 输出剪贴板中的文本内容
+
+              if(result != textData){
+                navigator.clipboard.writeText(textData)
+                .then(() => {
+                  console.log("复制成功"); // 复制成功后更新状态
+                })
+                .catch((error) => {
+                  console.log(`复制失败：${error}`);
+                });
+              }
+            })
+            
+        } catch (error) {
+            console.error('无法从剪贴板中获取内容', error);
+        }
+
       },
       handleMouseLeave(event) {
         // 获取到目标元素并恢复原有样式-出
