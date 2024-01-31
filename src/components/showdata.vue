@@ -1,6 +1,6 @@
 <!-- 信息展示页面 -->
 <template>
-  <div class="selectModule" :class="(myStyle == 'style1') ? 'dataBackgroundColor1':(myStyle == 'style2'?'dataBackgroundColor2':'dataBackgroundColor3')"  :style="{width: leftDivW+'px'}">
+  <div class="selectModule" :class="(myStyle == 'style1') ? 'dataBackgroundColor1':(myStyle == 'style2'?'dataBackgroundColor2':'dataBackgroundColor3')"  :style="{width: leftDivW+'%'}">
     <!-- 模块 -->
     <div class="moduleDiv">
       <div class="moduleDiv_content" v-for="(moduledata,index) in showDataOB" :key="index">
@@ -31,7 +31,7 @@
   </div>
 
 
-  <dev class="selectSubModule" :class="(myStyle == 'style1') ? 'dataBackgroundColor1':(myStyle == 'style2'?'dataBackgroundColor2':'dataBackgroundColor3')" :style="{width: rightDivW+'px'}">
+  <dev class="selectSubModule" :class="(myStyle == 'style1') ? 'dataBackgroundColor1':(myStyle == 'style2'?'dataBackgroundColor2':'dataBackgroundColor3')" :style="{width: rightDivW+'%',left:codesLeftNumber+'%'}">
    <!-- 子模块 -->
     <div class="moduleDiv_subContent" v-for="(moduledata,index) in showSubData" :key="index">
         <!-- 子模块 -->
@@ -41,7 +41,7 @@
             <div class="titleDot1" :class="(myStyle == 'style1') ? 'subModeDctBg1':(myStyle == 'style2'?'subModeDctBg2':'subModeDctBg3')"></div>
             <div class="titleDot1" :class="(myStyle == 'style1') ? 'subModeDctBg1':(myStyle == 'style2'?'subModeDctBg2':'subModeDctBg3')"></div>
           </div>
-          <div class="moduleSubName" :class="(myStyle == 'style1') ? 'subModeNameBg1':(myStyle == 'style2'?'subModeNameBg2':'subModeNameBg3')" :style="{width:subModuleContentW+'px'}" @click="selectSubModuleBt(moduledata.submoduleName )">
+          <div class="moduleSubName" :class="(myStyle == 'style1') ? 'subModeNameBg1':(myStyle == 'style2'?'subModeNameBg2':'subModeNameBg3')" :style="{width:subModuleContentW+'%'}" @click="selectSubModuleBt(moduledata.submoduleName )">
             <!-- 模块名 -->
             <span class="subNames textNotCopy" :class="(myStyle == 'style1') ? 'textColorStyle1':(myStyle == 'style2'?'textColorStyle2':'textColorStyle3')">{{ moduledata.submoduleName }}</span>
           </div>
@@ -92,10 +92,11 @@ import axios from 'axios';
        showModule:'基础',//显示模块
        showSubData:'',//显示代码数据
        moduleShowData:"subModule_0",//选中
-       leftDivW:91,//左侧div默认宽度
-       rightDivW:310,//右侧div默认宽度
+       leftDivW:20,//左侧div默认宽度
+       rightDivW:68,//右侧div默认宽度
+       codesLeftNumber:25,
        centreDistanceLeft:0,//中间距离左侧的位置
-       subModuleContentW:248,//子模块区域宽度
+       subModuleContentW:68,//子模块区域宽度
        atPresentSubMuduleName:'',//当前子模块名称
        mode:'',
        myStyle:"",//样式
@@ -277,20 +278,23 @@ import axios from 'axios';
 
       // div右移
       setDivWidthAugment(){
-        if(this.leftDivW<161){
-          this.leftDivW =  this.leftDivW+10;
-          this.rightDivW =  this.rightDivW-10;
+        console.log("右移：",this.leftDivW);
+        if(this.leftDivW<35){
+          this.leftDivW =  this.leftDivW+1;
+          this.rightDivW =  this.rightDivW-1;
           this.centreDistanceLeft=  this.centreDistanceLeft+10;
-          this.subModuleContentW = this.subModuleContentW -10;
+          this.codesLeftNumber = this.codesLeftNumber+1;
+          this.subModuleContentW = this.subModuleContentW -1;
         }
       },
       // div左移
       setDivWidthDecrease(){
-        if(this.leftDivW>91){
-          this.leftDivW =  this.leftDivW-10;
-          this.rightDivW =  this.rightDivW+10;
+        if(this.leftDivW>20){
+          this.leftDivW =  this.leftDivW-1;
+          this.rightDivW =  this.rightDivW+1;
           this.centreDistanceLeft=  this.centreDistanceLeft-10;
-          this.subModuleContentW = this.subModuleContentW +10;
+          this.codesLeftNumber = this.codesLeftNumber-1;
+          this.subModuleContentW = this.subModuleContentW +1;
         }
       },
       // 选择子模块
@@ -384,9 +388,9 @@ import axios from 'axios';
   /* 选择子模块 */
   /* background-color: rgb(62, 134, 198); */
   position: absolute;
-  width: 315px;
+  /* width: 315px; */
   height: 650px;
-  right: 10px;
+  left: 25%;
   top: 6px;
    /* 溢出滚动 */
    overflow: auto;

@@ -6,7 +6,7 @@
      <topContent :appName="appName" :languageData="language" :configFileData="configFileData"/>
   </div>
  
-  <div class="mainContent">
+  <div class="mainContent" :class="(configFileData.style == 'style1') ? 'backgroundColor1':(configFileData.style == 'style2'?'backgroundColor2':'backgroundColor3')">
      <!-- 主要内容 -->
      <div class="contentMenu" :class="(configFileData.style == 'style1') ? 'backgroundColor1':(configFileData.style == 'style2'?'backgroundColor2':'backgroundColor3')">
        <!-- 按键 -->
@@ -66,8 +66,6 @@
    mounted() {
     this.readConfigData();
     this.getAppVersion();
-    
-    
    },    
      data(){
        return{
@@ -183,21 +181,28 @@
  .mainContent{
    /* 主要内容 */
    width: 100%;
-   height: 721px;
-   background-color: blue;
+   height: 100%;
+   /* background-color: blue; */
    position: fixed;
    top: 50px;
    left: 0px;
+   overflow: auto;
  }
  .contentMenu{
    width: 100%;
    height: 45px;
+   position: fixed;
+   top: 50px;
+   z-index: 1;
    /* background-color: rgb(2, 21, 15); */
    /* background-color: aqua; */
  }
  .contentData{
    width: 100%;
    height: 676px;
+   position: relative;
+   margin-top: 45px;
+   /* height: 100%; */
    /* background-color: rgb(249, 249, 42); */
    /* padding: 10px; */
    /* 溢出滚动 */
@@ -219,16 +224,6 @@
    left: 0px;
  }
  
- /* 滚动条 */
- 
-
- /* 滑块样式 */
- 
-
- 
-
- 
-
  /* 文字不可选中 */
  .textNotCopy{
   -moz-user-select: none; /* Firefox */
@@ -238,7 +233,7 @@
 /* 弹窗遮罩 */
 .alterShade{
   width: 100%;
-  height: 94%;
+  height: 100%;
   /* background-color: rgba(255, 255, 255, 0.2); */
   position: absolute;
   top: 45px;
@@ -400,6 +395,22 @@
           background-clip:content-box;
         }
         .dataBackgroundColor1::-webkit-scrollbar-track-piece { 
+          border-radius: 8px; /* 轨道边界圆角 */
+          border: 2px solid rgb(20, 197, 144);
+        }
+        .mainContent::-webkit-scrollbar {
+          width: 0px;
+          height: 0px;
+          background-color: rgb(2, 21, 15);
+        }
+        .mainContent::-webkit-scrollbar-thumb {
+          border-radius: 6px; /* 滑块边界圆角 */
+          background-color: rgb(20, 197, 144); /* 滑块颜色 */
+          border: 1px solid #ffffff; 
+          width: 10px;
+          background-clip:content-box;
+        }
+        .mainContent::-webkit-scrollbar-track-piece { 
           border-radius: 8px; /* 轨道边界圆角 */
           border: 2px solid rgb(20, 197, 144);
         }

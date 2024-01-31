@@ -16,6 +16,8 @@ function createWindow() {
   const mainWindow = new BrowserWindow({
     width: 450,
     height: 850,
+    minWidth:450,
+    minHeight:290,
     resizable: true,//禁止改变窗口大小
     frame: false,
     icon: path.join(__dirname, '../dist/img/code2.ico'),
@@ -96,6 +98,19 @@ function createWindow() {
   //网络连接-请求版本
   ipcMain.on('internetLink', (e, version) => {
     internetLink(version);
+  })
+  //窗口最小化
+  ipcMain.on('windowsMini', (e) => {
+    mainWindow.minimize();//最小化窗口
+  })
+
+  //窗口最小化
+  ipcMain.on('windowsMax', (e) => {
+    if(mainWindow.isMaximized()){
+      mainWindow.restore();//恢复窗口大小
+    }else{
+      mainWindow.maximize();//最大化窗口
+    }
   })
 
   //获取版本号

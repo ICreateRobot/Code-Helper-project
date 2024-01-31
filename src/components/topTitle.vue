@@ -14,6 +14,9 @@
         </div>
     </div>
     <div class="appExit btSuspensionEvent">
+      <div class="windowsMini" @click="setWindowsMini">—</div>
+      <div class="windowsMax" @click="setWindowsMax">
+      </div>
        <div class="exitBt" @click="exitApp"></div>
     </div>
 </template>
@@ -36,6 +39,12 @@
       methods:{
         exitApp(){
           window.ipcRenderer.send('close');
+        },
+        setWindowsMini(){
+          window.ipcRenderer.send("windowsMini");
+        },
+        setWindowsMax(){
+          window.ipcRenderer.send("windowsMax");
         },
         setClickNumber(){
           console.log("点击",this.clickNumber);
@@ -78,6 +87,7 @@
     position: absolute;
     right: 20px;
     top: 10px;
+    
 }
 .appImg{
     width: 30px;
@@ -117,9 +127,32 @@
   height: 20px;
   background-image: url('../img/close.svg');
   position: relative;
-  top:6px
+  top:6px;
+  float: left;
   /* background-color: brown; */
 }
+.windowsMini{
+  width: 20px;
+  height: 20px;
+  /* background-color: red; */
+  position: relative;
+  right: 10px;
+  top: 6px;
+  float: left;
+  color: rgb(47, 190, 146);
+}
+.windowsMax{
+  width: 20px;
+  height: 20px;
+  /* background-color: red; */
+  position: relative;
+  background-image: url('../img/recoverBt.png');
+  right: 5px;
+  top: 6px;
+  float: left;
+  /* background-color: white; */
+}
+
 
 </style>
   
