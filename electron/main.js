@@ -2,13 +2,14 @@
 const { app, BrowserWindow, dialog, ipcMain, shell } = require('electron')
 const path = require('path');
 const fs = require('fs');
+const writeFile = require('fs/promises');
 const data_processing = require('./data_processing');
 const http = require('http');
 
 // const NODE_ENV = 'production' //生产环境
 // const NODE_ENV = 'development' //开发环境
 const NODE_ENV = process.env.NODE_ENV  //通过配置文件
-
+console.log("当前环境1：",process.platform);
 function createWindow() {
   // 创建浏览器窗口
   const mainWindow = new BrowserWindow({
@@ -18,7 +19,8 @@ function createWindow() {
     minHeight:290,
     resizable: true,//禁止改变窗口大小
     frame: false,
-    icon: path.join(__dirname, '../dist/img/code2.ico'),
+    //icon: path.join(__dirname, '../dist/img/code2.ico'),//window
+    //icon: path.join(__dirname, '../dist/img/icon.icns'),
     webPreferences: {
       nodeIntegration: process.env.ELECTRON_NODE_INTEGRATION,
       contextIsolation: !process.env.ELECTRON_NODE_INTEGRATION,
@@ -26,24 +28,25 @@ function createWindow() {
       preload: path.join(__dirname, 'preload.js'),
     }
   })
-
+/*
+  console.log("路径：",path.join(__dirname, '../dist/img/icon.icns'));
   if(process.platform ==='darwin'){
     app.dock.setIcon(path.join(__dirname,'../dist/img/icon.icns'));
   }
-
-
+*/
   // 加载 index.html
   // mainWindow.loadFile('dist/index.html') // 此处跟electron官网路径不同，需要注意
   // mainWindow.loadURL('http://127.0.0.1:5173/') 
+
   mainWindow.loadURL(
     NODE_ENV === 'development'
       ? 'http://localhost:5173'
       : `file://${path.join(__dirname, '../dist/index.html')}`
   );
   // app.setAppUserModelId("明治") //在主进程的app这里修改
-  app.setName("名字");
+  //app.setName("名字");
   // 打开开发工具
-  // mainWindow.webContents.openDevTools()
+   //mainWindow.webContents.openDevTools()
 
   
   // 设置初始显示模式
@@ -182,6 +185,7 @@ function importDeployFile(mainWindow) {
         const fileData = fs.readFileSync(newFileUrl);//获取用户文件数据
         let importData =data_processing.dataAnalysis(fileData);//初始化数据
         if(importData != false){
+
           const deployFileState = fs.createWriteStream(fileUrl);//创建写入流
           deployFileState.write(importData);//写入数据
           deployFileState.end();//写入完成标记

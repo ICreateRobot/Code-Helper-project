@@ -18,7 +18,7 @@
     "productName": "Code Helper",
     "asar": false,
     "copyright": "Copyright © 2023 ICreate",
-    "icon":"dist/img/code2.ico",
+    "icon":"dist/img/icon.icns",
     "mac": {
       "category": "public.app-category.utilities"
     },
