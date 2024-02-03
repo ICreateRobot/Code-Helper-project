@@ -10,11 +10,7 @@ const http = require('http');
 // const NODE_ENV = 'development' //开发环境
 const NODE_ENV = process.env.NODE_ENV  //通过配置文件
 console.log("当前环境1：",process.platform);
-if(process.platform == 'darwin'){
-  console.log(true);
-}else{
-  console.log(false);
-}
+
 function createWindow() {
   // 创建浏览器窗口
   const mainWindow = new BrowserWindow({
@@ -169,8 +165,13 @@ function importDeployFile(mainWindow) {
   dialog.showOpenDialog(options).then((result) => {
     if (!result.canceled && result.filePaths[0]) {
       let newFileUrl = result.filePaths[0];//资源管理器打开的文件
-      
-      let fileName = newFileUrl.split("\\").pop().split('.')[0];//导入文件名
+      let fileName = null;
+      if(process.platform == 'darwin'){
+        fileName = newFileUrl.split("/").pop().split('.')[0];//导入darwin文件名
+      }else{
+        fileName = newFileUrl.split("\\").pop().split('.')[0];//导入win文件名
+      }
+     
       // http://127.0.0.1:5173/assets/config_test.xml
       let fileUrl = `${path.join(__dirname, '../dist/config/' + fileName + '.json')}`;//配置文件位置    
       
@@ -373,7 +374,12 @@ function replaceModeConfigFile(fileName, mainWindow) {
   dialog.showOpenDialog(options).then((result) => {
     if (!result.canceled && result.filePaths[0]) {
       let newFileUrl = result.filePaths[0];//资源管理器打开的文件
-      let fileName = newFileUrl.split("\\").pop().split('.')[0];//导入文件名
+      let fileName = null;
+      if(process.platform == 'darwin'){
+        fileName = newFileUrl.split("/").pop().split('.')[0];//导入darwin文件名
+      }else{
+        fileName = newFileUrl.split("\\").pop().split('.')[0];//导入win文件名
+      }
       let newFileUrlArrs = newFileUrl.split('.')
       if(newFileUrlArrs[newFileUrlArrs.length - 1] != 'xml'){
          // 数据导入失败
