@@ -28,7 +28,7 @@ function createWindow() {
   })
 
   if(process.platform ==='darwin'){
-    app.dock.setIcon(path.join(__dirname,'../dist/img/code2.ico'));
+    app.dock.setIcon(path.join(__dirname,'../dist/img/icon.icns'));
   }
 
 
