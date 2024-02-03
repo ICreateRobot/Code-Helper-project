@@ -27,6 +27,10 @@ function createWindow() {
     }
   })
 
+  if(process.platform ==='darwin'){
+    app.dock.setIcon(path.join(__dirname,'../dist/img/code2.ico'));
+  }
+
 
   // 加载 index.html
   // mainWindow.loadFile('dist/index.html') // 此处跟electron官网路径不同，需要注意
