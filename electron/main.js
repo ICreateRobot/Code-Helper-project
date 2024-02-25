@@ -5,19 +5,20 @@ const fs = require('fs');
 const writeFile = require('fs/promises');
 const data_processing = require('./data_processing');
 const http = require('http');
+const { connected } = require('process');
 
 // const NODE_ENV = 'production' //生产环境
 // const NODE_ENV = 'development' //开发环境
 const NODE_ENV = process.env.NODE_ENV  //通过配置文件
-console.log("当前环境1：",process.platform);
+console.log("当前环境1：", process.platform);
 
 function createWindow() {
   // 创建浏览器窗口
   const mainWindow = new BrowserWindow({
     width: 450,
     height: 800,
-    minWidth:450,
-    minHeight:290,
+    minWidth: 450,
+    minHeight: 290,
     resizable: true,//禁止改变窗口大小
     frame: false,
     //icon: path.join(__dirname, '../dist/img/code2.ico'),//window
@@ -29,12 +30,12 @@ function createWindow() {
       preload: path.join(__dirname, 'preload.js'),
     }
   })
-/*
-  console.log("路径：",path.join(__dirname, '../dist/img/icon.icns'));
-  if(process.platform ==='darwin'){
-    app.dock.setIcon(path.join(__dirname,'../dist/img/icon.icns'));
-  }
-*/
+  /*
+    console.log("路径：",path.join(__dirname, '../dist/img/icon.icns'));
+    if(process.platform ==='darwin'){
+      app.dock.setIcon(path.join(__dirname,'../dist/img/icon.icns'));
+    }
+  */
   // 加载 index.html
   // mainWindow.loadFile('dist/index.html') // 此处跟electron官网路径不同，需要注意
   // mainWindow.loadURL('http://127.0.0.1:5173/') 
@@ -47,9 +48,14 @@ function createWindow() {
   // app.setAppUserModelId("明治") //在主进程的app这里修改
   //app.setName("名字");
   // 打开开发工具
-   //mainWindow.webContents.openDevTools()
+  //mainWindow.webContents.openDevTools()
 
-  
+  // 设置窗口始终在最前端
+  // mainWindow.setAlwaysOnTop(true);
+
+  //检查更新
+  openAppUpdata();
+
   // 设置初始显示模式
   set_display_mode(mainWindow);
 
@@ -112,20 +118,27 @@ function createWindow() {
 
   //窗口最小化
   ipcMain.on('windowsMax', (e) => {
-    if(mainWindow.isMaximized()){
+    if (mainWindow.isMaximized()) {
       mainWindow.restore();//恢复窗口大小
-    }else{
+    } else {
       mainWindow.maximize();//最大化窗口
     }
+  })
+
+
+  //窗口置顶
+  ipcMain.on('setWindowTop', (e) => {
+    setWindowTop(mainWindow, true);//窗口置顶
+  })
+  //窗口取消置顶
+  ipcMain.on('setWindowNotTop', (e) => {
+    setWindowTop(mainWindow, false);//窗口置顶
   })
 
   //获取版本号
   ipcMain.handle('getAppVersion', getAppVersion);
   //获取模式
   ipcMain.handle('getModes', getModes);
-
-
-
 
 }
 
@@ -150,7 +163,7 @@ app.on('window-all-closed', function () {
 })
 
 
-//网络文件
+//测试方法
 function openFileDialog() {
 
 }
@@ -166,64 +179,194 @@ function importDeployFile(mainWindow) {
     if (!result.canceled && result.filePaths[0]) {
       let newFileUrl = result.filePaths[0];//资源管理器打开的文件
       let fileName = null;
-      if(process.platform == 'darwin'){
+      if (process.platform == 'darwin') {
         fileName = newFileUrl.split("/").pop().split('.')[0];//导入darwin文件名
-      }else{
+      } else {
         fileName = newFileUrl.split("\\").pop().split('.')[0];//导入win文件名
       }
-     
-      // http://127.0.0.1:5173/assets/config_test.xml
-      let fileUrl = `${path.join(__dirname, '../dist/config/' + fileName + '.json')}`;//配置文件位置    
-      
-      let newFileUrlArrs = newFileUrl.split('.')
-      if(newFileUrlArrs[newFileUrlArrs.length - 1] != 'xml'){
-         // 数据导入失败
-         dialog.showMessageBox({
-          type: 'info',
-          title: '提示',
-          defaultId: 0,
-          message: "导入失败，文件扩展名应为“xml”格式",
-          buttons: ['确定']
-        }).then(result => {
-        }).catch(err => {console.log(err);});
-        return;
-      }
-      try {
-        const fileData = fs.readFileSync(newFileUrl);//获取用户文件数据
-        let importData =data_processing.dataAnalysis(fileData);//初始化数据
-        if(importData != false){
+      let isGoOn = true;
+      let files = getModes();
+      for (let file of files) {
+        if (fileName == file) {
+          isGoOn = false;
+          dialog.showMessageBox({
+            type: 'info',
+            title: '提示',
+            message: fileName + "与已有模式名相同，是否替换",
+            buttons: ['否', '是']
+          }).then(result => {
+            if (result.response === 1) {//是
+              console.log('用户点击了确定按钮');
+              // http://127.0.0.1:5173/assets/config_test.xml
+              let fileUrl = `${path.join(__dirname, '../dist/config/' + fileName + '.json')}`;//配置文件位置    
 
-          const deployFileState = fs.createWriteStream(fileUrl);//创建写入流
-          deployFileState.write(importData);//写入数据
-          deployFileState.end();//写入完成标记
-          //标记写入完成    监听写入完成情况前必须标记写入完成
-          deployFileState.on('finish', () => {
+              let newFileUrlArrs = newFileUrl.split('.')
+              if (newFileUrlArrs[newFileUrlArrs.length - 1] != 'xml') {
+                // 数据导入失败
+                dialog.showMessageBox({
+                  type: 'info',
+                  title: '提示',
+                  defaultId: 0,
+                  message: "导入失败，文件扩展名应为“xml”格式",
+                  buttons: ['确定']
+                }).then(result => {
+                }).catch(err => { console.log(err); });
+                return;
+              }
+              try {
+                const fileData = fs.readFileSync(newFileUrl);//获取用户文件数据
+                let importData = data_processing.dataAnalysis(fileData);//初始化数据
+                if (importData != false) {
+
+                  const deployFileState = fs.createWriteStream(fileUrl);//创建写入流
+                  deployFileState.write(importData);//写入数据
+                  deployFileState.end();//写入完成标记
+                  //标记写入完成    监听写入完成情况前必须标记写入完成
+                  deployFileState.on('finish', () => {
+                    dialog.showMessageBox({
+                      type: 'info',
+                      title: '提示',
+                      defaultId: 0,
+                      message: "导入成功",
+                      buttons: ['确定']
+                    }).then(result => {
+                      let response = result.response;//取消为0.确定为1
+                      if (response) {
+                        // console.log("初始化完成")
+                      } else {
+                        setDefaultModel(fileName, mainWindow);//设置默认模式
+                        mainWindow.webContents.reload();//刷新页面
+                      }
+                    }).catch(err => {
+                      console.log(err);
+                    });
+                  })
+
+                } else {
+                  // 数据导入失败
+                  dialog.showMessageBox({
+                    type: 'info',
+                    title: '提示',
+                    defaultId: 0,
+                    message: "导入失败，导入格式不正确",
+                    buttons: ['确定']
+                  }).then(result => {
+                    let response = result.response;//取消为0.确定为1
+                    if (response) {
+                      // console.log("初始化完成")
+                    } else {
+                      // mainWindow.webContents.reload();//刷新页面
+                    }
+                  }).catch(err => {
+                    console.log(err);
+                  });
+
+                }
+
+              } catch (err) {
+                console.error(`无法读取文件：${err}`);
+                // 数据导入失败
+                dialog.showMessageBox({
+                  type: 'info',
+                  title: '提示',
+                  defaultId: 0,
+                  message: "导入失败:" + err,
+                  buttons: ['确定']
+                }).then(result => {
+                  let response = result.response;//取消为0.确定为1
+                  if (response) {
+                    // console.log("初始化完成")
+                  } else {
+                    // mainWindow.webContents.reload();//刷新页面
+                  }
+                }).catch(err => {
+                  console.log(err);
+                });
+              }
+            } else {
+              isGoOn = false;
+            }
+          }).catch(err => { console.log(err); });
+          break;
+        }
+      }
+      console.log("导入", isGoOn)
+      if (isGoOn) {
+        console.log("导入")
+        // http://127.0.0.1:5173/assets/config_test.xml
+        let fileUrl = `${path.join(__dirname, '../dist/config/' + fileName + '.json')}`;//配置文件位置    
+
+        let newFileUrlArrs = newFileUrl.split('.')
+        if (newFileUrlArrs[newFileUrlArrs.length - 1] != 'xml') {
+          // 数据导入失败
+          dialog.showMessageBox({
+            type: 'info',
+            title: '提示',
+            defaultId: 0,
+            message: "导入失败，文件扩展名应为“xml”格式",
+            buttons: ['确定']
+          }).then(result => {
+          }).catch(err => { console.log(err); });
+          return;
+        }
+        try {
+          const fileData = fs.readFileSync(newFileUrl);//获取用户文件数据
+          let importData = data_processing.dataAnalysis(fileData);//初始化数据
+          if (importData != false) {
+
+            const deployFileState = fs.createWriteStream(fileUrl);//创建写入流
+            deployFileState.write(importData);//写入数据
+            deployFileState.end();//写入完成标记
+            //标记写入完成    监听写入完成情况前必须标记写入完成
+            deployFileState.on('finish', () => {
+              dialog.showMessageBox({
+                type: 'info',
+                title: '提示',
+                defaultId: 0,
+                message: "导入成功",
+                buttons: ['确定']
+              }).then(result => {
+                let response = result.response;//取消为0.确定为1
+                if (response) {
+                  // console.log("初始化完成")
+                } else {
+                  setDefaultModel(fileName, mainWindow);//设置默认模式
+                  mainWindow.webContents.reload();//刷新页面
+                }
+              }).catch(err => {
+                console.log(err);
+              });
+            })
+
+          } else {
+            // 数据导入失败
             dialog.showMessageBox({
               type: 'info',
               title: '提示',
               defaultId: 0,
-              message: "导入成功",
+              message: "导入失败，导入格式不正确",
               buttons: ['确定']
             }).then(result => {
               let response = result.response;//取消为0.确定为1
               if (response) {
                 // console.log("初始化完成")
               } else {
-                setDefaultModel(fileName,mainWindow);//设置默认模式
-                mainWindow.webContents.reload();//刷新页面
+                // mainWindow.webContents.reload();//刷新页面
               }
             }).catch(err => {
               console.log(err);
             });
-          })
 
-        }else{
+          }
+
+        } catch (err) {
+          console.error(`无法读取文件：${err}`);
           // 数据导入失败
           dialog.showMessageBox({
             type: 'info',
             title: '提示',
             defaultId: 0,
-            message: "导入失败，导入格式不正确",
+            message: "导入失败:" + err,
             buttons: ['确定']
           }).then(result => {
             let response = result.response;//取消为0.确定为1
@@ -235,29 +378,10 @@ function importDeployFile(mainWindow) {
           }).catch(err => {
             console.log(err);
           });
-          
         }
-        
-      } catch (err) {
-        console.error(`无法读取文件：${err}`);
-         // 数据导入失败
-         dialog.showMessageBox({
-          type: 'info',
-          title: '提示',
-          defaultId: 0,
-          message: "导入失败:"+err,
-          buttons: ['确定']
-        }).then(result => {
-          let response = result.response;//取消为0.确定为1
-          if (response) {
-            // console.log("初始化完成")
-          } else {
-            // mainWindow.webContents.reload();//刷新页面
-          }
-        }).catch(err => {
-          console.log(err);
-        });
       }
+
+
     } else {
       console.log("取消了选择");
     }
@@ -292,9 +416,9 @@ function getAppVersion() {
 //打开外部网站
 function getNewwindows() {
   console.log("open web");
-  shell.openExternal("https://www.icrobot.com/www/cn/index.html#/index").then(()=>{
+  shell.openExternal("https://www.icrobot.com/www/cn/index.html#/index").then(() => {
     console.log("open-yes")
-  }).catch(()=>{
+  }).catch(() => {
     console.log("open-no")
   });
 }
@@ -315,7 +439,7 @@ function saveModuleFile() {
     if (!result.canceled) {
       // result.filePath 为用户选择的文件保存路径
       let saveFileUrl = result.filePath;
-      
+
       console.log("用户选择的文件保存路径2：", saveFileUrl)
       const fileData = fs.readFileSync(configFileUrl);//获取配置文件数据
       console.log("data:", fileData)
@@ -375,22 +499,22 @@ function replaceModeConfigFile(fileName, mainWindow) {
     if (!result.canceled && result.filePaths[0]) {
       let newFileUrl = result.filePaths[0];//资源管理器打开的文件
       let fileName = null;
-      if(process.platform == 'darwin'){
+      if (process.platform == 'darwin') {
         fileName = newFileUrl.split("/").pop().split('.')[0];//导入darwin文件名
-      }else{
+      } else {
         fileName = newFileUrl.split("\\").pop().split('.')[0];//导入win文件名
       }
       let newFileUrlArrs = newFileUrl.split('.')
-      if(newFileUrlArrs[newFileUrlArrs.length - 1] != 'xml'){
-         // 数据导入失败
-         dialog.showMessageBox({
+      if (newFileUrlArrs[newFileUrlArrs.length - 1] != 'xml') {
+        // 数据导入失败
+        dialog.showMessageBox({
           type: 'info',
           title: '提示',
           defaultId: 0,
           message: "导入失败，文件扩展名应为“xml”格式",
           buttons: ['确定']
         }).then(result => {
-        }).catch(err => {console.log(err);});
+        }).catch(err => { console.log(err); });
         return;
       }
       // http://127.0.0.1:5173/assets/config_test.xml
@@ -404,7 +528,7 @@ function replaceModeConfigFile(fileName, mainWindow) {
       } catch (error) {
         isLose = true;
       }
-      if(isLose){
+      if (isLose) {
         // 数据导入失败
         dialog.showMessageBox({
           type: 'info',
@@ -422,8 +546,8 @@ function replaceModeConfigFile(fileName, mainWindow) {
         }).catch(err => {
           console.log(err);
         });
-        
-      }else{
+
+      } else {
         try {
           fs.unlink(oldConfigfileUrl, err => {
             if (err == null) {
@@ -445,7 +569,7 @@ function replaceModeConfigFile(fileName, mainWindow) {
                   if (response) {
                     // console.log("初始化完成")
                   } else {
-                    setDefaultModel(fileName,mainWindow);//设置默认模式
+                    setDefaultModel(fileName, mainWindow);//设置默认模式
                     mainWindow.webContents.reload();//刷新页面
                   }
                 }).catch(err => {
@@ -475,7 +599,7 @@ function replaceModeConfigFile(fileName, mainWindow) {
             type: 'info',
             title: '提示',
             defaultId: 0,
-            message: "导入失败:"+err,
+            message: "导入失败:" + err,
             buttons: ['确定']
           }).then(result => {
             let response = result.response;//取消为0.确定为1
@@ -495,7 +619,7 @@ function replaceModeConfigFile(fileName, mainWindow) {
   }).catch((err) => {
     console.error("发生错误：", err);
   });
-  
+
 }
 //设置默认模式
 function setDefaultModel(mode, mainWindow) {
@@ -534,7 +658,10 @@ function noInternetLink() {
     console.log(err);
   });
 }
-
+// 设置窗口置顶
+function setWindowTop(mainWindow, windowState) {
+  mainWindow.setAlwaysOnTop(windowState);
+}
 
 
 // 互联网连接-请求版本
@@ -596,16 +723,21 @@ function internetLink(versions) {
           let state = compareVersions(receiveData.data.appVersion, receiveData.data.newAppVersion);
           if (state == 0) {
             //当前是最新版本
-            if(!versions.isOpen){
-              return ;
+            if (!versions.isOpen) {
+              return;
             }
             dialog.showMessageBox({
               type: 'info',
               title: '提示',
-              defaultId: 0,
               message: "当前是最新版本 ",
               buttons: ['确定']
             }).then(result => {
+              console.log("弹窗状态:", result);
+              if (result.response === 0) {
+                console.log("弹窗状态:确定");
+              } else {
+                console.log("弹窗状态:关闭");
+              }
               console.log("最新版本");
             }).catch(err => {
               console.log(err);
@@ -618,9 +750,131 @@ function internetLink(versions) {
               title: '提示',
               defaultId: 0,
               message: "当前软件有更新：" + receiveData.data.newAppVersion,
+              buttons: ['以后再说', "前去更新"]
+            }).then(result => {
+              if (result.response === 1) {
+                console.log("弹窗状态:确定");
+                shell.openExternal("https://www.icrobot.com/www/cn/index.html#/file/index?type1=%E8%BD%AF%E4%BB%B6%E8%B5%84%E6%96%99")
+              } else {
+                console.log("弹窗状态:关闭");
+              }
+            }).catch(err => {
+              console.log(err);
+            });
+
+          } else {
+            //当前版本比更新版本高
+            dialog.showMessageBox({
+              type: 'info',
+              title: '提示',
+              defaultId: 0,
+              message: "当前软件最新版本为：#" + receiveData.data.appVersion + "#\n请联系管理员进行更新",
               buttons: ['确定']
             }).then(result => {
-              shell.openExternal("https://www.icrobot.com/www/cn/index.html#/file/index?type1=%E8%BD%AF%E4%BB%B6%E8%B5%84%E6%96%99")
+              app.exit();
+            }).catch(err => {
+              console.log(err);
+            });
+          }
+        }
+      } else {
+        // 请求失败
+        dialog.showMessageBox({
+          type: 'info',
+          title: '提示',
+          defaultId: 0,
+          message: "检查更新失败：#" + receiveData.msg + "#\n请联系管理员",
+          buttons: ['确定']
+        }).then(result => {
+          // app.exit();
+        }).catch(err => {
+          console.log(err);
+        });
+      }
+      console.log(`Response from ${req.method}:`, JSON.parse(data));
+    });
+  });
+
+  req.on('error', (err) => {
+    console.error(`Request error: ${err}`);
+  });
+
+  // 结束请求
+  req.end();
+}
+// 互联网连接-请求版本
+function internetLinkOpen(versions) {
+  const sendData = { appName: "'CodeHelper'", AppVersion: "'" + versions + "'" };
+  const url = 'http://119.3.123.115:8080/appVersionManage/getAppState'; // 修改为目标API的URL
+
+  // 将参数转换成查询字符串格式
+  let queryString = '';
+  for (const [key, value] of Object.entries(sendData)) {
+    if (queryString !== '') {
+      queryString += '&';
+    }
+    queryString += `${encodeURIComponent(key)}=${encodeURIComponent(value)}`;
+  }
+
+  // 构建完整的URL（包括查询字符串）
+  const fullUrl = `${url}?${queryString}`;
+  // 创建HTTP请求选项
+  const options = {
+    method: 'POST', // 可以根据需要设置其他HTTP方法，比如POST、PUT等
+  };
+
+  // 发起HTTP请求
+  const req = http.request(fullUrl, options, res => {
+    let data = '';
+
+    // 接收服务器返回的数据流
+    res.on('data', chunk => {
+      data += chunk;
+    });
+
+    // 当数据接收完全后进行处理
+    res.on('end', () => {
+      let receiveData = JSON.parse(data);
+      if (receiveData.code == 200) {
+        // 请求成功
+        if (!receiveData.data.appState) {
+          dialog.showMessageBox({
+            type: 'info',
+            title: '提示',
+            defaultId: 0,
+            message: "当前版本不可用，请下载最新版本 ",
+            buttons: ['确定']
+          }).then(result => {
+            shell.openExternal("https://www.icrobot.com/www/cn/index.html#/file/index?type1=%E8%BD%AF%E4%BB%B6%E8%B5%84%E6%96%99")
+            app.exit();
+          }).catch(err => {
+            console.log(err);
+          });
+        } else {
+          let state = compareVersions(receiveData.data.appVersion, receiveData.data.newAppVersion);
+          if (state == 0) {
+            //当前是最新版本
+          } else if (state == -1) {
+            //当前有更新版本
+            dialog.showMessageBox({
+              type: 'info',
+              title: '提示',
+              defaultId: 0,
+              message: "当前软件有更新：" + receiveData.data.newAppVersion,
+              buttons: ['以后再说', "前去更新"],
+              checkboxLabel: receiveData.data.newAppVersion + '版本不再提醒',
+              checkboxChecked: false // 设置复选框默认选中
+            }).then(result => {
+              if (result.response === 1) {
+                console.log("弹窗状态:确定");
+                shell.openExternal("https://www.icrobot.com/www/cn/index.html#/file/index?type1=%E8%BD%AF%E4%BB%B6%E8%B5%84%E6%96%99")
+              } else {
+                console.log("弹窗状态:关闭");
+              }
+
+              if (result.checkboxChecked) {//本版本不再提醒
+                setOpenAppUpdataInfo(false, receiveData.data.newAppVersion)
+              }
             }).catch(err => {
               console.log(err);
             });
@@ -690,17 +944,11 @@ function setLanguageAndStyle(data, mainWindow) {
   let style = "";//风格
   if (data[0] == 'Chinese') {
     language = '中文';
+
   } else {
     language = '英文';
   }
   style = data[1];
-  // if(data[1] == "style1"){
-  //   style = '酷黑';
-  // }else if(data[1] == "style2"){
-  //   style = '清新';
-  // }else{
-  //   style = '欢快';
-  // }
   try {
     files = fs.readFileSync(url, "utf8");
     jsonData = JSON.parse(files);
@@ -721,10 +969,147 @@ function setLanguageAndStyle(data, mainWindow) {
     console.log("报错：", error)
   }
 }
+//设置是否打开软件提示更新
+function setOpenAppUpdataInfo(state, newVersion) {
 
+  let url = `${path.join(__dirname, '../dist/configData.json')}`
+  let OpenAppUpdataInfo = state;//语言
+  let NoMoreRemindersVersionpUpdataInfo = newVersion;//语言
+
+  try {
+    files = fs.readFileSync(url, "utf8");
+    jsonData = JSON.parse(files);
+    jsonData.OpenAppUpdataInfo = OpenAppUpdataInfo;
+    jsonData.NoMoreRemindersVersionpUpdataInfo = NoMoreRemindersVersionpUpdataInfo;
+    jsonData.modificationTime = getTodayTime();
+    let json_dataString = JSON.stringify(jsonData);//将对象转换为字符串
+
+    fs.writeFile(url, json_dataString, err => {
+      //如果写入失败，则回调函数调用时，会传入错误对象，如写入成功，会传入 null
+      console.log("err:-设置是否打开软件提示更新:", err)
+    });
+  } catch (error) {
+    console.log("报错：", error)
+  }
+}
+//查看是否打开软件提示更新
+function selectOpenAppUpdataInfo() {
+  let url = `${path.join(__dirname, '../dist/configData.json')}`
+  try {
+    files = fs.readFileSync(url, "utf8");
+    jsonData = JSON.parse(files);
+    return jsonData.OpenAppUpdataInfo;
+  } catch (error) {
+    console.log("报错：", error)
+  }
+  return true;
+}
+//查看配置文件的更新信息
+function selectOpenAppNewVersion() {
+  let url = `${path.join(__dirname, '../dist/configData.json')}`
+  try {
+    files = fs.readFileSync(url, "utf8");
+    jsonData = JSON.parse(files);
+    return jsonData.NoMoreRemindersVersionpUpdataInfo;
+  } catch (error) {
+    console.log("报错：", error)
+  }
+  return '1.0.1';
+}
+//检查更新
+function openAppUpdata() {
+  if (selectOpenAppUpdataInfo()) {
+    internetLinkOpen(getAppVersion()[0]);//检查更新
+  } else {
+    getNewAppVersion(selectOpenAppNewVersion());//新版本检测
+  }
+}
+//获取最新版本
+function getNewAppVersion(versions) {
+  const sendData = { appName: "'CodeHelper'", AppVersion: "'" + versions + "'" };
+  const url = 'http://119.3.123.115:8080/appVersionManage/getAppState'; // 修改为目标API的URL
+
+  // 将参数转换成查询字符串格式
+  let queryString = '';
+  for (const [key, value] of Object.entries(sendData)) {
+    if (queryString !== '') {
+      queryString += '&';
+    }
+    queryString += `${encodeURIComponent(key)}=${encodeURIComponent(value)}`;
+  }
+
+  // 构建完整的URL（包括查询字符串）
+  const fullUrl = `${url}?${queryString}`;
+  // 创建HTTP请求选项
+  const options = {
+    method: 'POST', // 可以根据需要设置其他HTTP方法，比如POST、PUT等
+  };
+
+  // 发起HTTP请求
+  const req = http.request(fullUrl, options, res => {
+    let data = '';
+
+    // 接收服务器返回的数据流
+    res.on('data', chunk => {
+      data += chunk;
+    });
+
+    // 当数据接收完全后进行处理
+    res.on('end', () => {
+      let receiveData = JSON.parse(data);
+      if (receiveData.code == 200) {
+        // 请求成功
+        if (!receiveData.data.appState) {
+          //不可用
+        } else {
+          let state = compareVersions(receiveData.data.appVersion, receiveData.data.newAppVersion);
+          if (state == 0) {
+            //当前是最新版本
+          } else if (state == -1) {
+            //当前有更新版本
+
+            //当前有更新版本
+            dialog.showMessageBox({
+              type: 'info',
+              title: '提示',
+              defaultId: 0,
+              message: "当前软件有更新：" + receiveData.data.newAppVersion,
+              buttons: ['以后再说', "前去更新"],
+              checkboxLabel: receiveData.data.newAppVersion + '版本不再提醒',
+              checkboxChecked: false // 设置复选框默认选中
+            }).then(result => {
+              if (result.response === 1) {
+                console.log("弹窗状态:确定");
+                shell.openExternal("https://www.icrobot.com/www/cn/index.html#/file/index?type1=%E8%BD%AF%E4%BB%B6%E8%B5%84%E6%96%99")
+              } else {
+                console.log("弹窗状态:关闭");
+              }
+
+              if (result.checkboxChecked) {//本版本不再提醒
+                setOpenAppUpdataInfo(false, receiveData.data.newAppVersion)
+              }
+            }).catch(err => {
+              console.log(err);
+            });
+          } else {
+            //当前版本比更新版本高
+          }
+        }
+      }
+      console.log(`Response from ${req.method}:`, JSON.parse(data));
+    });
+  });
+
+  req.on('error', (err) => {
+    console.error(`Request error: ${err}`);
+  });
+
+  // 结束请求
+  req.end();
+}
 //设置代码是否可复制
 function setReproducibility(data, mainWindow) {
-  console.log("点击data：",data);
+  console.log("点击data：", data);
   let url = `${path.join(__dirname, '../dist/configData.json')}`
   let reproducibility = data;
   console.log(reproducibility);
@@ -773,21 +1158,21 @@ function getTodayTime() {
 }
 
 //设置初始模式
-function set_display_mode(mainWindow){
+function set_display_mode(mainWindow) {
   console.log("infunction");
   let modeName = readConfigModeName();
   let configs = getModes();
-  console.log('modeName',modeName);
-  console.log('configs',configs);
-  for(let name in configs){
-    console.log('['+modeName+'-'+configs[name]+':'+configs[name] == modeName+']');
-    if(configs[name] == modeName){
+  console.log('modeName', modeName);
+  console.log('configs', configs);
+  for (let name in configs) {
+    console.log('[' + modeName + '-' + configs[name] + ':' + configs[name] == modeName + ']');
+    if (configs[name] == modeName) {
       return;
     }
   }
-  setDefaultModel(configs[0],mainWindow);
+  setDefaultModel(configs[0], mainWindow);
 }
-function readConfigModeName(){
+function readConfigModeName() {
   let configName;
   let url = `${path.join(__dirname, '../dist/configData.json')}`
   try {

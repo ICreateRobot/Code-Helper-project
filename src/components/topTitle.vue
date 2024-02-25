@@ -14,6 +14,8 @@
         </div>
     </div>
     <div class="appExit btSuspensionEvent">
+      <div class="but_top" @click="setWindowsTop('notTop')" v-if="windowsTopState"> </div>
+      <div class="but_not_top" @click="setWindowsTop('top')" v-else> </div>
       <div class="windowsMini" @click="setWindowsMini">—</div>
       <div class="windowsMax" :class="windowsMaxState? 'windowsMaxBg1_1':'windowsMaxBg2_1'" @click="setWindowsMax"></div>
       <div class="exitBt" @click="exitApp"></div>
@@ -33,7 +35,8 @@
          context:"头部导航",
          style:"style1",
          clickNumber:0,//点击次数
-         windowsMaxState:false//窗口是否全屏
+         windowsMaxState:false,//窗口是否全屏
+         windowsTopState:false//窗口是置顶
         }
       },
       methods:{
@@ -46,6 +49,17 @@
         setWindowsMax(){
           this.windowsMaxState = !this.windowsMaxState;
           window.ipcRenderer.send("windowsMax");
+        },
+        setWindowsTop(topState){
+          console.log("状态1",topState);
+          if(topState=="top"){
+            this.windowsTopState = true;
+            window.ipcRenderer.send("setWindowTop");
+          }
+          if(topState=="notTop"){
+            this.windowsTopState = false;
+            window.ipcRenderer.send("setWindowNotTop");
+          }
         },
         setClickNumber(){
           console.log("点击",this.clickNumber);
@@ -88,7 +102,30 @@
     position: absolute;
     right: 20px;
     top: 10px;
-    
+}
+.but_top{
+  width: 14px;
+  height: 20px;
+  background-image: url('../img/notTop.svg');
+  position: relative;
+  top:6px;
+  right: 15px;
+  float: left;
+  background-repeat: no-repeat; /* 防止图片重复 */
+  background-position: center; /* 将图片居中对齐 */
+  background-size: cover; /* 确保图片完全显示且不会被拉伸或压缩 */
+}
+.but_not_top{
+  width: 20px;
+  height: 20px;
+  background-image: url('../img/top.svg');
+  position: relative;
+  top:6px;
+  right: 15px;
+  float: left;
+  background-repeat: no-repeat; /* 防止图片重复 */
+  background-position: center; /* 将图片居中对齐 */
+  background-size: cover; /* 确保图片完全显示且不会被拉伸或压缩 */
 }
 .appImg{
     width: 30px;

@@ -3,5 +3,7 @@
     "mode": "Arduino",
     "style": "style1",
     "reproducibleOrNot": true,
+    "OpenAppUpdataInfo":true,
+    "NoMoreRemindersVersionpUpdataInfo":"",
     "modificationTime": "2024年1月18日 9:17:46"
 }

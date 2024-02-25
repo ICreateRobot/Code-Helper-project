@@ -107,7 +107,7 @@
             console.log("返回：",data);
             this.version =data[0] ;
             this.appName = data[1]
-            this.check_for_updates();
+            // this.check_for_updates();
           }); 
       },
       readConfigData(){
