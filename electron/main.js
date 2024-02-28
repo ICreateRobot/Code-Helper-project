@@ -11,6 +11,8 @@ const { connected } = require('process');
 // const NODE_ENV = 'development' //开发环境
 const NODE_ENV = process.env.NODE_ENV  //通过配置文件
 console.log("当前环境1：", process.platform);
+var alterLanguage;//弹窗语言
+var showAlterLanguage;//显示语言
 
 function createWindow() {
   // 创建浏览器窗口
@@ -56,6 +58,9 @@ function createWindow() {
   //检查更新
   openAppUpdata();
 
+  //获取语言
+  readConfigModeLanguage();
+
   // 设置初始显示模式
   set_display_mode(mainWindow);
 
@@ -66,7 +71,11 @@ function createWindow() {
 
   //配置文件错误
   ipcMain.on('deployFileErr', e => {
-    dialog.showMessageBox({ type: 'warning', title: '提示', message: '配置文件错误，请重新导入或初始化' })
+    dialog.showMessageBox({
+       type: 'warning',
+       title: showAlterLanguage.warning_title_info, 
+       message: showAlterLanguage.warning_message_infoContent
+      })
   });
 
   //导入配置文件
@@ -97,6 +106,11 @@ function createWindow() {
   })
   //设置语言和风格
   ipcMain.on('setLanguageAndStyle', (e, data) => {
+    if(data[0] == "中文"){
+      showAlterLanguage = alterLanguage.Chinese;
+    }else{
+      showAlterLanguage = alterLanguage.English;
+    }
     setLanguageAndStyle(data, mainWindow)
   })
   //设置是否可复制
@@ -170,8 +184,9 @@ function openFileDialog() {
 
 //导入配置文件
 function importDeployFile(mainWindow) {
+  
   const options = {
-    title: '导入文件', // 设置对话框标题
+    title: showAlterLanguage.warning_message_importMoldContent, // 设置对话框标题
     defaultPath: '/path/to/default/directory' // 默认路径（可选）
   }
 
@@ -189,26 +204,24 @@ function importDeployFile(mainWindow) {
       for (let file of files) {
         if (fileName == file) {
           isGoOn = false;
+          console.log("语言：",showAlterLanguage)
           dialog.showMessageBox({
             type: 'info',
-            title: '提示',
-            message: fileName + "与已有模式名相同，是否替换",
-            buttons: ['否', '是']
+            title: showAlterLanguage.warning_title_info,
+            message: fileName + showAlterLanguage.warning_message_replaceOrNotContent,
+            buttons: ["No", "Yes"]
           }).then(result => {
             if (result.response === 1) {//是
-              console.log('用户点击了确定按钮');
-              // http://127.0.0.1:5173/assets/config_test.xml
-              let fileUrl = `${path.join(__dirname, '../dist/config/' + fileName + '.json')}`;//配置文件位置    
-
+              let fileUrl = `${path.join(__dirname, '../dist/config/' + fileName + '.json')}`;//配置文件位置   
               let newFileUrlArrs = newFileUrl.split('.')
               if (newFileUrlArrs[newFileUrlArrs.length - 1] != 'xml') {
                 // 数据导入失败
                 dialog.showMessageBox({
                   type: 'info',
-                  title: '提示',
+                  title: showAlterLanguage.warning_title_info,
                   defaultId: 0,
-                  message: "导入失败，文件扩展名应为“xml”格式",
-                  buttons: ['确定']
+                  message: showAlterLanguage.warning_message_ImportFailureContent,
+                  buttons: [showAlterLanguage.warning_message_confirm]
                 }).then(result => {
                 }).catch(err => { console.log(err); });
                 return;
@@ -225,14 +238,13 @@ function importDeployFile(mainWindow) {
                   deployFileState.on('finish', () => {
                     dialog.showMessageBox({
                       type: 'info',
-                      title: '提示',
+                      title: showAlterLanguage.warning_title_info,
                       defaultId: 0,
-                      message: "导入成功",
-                      buttons: ['确定']
+                      message: showAlterLanguage.warning_message_ImportSuccessfullyContent,
+                      buttons: [showAlterLanguage.warning_message_confirm]
                     }).then(result => {
                       let response = result.response;//取消为0.确定为1
                       if (response) {
-                        // console.log("初始化完成")
                       } else {
                         setDefaultModel(fileName, mainWindow);//设置默认模式
                         mainWindow.webContents.reload();//刷新页面
@@ -246,17 +258,12 @@ function importDeployFile(mainWindow) {
                   // 数据导入失败
                   dialog.showMessageBox({
                     type: 'info',
-                    title: '提示',
+                    title: showAlterLanguage.warning_title_info,
                     defaultId: 0,
-                    message: "导入失败，导入格式不正确",
-                    buttons: ['确定']
+                    message: showAlterLanguage.warning_message_ImportFormatIncorrectContent,
+                    buttons: [showAlterLanguage.warning_message_confirm]
                   }).then(result => {
-                    let response = result.response;//取消为0.确定为1
-                    if (response) {
-                      // console.log("初始化完成")
-                    } else {
-                      // mainWindow.webContents.reload();//刷新页面
-                    }
+                    
                   }).catch(err => {
                     console.log(err);
                   });
@@ -268,18 +275,11 @@ function importDeployFile(mainWindow) {
                 // 数据导入失败
                 dialog.showMessageBox({
                   type: 'info',
-                  title: '提示',
+                  title: showAlterLanguage.warning_title_info,
                   defaultId: 0,
-                  message: "导入失败:" + err,
-                  buttons: ['确定']
-                }).then(result => {
-                  let response = result.response;//取消为0.确定为1
-                  if (response) {
-                    // console.log("初始化完成")
-                  } else {
-                    // mainWindow.webContents.reload();//刷新页面
-                  }
-                }).catch(err => {
+                  message: showAlterLanguage.warning_message_ImportNoSuccessfullyContent + err,
+                  buttons: [showAlterLanguage.warning_message_confirm]
+                }).then(result => {}).catch(err => {
                   console.log(err);
                 });
               }
@@ -290,21 +290,19 @@ function importDeployFile(mainWindow) {
           break;
         }
       }
-      console.log("导入", isGoOn)
+
       if (isGoOn) {
-        console.log("导入")
         // http://127.0.0.1:5173/assets/config_test.xml
         let fileUrl = `${path.join(__dirname, '../dist/config/' + fileName + '.json')}`;//配置文件位置    
-
         let newFileUrlArrs = newFileUrl.split('.')
         if (newFileUrlArrs[newFileUrlArrs.length - 1] != 'xml') {
           // 数据导入失败
           dialog.showMessageBox({
             type: 'info',
-            title: '提示',
+            title: showAlterLanguage.warning_title_info,
             defaultId: 0,
-            message: "导入失败，文件扩展名应为“xml”格式",
-            buttons: ['确定']
+            message: showAlterLanguage.warning_message_ImportFailureContent,
+            buttons: [showAlterLanguage.warning_message_confirm,]
           }).then(result => {
           }).catch(err => { console.log(err); });
           return;
@@ -321,10 +319,10 @@ function importDeployFile(mainWindow) {
             deployFileState.on('finish', () => {
               dialog.showMessageBox({
                 type: 'info',
-                title: '提示',
+                title: showAlterLanguage.warning_title_info,
                 defaultId: 0,
-                message: "导入成功",
-                buttons: ['确定']
+                message: showAlterLanguage.warning_message_ImportSuccessfullyContent,
+                buttons: [showAlterLanguage.warning_message_confirm]
               }).then(result => {
                 let response = result.response;//取消为0.确定为1
                 if (response) {
@@ -342,10 +340,10 @@ function importDeployFile(mainWindow) {
             // 数据导入失败
             dialog.showMessageBox({
               type: 'info',
-              title: '提示',
+              title: showAlterLanguage.warning_title_info,
               defaultId: 0,
-              message: "导入失败，导入格式不正确",
-              buttons: ['确定']
+              message:showAlterLanguage.warning_message_ImportFormatIncorrectContent,
+              buttons: [showAlterLanguage.warning_message_confirm]
             }).then(result => {
               let response = result.response;//取消为0.确定为1
               if (response) {
@@ -364,10 +362,10 @@ function importDeployFile(mainWindow) {
           // 数据导入失败
           dialog.showMessageBox({
             type: 'info',
-            title: '提示',
+            title: showAlterLanguage.warning_title_info,
             defaultId: 0,
-            message: "导入失败:" + err,
-            buttons: ['确定']
+            message: showAlterLanguage.warning_message_ImportNoSuccessfullyContent + err,
+            buttons: [showAlterLanguage.warning_message_confirm]
           }).then(result => {
             let response = result.response;//取消为0.确定为1
             if (response) {
@@ -432,7 +430,7 @@ function saveModuleFile() {
       { name: 'Config Files', extensions: ['xlsm'] }, // 可选择的文本文件格式
       { name: 'All Files', extensions: ['*'] } // 所有文件格式
     ],
-    title: '保存模板',
+    title: showAlterLanguage.warning_message_saveMoldContent,
     defaultPath: '~/configModuleFile'
   }).then(result => {
     console.log("path", result)
@@ -450,10 +448,10 @@ function saveModuleFile() {
       deployFileState.on('finish', () => {
         dialog.showMessageBox({
           type: 'info',
-          title: '提示',
+          title: showAlterLanguage.warning_title_info,
           defaultId: 0,
-          message: "文件已保存",
-          buttons: ['确定']
+          message: showAlterLanguage.warning_message_saveFileContent,
+          buttons: [showAlterLanguage.warning_message_confirm]
         }).then(result => {
           console.log("文件已保存");
         }).catch(err => {
@@ -509,15 +507,14 @@ function replaceModeConfigFile(fileName, mainWindow) {
         // 数据导入失败
         dialog.showMessageBox({
           type: 'info',
-          title: '提示',
+          title: showAlterLanguage.warning_title_info,
           defaultId: 0,
-          message: "导入失败，文件扩展名应为“xml”格式",
-          buttons: ['确定']
+          message: showAlterLanguage.warning_message_ImportFailureContent,
+          buttons: [showAlterLanguage.warning_message_confirm]
         }).then(result => {
         }).catch(err => { console.log(err); });
         return;
       }
-      // http://127.0.0.1:5173/assets/config_test.xml
       let fileUrl = `${path.join(__dirname, '../dist/config/' + fileName + '.json')}`;//配置文件位置   
       let fileData;//获取用户文件数据
       let importData;//导入的数据
@@ -532,10 +529,10 @@ function replaceModeConfigFile(fileName, mainWindow) {
         // 数据导入失败
         dialog.showMessageBox({
           type: 'info',
-          title: '提示',
+          title: showAlterLanguage.warning_title_info,
           defaultId: 0,
-          message: "导入失败，文件格式不正确",
-          buttons: ['确定']
+          message: showAlterLanguage.warning_message_ImportFormatIncorrectContent,
+          buttons: [showAlterLanguage.warning_message_confirm]
         }).then(result => {
           let response = result.response;//取消为0.确定为1
           if (response) {
@@ -560,10 +557,10 @@ function replaceModeConfigFile(fileName, mainWindow) {
               deployFileState.on('finish', () => {
                 dialog.showMessageBox({
                   type: 'info',
-                  title: '提示',
+                  title: showAlterLanguage.warning_title_info,
                   defaultId: 0,
-                  message: "导入完成",
-                  buttons: ['确定']
+                  message: showAlterLanguage.warning_message_ImportCompleteContent,
+                  buttons: [showAlterLanguage.warning_message_confirm]
                 }).then(result => {
                   let response = result.response;//取消为0.确定为1
                   if (response) {
@@ -581,10 +578,10 @@ function replaceModeConfigFile(fileName, mainWindow) {
               console.log("删除失败")
               dialog.showMessageBox({
                 type: 'error',
-                title: '错误',
+                title: showAlterLanguage.warning_title_err,
                 defaultId: 0,
-                message: "无法替换文件",
-                buttons: ['确定']
+                message: showAlterLanguage.warning_message_setFileFullyContent,
+                buttons: [showAlterLanguage.warning_message_confirm]
               }).then(result => {
                 console.log("报错弹窗");
               }).catch(err => {
@@ -597,10 +594,10 @@ function replaceModeConfigFile(fileName, mainWindow) {
           // 数据导入失败
           dialog.showMessageBox({
             type: 'info',
-            title: '提示',
+            title: showAlterLanguage.warning_title_info,
             defaultId: 0,
-            message: "导入失败:" + err,
-            buttons: ['确定']
+            message: showAlterLanguage.warning_message_ImportNoSuccessfullyContent + err,
+            buttons: [showAlterLanguage.warning_message_confirm]
           }).then(result => {
             let response = result.response;//取消为0.确定为1
             if (response) {
@@ -648,10 +645,10 @@ function setDefaultModel(mode, mainWindow) {
 function noInternetLink() {
   dialog.showMessageBox({
     type: 'info',
-    title: '提示',
+    title: showAlterLanguage.warning_title_info,
     defaultId: 0,
-    message: "无互联网连接",
-    buttons: ['确定']
+    message: showAlterLanguage.warning_message_noInternetContent,
+    buttons: [showAlterLanguage.warning_message_confirm]
   }).then(result => {
     console.log("无互联网连接弹窗");
   }).catch(err => {
@@ -705,10 +702,10 @@ function internetLink(versions) {
         if (!receiveData.data.appState) {
           dialog.showMessageBox({
             type: 'info',
-            title: '提示',
+            title: showAlterLanguage.warning_title_info,
             defaultId: 0,
-            message: "当前版本不可用，请下载最新版本 ",
-            buttons: ['确定']
+            message: showAlterLanguage.warning_message_notApplicableContent,
+            buttons: [showAlterLanguage.warning_message_confirm]
           }).then(result => {
             shell.openExternal("https://www.icrobot.com/www/cn/index.html#/file/index?type1=%E8%BD%AF%E4%BB%B6%E8%B5%84%E6%96%99")
             app.exit();
@@ -728,9 +725,9 @@ function internetLink(versions) {
             }
             dialog.showMessageBox({
               type: 'info',
-              title: '提示',
-              message: "当前是最新版本 ",
-              buttons: ['确定']
+              title: showAlterLanguage.warning_title_info,
+              message: showAlterLanguage.warning_message_CurrentIsTheLatestContent,
+              buttons: [showAlterLanguage.warning_message_confirm]
             }).then(result => {
               console.log("弹窗状态:", result);
               if (result.response === 0) {
@@ -747,10 +744,10 @@ function internetLink(versions) {
             //当前有更新版本
             dialog.showMessageBox({
               type: 'info',
-              title: '提示',
+              title: showAlterLanguage.warning_title_info,
               defaultId: 0,
-              message: "当前软件有更新：" + receiveData.data.newAppVersion,
-              buttons: ['以后再说', "前去更新"]
+              message: showAlterLanguage.warning_message_updatedContent + receiveData.data.newAppVersion,
+              buttons: [showAlterLanguage.warning_message_besidesUpdataContent,showAlterLanguage.warning_message_goUpdataContent]
             }).then(result => {
               if (result.response === 1) {
                 console.log("弹窗状态:确定");
@@ -766,10 +763,10 @@ function internetLink(versions) {
             //当前版本比更新版本高
             dialog.showMessageBox({
               type: 'info',
-              title: '提示',
+              title: showAlterLanguage.warning_title_info,
               defaultId: 0,
-              message: "当前软件最新版本为：#" + receiveData.data.appVersion + "#\n请联系管理员进行更新",
-              buttons: ['确定']
+              message: showAlterLanguage.warning_message_LatestISContent + receiveData.data.appVersion +showAlterLanguage.warning_message_ContactAdministratorUpdataContent,
+              buttons: [showAlterLanguage.warning_message_confirm]
             }).then(result => {
               app.exit();
             }).catch(err => {
@@ -781,10 +778,10 @@ function internetLink(versions) {
         // 请求失败
         dialog.showMessageBox({
           type: 'info',
-          title: '提示',
+          title: showAlterLanguage.warning_title_info,
           defaultId: 0,
-          message: "检查更新失败：#" + receiveData.msg + "#\n请联系管理员",
-          buttons: ['确定']
+          message: showAlterLanguage.warning_message_CheckFailureContent + receiveData.msg + warning_message_ContactAdministratorContent,
+          buttons: [showAlterLanguage.warning_message_confirm]
         }).then(result => {
           // app.exit();
         }).catch(err => {
@@ -840,10 +837,10 @@ function internetLinkOpen(versions) {
         if (!receiveData.data.appState) {
           dialog.showMessageBox({
             type: 'info',
-            title: '提示',
+            title: showAlterLanguage.warning_title_info,
             defaultId: 0,
-            message: "当前版本不可用，请下载最新版本 ",
-            buttons: ['确定']
+            message: showAlterLanguage.warning_message_notApplicableContent,
+            buttons: [showAlterLanguage.warning_message_confirm]
           }).then(result => {
             shell.openExternal("https://www.icrobot.com/www/cn/index.html#/file/index?type1=%E8%BD%AF%E4%BB%B6%E8%B5%84%E6%96%99")
             app.exit();
@@ -858,11 +855,11 @@ function internetLinkOpen(versions) {
             //当前有更新版本
             dialog.showMessageBox({
               type: 'info',
-              title: '提示',
+              title: showAlterLanguage.warning_title_info,
               defaultId: 0,
-              message: "当前软件有更新：" + receiveData.data.newAppVersion,
-              buttons: ['以后再说', "前去更新"],
-              checkboxLabel: receiveData.data.newAppVersion + '版本不再提醒',
+              message: showAlterLanguage.warning_message_updatedContent + receiveData.data.newAppVersion,
+              buttons: [showAlterLanguage.warning_message_besidesUpdataContent,showAlterLanguage.warning_message_goUpdataContent],
+              checkboxLabel: receiveData.data.newAppVersion + showAlterLanguage.warning_message_NoMoreRemindersContent,
               checkboxChecked: false // 设置复选框默认选中
             }).then(result => {
               if (result.response === 1) {
@@ -883,10 +880,10 @@ function internetLinkOpen(versions) {
             //当前版本比更新版本高
             dialog.showMessageBox({
               type: 'info',
-              title: '提示',
+              title: showAlterLanguage.warning_title_info,
               defaultId: 0,
-              message: "当前软件最新版本为：#" + receiveData.data.appVersion + "#\n请联系管理员进行更新",
-              buttons: ['确定']
+              message: showAlterLanguage.warning_message_LatestISContent + receiveData.data.appVersion + showAlterLanguage.warning_message_ContactAdministratorUpdataContent,
+              buttons: [showAlterLanguage.warning_message_confirm]
             }).then(result => {
               app.exit();
             }).catch(err => {
@@ -898,10 +895,10 @@ function internetLinkOpen(versions) {
         // 请求失败
         dialog.showMessageBox({
           type: 'info',
-          title: '提示',
+          title: showAlterLanguage.warning_title_info,
           defaultId: 0,
-          message: "检查更新失败：#" + receiveData.msg + "#\n请联系管理员",
-          buttons: ['确定']
+          message: showAlterLanguage.warning_message_CheckFailureContent + receiveData.msg + showAlterLanguage.warning_message_ContactAdministratorContent,
+          buttons: [showAlterLanguage.warning_message_confirm]
         }).then(result => {
           // app.exit();
         }).catch(err => {
@@ -1071,11 +1068,11 @@ function getNewAppVersion(versions) {
             //当前有更新版本
             dialog.showMessageBox({
               type: 'info',
-              title: '提示',
+              title:  showAlterLanguage.warning_title_info,
               defaultId: 0,
-              message: "当前软件有更新：" + receiveData.data.newAppVersion,
-              buttons: ['以后再说', "前去更新"],
-              checkboxLabel: receiveData.data.newAppVersion + '版本不再提醒',
+              message: showAlterLanguage.warning_message_updatedContent + receiveData.data.newAppVersion,
+              buttons: [showAlterLanguage.warning_message_besidesUpdataContent, showAlterLanguage.warning_message_goUpdataContent],
+              checkboxLabel: receiveData.data.newAppVersion + showAlterLanguage.warning_message_NoMoreRemindersContent,
               checkboxChecked: false // 设置复选框默认选中
             }).then(result => {
               if (result.response === 1) {
@@ -1183,4 +1180,33 @@ function readConfigModeName() {
     console.log("报错：", error)
   }
   return configName;
+}
+function readConfigModeLanguage() {
+  alterLanguage = readConfigLanguage();
+  let configName;
+  let url = `${path.join(__dirname, '../dist/configData.json')}`
+  try {
+    files = fs.readFileSync(url, "utf8");
+    const jsonData = JSON.parse(files);
+
+    if(jsonData.language == "中文"){
+      showAlterLanguage = alterLanguage.Chinese;
+    }else{
+      showAlterLanguage = alterLanguage.English;
+    }
+  } catch (error) {
+    console.log("报错：", error)
+  }
+  return configName;
+}
+
+function readConfigLanguage() {
+  let url = `${path.join(__dirname, '../dist/language/alterLanguage.json')}`
+  try {
+    files = fs.readFileSync(url, "utf8");
+    jsonData1 = JSON.parse(files);
+  } catch (error) {
+    console.log("报错：", error)
+  }
+  return jsonData1;
 }
