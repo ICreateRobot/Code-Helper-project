@@ -14,15 +14,15 @@ electron
 
 ### Software title bar
 
-![image-20240229133501113](C:\Users\HASEE\AppData\Roaming\Typora\typora-user-images\image-20240229133501113.png)
+![image-20240229134122613](.\public\img\readme\01.png)
 
 ### Software menu bar
 
-![image-20240229134122613](C:\Users\HASEE\AppData\Roaming\Typora\typora-user-images\image-20240229134122613.png)
+![image-20240229134122613](.\public\img\readme\02.png)
 
 ### Software agent
 
-![image-20240229134556571](C:\Users\HASEE\AppData\Roaming\Typora\typora-user-images\image-20240229134556571.png)
+![image-20240229134556571](.\public\img\readme\03.png)
 
 
 
