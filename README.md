@@ -1,6 +1,8 @@
 # Helpers-for-API
-
-This template should help get you started developing with Vue 3 in Vite.
+For this project, you should know the following development techniques:
+vue
+nodejs
+electron
 
 ## Recommended IDE Setup
 
@@ -19,11 +21,13 @@ npm install
 ### Compile and Hot-Reload for Development
 
 ```sh
-npm run dev
+npm run electron:serve
 ```
 
 ### Compile and Minify for Production
 
 ```sh
-npm run build
+npm run electron:build
 ```
+
+
