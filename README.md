@@ -1,8 +1,15 @@
 # Helpers-for-API
 For this project, you should know the following development techniques:
+```sh
 vue
+```
+```sh
 nodejs
+```
+```sh
 electron
+```
+
 
 ## Recommended IDE Setup
 
