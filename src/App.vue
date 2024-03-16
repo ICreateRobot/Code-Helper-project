@@ -10,7 +10,7 @@
      <!-- 主要内容 -->
      <div class="contentMenu" :class="(configFileData.style == 'style1') ? 'backgroundColor1':(configFileData.style == 'style2'?'backgroundColor2':'backgroundColor3')">
        <!-- 按键 -->
-       <Menu @openImprotAlter="openImprotAlter" @openModuleAlter="openModuleAlter" @openSetAlter='openSetAlter' :languageData="language"/>
+       <Menu @openImprotAlter="openImprotAlter" @openModuleAlter="openModuleAlter" @openSetAlter='openSetAlter' :languageData="language" :configFileData="configFileData"/>
      </div>
 
      <!-- 弹窗遮罩 -->
@@ -251,11 +251,24 @@
     }
     /* 清新 */
     .textColorStyle2{
-      color: rgb(224,230,222);
+      color: rgb(251,251,251);
     }
     /* 欢快 */
     .textColorStyle3{
-      color: rgb(0, 0, 0);
+      color: rgb(252, 252, 252);
+    }
+    /*子模块名称 */
+    /* 酷黑 */
+    .textColorStyle1_2{
+      color: rgb(224,230,222);
+    }
+    /* 清新 */
+    .textColorStyle2_2{
+      color: rgb(57,148,175);
+    }
+    /* 欢快 */
+    .textColorStyle3_2{
+      color: rgb(248,119,157);
     }
   /* 背景颜色 */
     /* 酷黑 */
@@ -264,11 +277,11 @@
     }
     /* 清新 */
     .backgroundColor2{
-      background-color: rgb(1, 100, 105);
+      background-color: rgb(42, 178, 216);
     }
     /* 欢快 */
     .backgroundColor3{
-      background-color: rgb(23, 152, 219);
+      background-color: rgb(248, 184, 201);
     }
   /* 数据页 */
     /* 酷黑 */
@@ -279,21 +292,21 @@
     }
     /* 清新 */
     .dataBackgroundColor2{
-      background-color: rgb(23, 160, 166);
+      background-color: rgb(204, 242, 251);
     }
     /* 欢快 */
     .dataBackgroundColor3{
-      background-color: rgb(100, 199, 253);
+      background-color: rgb(249, 245, 246);
     }
   /* 圆点背景 */
     .backgroundColorO1{
       background-color: rgb(15, 30, 26);
     }
     .backgroundColorO2{
-      background-color: rgb(23, 160, 166);
+      background-color: rgb(204, 242, 251);
     }
     .backgroundColorO3{
-      background-color: rgb(100, 199, 253);
+      background-color: rgb(249, 245, 246);
     }
   /* 子模块名框背景 */
     .subModeBg1{
@@ -301,22 +314,22 @@
       border: 2px rgb(0, 110, 77) solid;
     }
     .subModeBg2{
-      background-color: rgb(23, 160, 166);
-      border: 2px rgb(0, 110, 77) solid;
+      background-color: rgb(204, 242, 251);
+      border: 2px rgb(33, 134, 164) solid;
     }
     .subModeBg3{
-      background-color: rgb(100, 199, 253);
-      border: 2px rgb(12, 116, 173) solid;
+      background-color: rgb(249, 245, 246);
+      border: 2px rgb(247, 121, 158) solid;
     }
   /* 子模块名框圆点背景 */
     .subModeDctBg1{
       background-color: rgb(0, 255, 195);
     }
     .subModeDctBg2{
-      background-color: rgb(0, 255, 195);
+      background-color: rgb(33, 134, 164);
     }
     .subModeDctBg3{
-      background-color: rgb(0, 143, 219);
+      background-color: rgb(247,121,158);
     }
   /* 子模块名称框背景 */
     .subModeNameBg1{
@@ -324,12 +337,12 @@
       border-left: 2px rgb(0, 110, 77) solid;
     }
     .subModeNameBg2{
-      background-color: rgb(23, 160, 166);
-      border-left: 2px rgb(0, 110, 77) solid;
+      background-color: rgb(204, 242, 251);
+      border-left: 2px rgb(33, 134, 164) solid;
     }
     .subModeNameBg3{
-      background-color: rgb(100, 199, 253);
-      border-left: 2px rgb(12, 116, 173) solid;
+      background-color: rgb(249, 245, 246);
+      border-left: 2px rgb(247,121,158) solid;
     }
   /* 代码背景 */
     .codeBg1{
@@ -337,11 +350,38 @@
       background-color:rgb(20, 197, 144);
     }
     .codeBg2{
-      color: black;
-      background-color:rgb(255, 255, 255);
+      color: rgb(251, 249, 250);
+      background-color:rgb(36, 95, 113);
     }
     .codeBg3{
-      background-color:rgb(173, 226, 255);
+      background-color:rgb(248, 141, 171);
+    }
+
+    
+    /**显示注释 */
+    .codeNote1{
+      white-space:nowrap;
+      /* cursor:move; */
+      position: relative;
+      left: 6px;
+      font-size: 14px;
+      color: #016469;
+    }
+    .codeNote2{
+      white-space:nowrap;
+      /* cursor:move; */
+      position: relative;
+      left: 6px;
+      font-size: 14px;
+      color: rgb(42, 178, 216);
+    }
+    .codeNote3{
+      white-space:nowrap;
+      /* cursor:move; */
+      position: relative;
+      left: 6px;
+      font-size: 14px;
+      color: #ffffff;
     }
 
     /* 滚动条 */
@@ -417,106 +457,106 @@
       /* 清新 */
         /* 代码滚动条 */
         .codeBg2::-webkit-scrollbar {
-          width: 0px;
           height: 8px;
-          background-color: rgb(2, 21, 15);
+          background-color: rgb(204, 242, 251);
         }
         .codeBg2::-webkit-scrollbar-thumb {
           border-radius: 6px; /* 滑块边界圆角 */
-          background-color: rgb(20, 197, 144); /* 滑块颜色 */
+          background-color: rgb(42, 178, 216); /* 滑块颜色 */
+          margin: 5px;
           border: 1px solid #ffffff; 
-          width: 10px;
+          width: 1px;
           background-clip:content-box;
         }
         .codeBg2::-webkit-scrollbar-track-piece { 
           border-radius: 8px; /* 轨道边界圆角 */
-          border: 2px solid rgb(20, 197, 144);
+          border: 2px solid rgb(42, 178, 216);
         }
         /* 子模块名滚动条 */
         .subModeNameBg2::-webkit-scrollbar {
           width: 0px;
           height: 7px;
-          background-color: rgb(2, 21, 15);
+          background-color: rgb(204, 242, 251);
         }
         .subModeNameBg2::-webkit-scrollbar-thumb {
           border-radius: 6px; /* 滑块边界圆角 */
-          background-color: rgb(20, 197, 144); /* 滑块颜色 */
+          background-color: rgb(42, 178, 216); /* 滑块颜色 */
           border: 1px solid #ffffff; 
           width: 10px;
           background-clip:content-box;
         }
         .subModeNameBg2::-webkit-scrollbar-track-piece { 
           border-radius: 8px; /* 轨道边界圆角 */
-          border: 2px solid rgb(20, 197, 144);
+          border: 2px solid rgb(42, 178, 216);
         }
       /* 垂直滚动条 */
         .dataBackgroundColor2::-webkit-scrollbar {
           width: 7px;
           height: 0px;
-          background-color: rgb(2, 21, 15);
+          background-color: rgb(204, 242, 251);
         }
         .dataBackgroundColor2::-webkit-scrollbar-thumb {
           border-radius: 6px; /* 滑块边界圆角 */
-          background-color: rgb(20, 197, 144); /* 滑块颜色 */
+          background-color: rgb(42, 178, 216); /* 滑块颜色 */
           border: 1px solid #ffffff; 
           width: 10px;
           background-clip:content-box;
         }
         .dataBackgroundColor2::-webkit-scrollbar-track-piece { 
           border-radius: 8px; /* 轨道边界圆角 */
-          border: 2px solid rgb(20, 197, 144);
+          border: 2px solid rgb(42, 178, 216);
         }
       /* 欢快 */
         /* 代码滚动条 */
         .codeBg3::-webkit-scrollbar {
           width: 0px;
           height: 8px;
-          background-color: rgb(100, 199, 253);
+          background-color: rgb(249, 245, 246);
         }
         .codeBg3::-webkit-scrollbar-thumb {
           border-radius: 6px; /* 滑块边界圆角 */
-          background-color: rgb(0, 162, 250); /* 滑块颜色 */
+          background-color: rgb(247, 184, 201); /* 滑块颜色 */
           border: 1px solid #ffffff; 
           width: 10px;
           background-clip:content-box;
         }
         .codeBg3::-webkit-scrollbar-track-piece { 
           border-radius: 8px; /* 轨道边界圆角 */
-          border: 2px solid rgb(0, 162, 250);
+          border: 2px solid rgb(247, 184, 201);
         }
         /* 子模块名滚动条 */
         .subModeNameBg3::-webkit-scrollbar {
           width: 0px;
           height: 7px;
-          background-color: rgb(100, 199, 253);
+          background-color: rgb(249, 245, 246);
         }
         .subModeNameBg3::-webkit-scrollbar-thumb {
           border-radius: 6px; /* 滑块边界圆角 */
-          background-color: rgb(0, 162, 250); /* 滑块颜色 */
+          background-color: rgb(247, 184, 201); /* 滑块颜色 */
           border: 1px solid #ffffff; 
           width: 10px;
           background-clip:content-box;
         }
         .subModeNameBg3::-webkit-scrollbar-track-piece { 
           border-radius: 8px; /* 轨道边界圆角 */
-          border: 2px solid rgb(0, 136, 209);
+          border: 2px solid rgb(247, 184, 201);
         }
       /* 垂直滚动条 */
         .dataBackgroundColor3::-webkit-scrollbar {
           width: 7px;
           height: 0px;
-          background-color: rgb(2, 21, 15);
+          background-color: rgb(249, 245, 246);
         }
         .dataBackgroundColor3::-webkit-scrollbar-thumb {
           border-radius: 6px; /* 滑块边界圆角 */
-          background-color: rgb(0, 162, 250); /* 滑块颜色 */
+          background-color: rgb(247, 184, 201); /* 滑块颜色 */
           border: 1px solid #ffffff; 
           width: 10px;
           background-clip:content-box;
         }
         .dataBackgroundColor3::-webkit-scrollbar-track-piece { 
           border-radius: 8px; /* 轨道边界圆角 */
-          border: 2px solid rgb(0, 162, 250);
+          border: 2px solid rgb(247, 184, 201);
         }
   /* 弹窗 */
   /* 弹窗遮罩 */

@@ -1,24 +1,24 @@
 <template>
     <div class="btContent">
       <!-- 导入按钮 -->
-        <div class="menuBt importBt" @click="openImportAlter">
+        <div class="menuBt importBt" :class="(configFileData.style == 'style1') ? 'menuBt1':(configFileData.style == 'style2'?'menuBt2':'menuBt3')" @click="openImportAlter">
           <div class="btIcon importBtIcon"></div>
           <div class="importBtText">
-            <span class="textNotCopy">{{languageData.ui_text_import}}</span>
+            <span class="textNotCopy" :class="(configFileData.style == 'style1') ? 'testColor1':(configFileData.style == 'style2'?'testColor2':'testColor3')">{{languageData.ui_text_import}}</span>
           </div>
         </div>
       <!-- 模式按钮 -->
-        <div class="menuBt ModuleBt" @click="openSelectModelAlter">
+        <div class="menuBt ModuleBt" :class="(configFileData.style == 'style1') ? 'menuBt1':(configFileData.style == 'style2'?'menuBt2':'menuBt3')" @click="openSelectModelAlter">
           <div class="btIcon moduleBtIcon"></div>
           <div class="importBtText">
-            <span class="textNotCopy">{{languageData.ui_text_mode}}</span>
+            <span class="textNotCopy" :class="(configFileData.style == 'style1') ? 'testColor1':(configFileData.style == 'style2'?'testColor2':'testColor3')">{{languageData.ui_text_mode}}</span>
           </div>
         </div>
       <!-- 设置按钮 -->
-        <div class="menuBt setBt" @click="openSetAlter">
+        <div class="menuBt setBt" :class="(configFileData.style == 'style1') ? 'menuBt1':(configFileData.style == 'style2'?'menuBt2':'menuBt3')" @click="openSetAlter">
           <div class="btIcon setBtIcon"></div>
           <div class="importBtText">
-            <span class="textNotCopy">{{languageData.ui_text_setting}}</span>
+            <span class="textNotCopy" :class="(configFileData.style == 'style1') ? 'testColor1':(configFileData.style == 'style2'?'testColor2':'testColor3')">{{languageData.ui_text_setting}}</span>
           </div>
         </div>
 
@@ -27,7 +27,7 @@
 <script>
 // import axios from 'axios';
   export default{
-    props:['languageData'],
+    props:['languageData','configFileData'],
     components:{
       },  
       mounted() {
@@ -73,16 +73,48 @@
     width: auto;
     height: 26px;
     position: relative;
-    box-shadow:0px 0px 5px rgb(78, 165, 139);
-    border-radius: 5px;
-    border:2px rgb(74, 117, 104) solid;
     float: left;
     margin-left: 15px;
     cursor:pointer;
     top: 2px;
   }
+  /**按键描边 */
+  .menuBt1{
+    box-shadow:0px 0px 5px rgb(78, 165, 139);
+    border-radius: 5px;
+    border:2px rgb(74, 117, 104) solid;
+  }
+  .menuBt2{
+    box-shadow:0px 0px 5px rgb(223, 223, 223);
+    border-radius: 5px;
+    border:2px rgb(249, 249, 249) solid;
+  }
+  .menuBt3{
+    padding: 2px;
+    border-radius: 5px;
+    background-color: rgb(207, 154, 170);
+  }
+  /**按键文字 */
+  .testColor1{
+   color: rgb(255, 255, 255);
+  }
+  .testColor2{
+    color: rgb(255, 255, 255);
+  }
+  .testColor3{
+    color: rgb(0, 0, 0);
+  }
+
+  
   .menuBt:hover{
     box-shadow:3px 3px 5px rgb(54, 84, 75);
+  }
+  .menuBt2:hover{
+    box-shadow:3px 3px 5px rgb(54, 84, 75);
+  }
+  .menuBt3:hover{
+     box-shadow:3px 3px 5px rgb(54, 84, 75);
+    background-color: rgb(255, 255, 255);
   }
   .btIcon{
     width: 20px;

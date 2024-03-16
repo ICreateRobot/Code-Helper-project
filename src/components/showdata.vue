@@ -12,10 +12,10 @@
 
         <div class="moduleAdorn" :class="(myStyle == 'style1') ? 'backgroundColorO1':(myStyle == 'style2'?'backgroundColorO2':'backgroundColorO3')">
           <!-- 装饰 -->
-          <div class="dot dot_1"></div>
-          <div class="dot dot_2"></div>
+          <div class="dot dot_1" :style="setSelectModuleNameDot2()"></div>
+          <div class="dot dot_2" :style="setSelectModuleNameDot2()"></div>
           <div class="dot dot_3" :style="setSelectModuleNameDot(moduledata.moduleName)" @click="setShowDataModuleName(moduledata.moduleName)"></div>
-          <div class="dot dot_4"></div>
+          <div class="dot dot_4" :style="setSelectModuleNameDot2()"></div>
         </div>
 
       </div>     
@@ -43,7 +43,7 @@
           </div>
           <div class="moduleSubName" :class="(myStyle == 'style1') ? 'subModeNameBg1':(myStyle == 'style2'?'subModeNameBg2':'subModeNameBg3')" :style="{width:subModuleContentW+'%'}" @click="selectSubModuleBt(moduledata.submoduleName )">
             <!-- 模块名 -->
-            <span class="subNames textNotCopy" :class="(myStyle == 'style1') ? 'textColorStyle1':(myStyle == 'style2'?'textColorStyle2':'textColorStyle3')">{{ moduledata.submoduleName }}</span>
+            <span class="subNames textNotCopy" :class="(myStyle == 'style1') ? 'textColorStyle1_2':(myStyle == 'style2'?'textColorStyle2_2':'textColorStyle3_2')">{{ moduledata.submoduleName }}</span>
           </div>
           <div v-if="moduledata.codes[0].code != ''" style="position: relative;top:20%">
             <div class="moduleSubBtContent" @click="selectSubModuleBt(moduledata.submoduleName )">
@@ -58,10 +58,10 @@
           <div class="code " :class="(myStyle == 'style1') ? 'codeBg1':(myStyle == 'style2'?'codeBg2':'codeBg3')"  v-for="(code,index) in moduledata.codes" :key="index">
             <div class="textNotCopy" :class="isCopy ? '':'textNotCopy'" @click="copyCodeText(code.code,code.explain)" @mouseenter="handleMouseEnter" @mousemove="mousemoveEv" @mouseleave="handleMouseLeave">
               <span :style="isCopy ? 'cursor:move;':'cursor:default;'" >
-                <span class="codeText" :class="isCopy ? '':'textNotCopy'">{{ code.code }}</span>
+                <span class="codeText" :class="isCopy ? '':'textNotCopy'" :style="setTextCode()">{{ code.code }}</span>
                 <span :class="isCopy ? '':'textNotCopy'" style=" opacity:0;">{{ code.explain }}</span>
               </span><br>
-              <span class="textNotCopy codeNote">{{ code.explain }}</span><br>
+              <span class="textNotCopy" :class="(myStyle == 'style1') ? 'codeNote1':(myStyle == 'style2'?'codeNote2':'codeNote3')">{{ code.explain }}</span><br>
             </div>
           </div>
          
@@ -174,18 +174,35 @@ import axios from 'axios';
         // 清新
         if(this.myStyle == 'style2'){
            if(this.showModule == moduleSelectName){
-              return 'background-color:  rgb(20, 197, 144);';
+              return 'background-color:  rgb(43, 179, 221);';
             }else{
-              return 'background-color: rgb(255, 255, 255);';
+              return 'background-color: rgb(203, 203, 203);';
             }
         }
          // 欢快
          if(this.myStyle == 'style3'){
            if(this.showModule == moduleSelectName){
-              return 'background-color:  rgb(50, 143, 206);';
+              return 'background-color:  rgb(249, 120, 158);';
             }else{
-              return 'background-color: rgb(255, 255, 255);';
+              return 'background-color: rgb(202, 203, 205);';
             }
+        }
+       
+      },
+      
+      // 设置圆点是否被选中
+      setSelectModuleNameDot2(){
+        // 酷黑
+        if(this.myStyle == 'style1'){
+          return 'background-color: rgb(255, 255, 255);';      
+        }
+        // 清新
+        if(this.myStyle == 'style2'){
+          return 'background-color: rgb(203, 203, 203);';
+        }
+         // 欢快
+        if(this.myStyle == 'style3'){
+          return 'background-color: rgb(202, 203, 205);';
         }
        
       },
@@ -202,20 +219,25 @@ import axios from 'axios';
         // 清新
         if(this.myStyle == 'style2'){
           if(this.showModule == showNameText){
-            return 'background-color: rgb(20, 197, 144);';
+            return 'background-color: rgb(42,178,216);';
           }else{
-            return 'background-color: rgb(23, 160, 166)';
+            return 'background-color: rgb(204, 242, 251);';
           }
         }
           // 欢快
         if(this.myStyle == 'style3'){
           if(this.showModule == showNameText){
-            return 'background-color: rgb(50, 143, 206);';
+            return 'background-color: rgb(249, 120, 158);';
           }else{
-            return 'background-color: rgb(100, 199, 253)';
+            return 'background-color: rgb(249,245,246)';
           }
         }
         
+      },
+      setTextCode(){
+        if(this.myStyle == 'style3'){
+          return 'color:  rgb(0, 0, 0);';
+        }
       },
       //设置三角
       setTriangleStyle(modeName){
@@ -230,17 +252,17 @@ import axios from 'axios';
          // 清新
          if(this.myStyle == 'style2'){
           if(this.atPresentSubMuduleName == modeName){
-            return 'border-top: 10px solid rgb(0, 255, 195);  border-bottom: 0px;';
+            return 'border-top: 10px solid rgb(33, 134, 164);  border-bottom: 0px;';
           }else{
-            return 'border-bottom: 10px solid rgb(0, 255, 195);  border-top: 0px;';
+            return 'border-bottom: 10px solid rgb(33, 134, 164);  border-top: 0px;';
           }
         }
          // 欢快
          if(this.myStyle == 'style3'){
           if(this.atPresentSubMuduleName == modeName){
-            return 'border-top: 10px solid rgb(0, 143, 219);  border-bottom: 0px;';
+            return 'border-top: 10px solid rgb(245, 142, 171);  border-bottom: 0px;';
           }else{
-            return 'border-bottom: 10px solid rgb(0, 143, 219);  border-top: 0px;';
+            return 'border-bottom: 10px solid rgb(245, 142, 171);  border-top: 0px;';
           }
         }
       },
@@ -257,9 +279,16 @@ import axios from 'axios';
          // 欢快
          if(this.myStyle == 'style2'){
           if(this.showModule == showNameText){
-            return 'color: rgb(250, 250, 250);';
+            return 'color: rgb(244, 250, 240);';
           }else{
-            return 'color:  rgb(255, 255, 255);';
+            return 'color:  rgb(35, 62, 79);';
+          }
+        }
+        if(this.myStyle == 'style3'){
+          if(this.showModule == showNameText){
+            return 'color: rgb(252, 252, 250);';
+          }else{
+            return 'color:  rgb(34, 61, 80);';
           }
         }
         
@@ -462,14 +491,12 @@ span{
 }
 .spanModuleName{
   line-height:38px;
-  color: white;
 }
 /* 圆点 */
 .dot{
   width: 2px; /* 或者其他适当的数值 */
   height: 2px; /* 或者其他适当的数值 */
   border-radius: 50%; /* 将边界角度设置为50%，即等于高度/2 */
-  background-color: rgb(255, 255, 255);
   position: absolute;
   left: 45%;
 }
@@ -576,14 +603,7 @@ span{
   position: relative;
   left: 6px;
 }
-.codeNote{
-  white-space:nowrap;
-  /* cursor:move; */
-  position: relative;
-  left: 6px;
-  font-size: 14px;
-  color: #016469;
-}
+
 
 .titleDots{
   width: 10px;

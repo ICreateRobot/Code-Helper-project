@@ -315,7 +315,7 @@ function importDeployFile(mainWindow) {
             const deployFileState = fs.createWriteStream(fileUrl);//创建写入流
             deployFileState.write(importData);//写入数据
             deployFileState.end();//写入完成标记
-            //标记写入完成    监听写入完成情况前必须标记写入完成
+            //标记写入完成   
             deployFileState.on('finish', () => {
               dialog.showMessageBox({
                 type: 'info',
