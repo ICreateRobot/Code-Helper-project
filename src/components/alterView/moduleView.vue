@@ -1,10 +1,10 @@
 
 <template>
     <div class="moduleAlter" :class="(configFileData.style == 'style1') ? 'backgroundColor1':(configFileData.style == 'style2'?'backgroundColor2':'backgroundColor3')">
-        <div class="closeAlter" @click="closeAlter"></div>
+        <div class="closeAlter" :class="(configFileData.style == 'style1') ? 'exitBt1':(configFileData.style == 'style2'?'exitBt2':'exitBt3')" @click="closeAlter"></div>
         <div class="alterTitle2" :class="(configFileData.style == 'style1') ? 'textColorStyle1':(configFileData.style == 'style2'?'textColorStyle2':'textColorStyle3')">
           <!-- 标题 -->
-          <div class="titleIcon3"></div>
+          <div class="titleIcon3" :class="(configFileData.style == 'style1') ? 'moduleBtIcon1':(configFileData.style == 'style2'?'moduleBtIcon2':'moduleBtIcon3')"></div>
           <div class="titleText">
               <span class="textNotCopy">{{ languageData.ui_text_mode}}</span>
           </div>
@@ -13,7 +13,7 @@
         <div class="alterContent2" :class="(configFileData.style == 'style1') ? 'dataBackgroundColor1':(configFileData.style == 'style2'?'dataBackgroundColor2':'dataBackgroundColor3')">
           <!-- 内容 -->
           <div class="clipBorder2" :class="(configFileData.style == 'style1') ? 'dataBackgroundColor1':(configFileData.style == 'style2'?'dataBackgroundColor2':'dataBackgroundColor3')"></div>
-            <div v-for="(mode,index) in modes" :key="index" :class="(configFileData.style == 'style1') ? 'textColorStyle1':(configFileData.style == 'style2'?'textColorStyle2':'textColorStyle3')">
+            <div v-for="(mode,index) in modes" :key="index" :class="(configFileData.style == 'style1') ? 'alterTextColorStyle1':(configFileData.style == 'style2'?'alterTextColorStyle2':'alterTextColorStyle3')">
               <input type="radio" :id=mode :value=mode v-model="atModule">
               <label :for=mode> <span class="textNotCopy">{{ mode }}</span></label>
             </div>
@@ -21,9 +21,9 @@
 
         </div>
 
-        <div class="alterBt2 btSuspensionEvent" @click="setMode" :class="(configFileData.style == 'style1') ? 'alterBtBg1':(configFileData.style == 'style2'?'alterBtBg1':'alterBtBg1')">
+        <div class="alterBt2 btSuspensionEvent" @click="setMode" :class="(configFileData.style == 'style1') ? 'alterBtBg1':(configFileData.style == 'style2'?'alterBtBg2':'alterBtBg3')">
           <!-- 按键 -->
-          <span class="alterBtText textNotCopy" :class="(configFileData.style == 'style1') ? 'textColorStyle1':(configFileData.style == 'style2'?'textColorStyle2':'textColorStyle3')">{{languageData.ui_text_confirm}}</span>
+          <span class="alterBtText textNotCopy" :class="(configFileData.style == 'style1') ? 'butColorStyle1':(configFileData.style == 'style2'?'butColorStyle2':'butColorStyle3')">{{languageData.ui_text_confirm}}</span>
         </div>
     </div>
 
@@ -84,8 +84,8 @@
   height: 20px;
   /* background-color: rgb(0, 0, 0); */
   position: absolute;
-  top: 2px;
-  right: 3px;
+  top: 5px;
+  right: 5px;
   cursor:pointer;
 }
 /* 弹窗框架 */
@@ -100,7 +100,7 @@
   width: 19px;
   height: 20px;
   /* background-color: aquamarine; */
-  background-image: url('../img/mode.svg');
+  /* background-image: url('../img/mode.svg'); */
   position: relative;
   top: 5px;
   left: 5px;

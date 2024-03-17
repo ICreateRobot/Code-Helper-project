@@ -5,7 +5,7 @@
     <div class="appTitle" :class="(configFileData.style == 'style1') ? 'textColorStyle1':(configFileData.style == 'style2'?'textColorStyle2':'textColorStyle3')">
         <div class="appImg"  @click="setClickNumber"></div>
         <div class="appName">
-            <span class="textNotCopy">{{ appName }}</span>
+            <span class="textNotCopy" :class="(configFileData.style == 'style1') ? 'titleTextColorStyle1':(configFileData.style == 'style2'?'titleTextColorStyle2':'titleTextColorStyle3')">{{ appName }}</span>
         </div>
         <div class="CurrentMode">
             <span class="textNotCopy">
@@ -14,11 +14,18 @@
         </div>
     </div>
     <div class="appExit btSuspensionEvent">
-      <div class="but_top" @click="setWindowsTop('notTop')" v-if="windowsTopState"> </div>
-      <div class="but_not_top" @click="setWindowsTop('top')" v-else> </div>
-      <div class="windowsMini" @click="setWindowsMini">—</div>
-      <div class="windowsMax" :class="windowsMaxState? 'windowsMaxBg1_1':'windowsMaxBg2_1'" @click="setWindowsMax"></div>
-      <div class="exitBt" @click="exitApp"></div>
+      <div class="but_top" :class="(configFileData.style == 'style1') ? 'but_top1':(configFileData.style == 'style2'?'but_top2':'but_top3')" @click="setWindowsTop('notTop')" v-if="windowsTopState"> </div>
+      <div class="but_not_top" :class="(configFileData.style == 'style1') ? 'but_not_top1':(configFileData.style == 'style2'?'but_not_top2':'but_not_top3')" @click="setWindowsTop('top')" v-else> </div>
+      <div class="windowsMini" :class="(configFileData.style == 'style1') ? 'windowsMini1':(configFileData.style == 'style2'?'windowsMini2':'windowsMini3')" @click="setWindowsMini">—</div>
+      <div class="windowsMax"
+       :class="windowsMaxState?
+        (configFileData.style == 'style1') ? 'windowsMaxBg1_1':(configFileData.style == 'style2'?'windowsMaxBg1_2':'windowsMaxBg1_3')
+        :
+        (configFileData.style == 'style1') ? 'windowsMaxBg2_1':(configFileData.style == 'style2'?'windowsMaxBg2_2':'windowsMaxBg2_3')" 
+       
+       
+       @click="setWindowsMax"></div>
+      <div class="exitBt" :class="(configFileData.style == 'style1') ? 'exitBt1':(configFileData.style == 'style2'?'exitBt2':'exitBt3')" @click="exitApp"></div>
     </div>
 </template>
 <script>
@@ -100,13 +107,12 @@
 }
 .appExit{
     position: absolute;
-    right: 20px;
-    top: 10px;
+    right: 10px;
+    top: 5px;
 }
 .but_top{
   width: 14px;
   height: 20px;
-  background-image: url('../img/notTop.svg');
   position: relative;
   top:6px;
   right: 15px;
@@ -115,10 +121,18 @@
   background-position: center; /* 将图片居中对齐 */
   background-size: cover; /* 确保图片完全显示且不会被拉伸或压缩 */
 }
+.but_top1{
+  background-image: url('../img/notTop.svg');
+}
+.but_top2{
+  background-image: url('../img/notTop02.svg');
+}
+.but_top3{
+  background-image: url('../img/notTop03.svg');
+}
 .but_not_top{
   width: 20px;
   height: 20px;
-  background-image: url('../img/top.svg');
   position: relative;
   top:6px;
   right: 15px;
@@ -126,6 +140,15 @@
   background-repeat: no-repeat; /* 防止图片重复 */
   background-position: center; /* 将图片居中对齐 */
   background-size: cover; /* 确保图片完全显示且不会被拉伸或压缩 */
+}
+.but_not_top1{
+  background-image: url('img/top.svg');
+}
+.but_not_top2{
+  background-image: url('../img/top02.svg');
+}
+.but_not_top3{
+  background-image: url('../img/top03.svg');
 }
 .appImg{
     width: 30px;
@@ -163,12 +186,13 @@
 .exitBt{
   width: 20px;
   height: 20px;
-  background-image: url('../img/close.svg');
   position: relative;
   top:6px;
   float: left;
   /* background-color: brown; */
 }
+
+
 .windowsMini{
   width: 20px;
   height: 20px;
@@ -177,7 +201,15 @@
   right: 10px;
   top: 6px;
   float: left;
+}
+.windowsMini1{
   color: rgb(47, 190, 146);
+}
+.windowsMini2{
+  color: rgb(255, 255, 255);
+}
+.windowsMini3{
+  color: rgb(2, 2, 2);
 }
 .windowsMax{
   width: 20px;
@@ -197,6 +229,41 @@
 }
 .windowsMaxBg2_1{
   background-image: url('../img/maxBt.png');
+}
+.windowsMaxBg1_2{
+  background-image: url('../img/recoverBt02.svg');
+}
+.windowsMaxBg2_2{
+  width: 15px;
+  height: 15px;
+  margin-top: 3px;
+  background-image: url('../img/maxBt02.svg');
+}
+.windowsMaxBg1_3{
+  width: 18px;
+  height: 18px;
+  background-image: url('../img/recoverBt03.svg');
+}
+.windowsMaxBg2_3{
+  width: 15px;
+  height: 15px;
+  margin-top: 3px;
+  background-image: url('../img/maxBt03.svg');
+}
+
+/**标题颜色 */
+.titleTextColorStyle3{
+  /* font-size: 16px;
+  font-weight: 900;
+  /* -webkit-text-stroke: 1px rgb(235, 67, 116); */
+  /* color:#ffffff;
+-webkit-text-stroke:4px transparent;
+
+background:linear-gradient(90deg,rgb(235, 67, 116),rgb(235, 67, 116)) top left / 100% 100%;
+-webkit-background-clip: text; */
+color:#ffffff;
+text-shadow: 3px 0px rgb(235, 67, 116), 2.943px 0.585px rgb(235, 67, 116), 2.7720px 1.149px rgb(235, 67, 116), 2.493px 1.6680px rgb(235, 67, 116), 2.121px 2.121px rgb(235, 67, 116), 1.6680px 2.493px rgb(235, 67, 116), 1.149px 2.7720px rgb(235, 67, 116), 0.585px 2.943px rgb(235, 67, 116), 0px 3px rgb(235, 67, 116), -0.585px 2.943px rgb(235, 67, 116), -1.149px 2.7720px rgb(235, 67, 116), -1.6680px 2.493px rgb(235, 67, 116), -2.121px 2.121px rgb(235, 67, 116), -2.493px 1.6680px rgb(235, 67, 116), -2.7720px 1.149px rgb(235, 67, 116), -2.943px 0.585px rgb(235, 67, 116), -3px 0px rgb(235, 67, 116), -2.943px -0.585px rgb(235, 67, 116), -2.7720px -1.149px rgb(235, 67, 116), -2.493px -1.6680px rgb(235, 67, 116), -2.121px -2.121px rgb(235, 67, 116), -1.6680px -2.493px rgb(235, 67, 116), -1.149px -2.7720px rgb(235, 67, 116), -0.585px -2.943px rgb(235, 67, 116), 0px -3px rgb(235, 67, 116), 0.585px -2.943px rgb(235, 67, 116), 1.149px -2.7720px rgb(235, 67, 116), 1.6680px -2.493px rgb(235, 67, 116), 2.121px -2.121px rgb(235, 67, 116), 2.493px -1.6680px rgb(235, 67, 116), 2.7720px -1.149px rgb(235, 67, 116), 2.943px -0.585px rgb(235, 67, 116);
+  /* text-shadow: 3px 1px 1px #ffffff; */
 }
 </style>
   

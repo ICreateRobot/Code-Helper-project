@@ -429,14 +429,13 @@ import axios from 'axios';
   /* background-color: rgb(0, 255, 34); */
   position: absolute;
   width: 91px;
-  height: 659px;
+  height: 650px;
   left: 10px;
   top: 6px;
   padding-top: 6px;
   padding-left: 3px;
   border-top-left-radius:8px;
   border-bottom-left-radius:8px;
-  
 
 }
 .selectSubModule{
@@ -444,7 +443,7 @@ import axios from 'axios';
   /* background-color: rgb(62, 134, 198); */
   position: absolute;
   /* width: 315px; */
-  height: 650px;
+  height: 641px;
   left: 25%;
   top: 6px;
    /* 溢出滚动 */
@@ -528,12 +527,13 @@ span{
   position: relative;
 }
 .moduleSubNameTitle{
-  width: 100%;
+  width: 90%;
   height: 40px;
   /* 圆角 */
   border-radius: 6px;
   /* background-color: aliceblue; */
   float: left;
+  margin-left: 10px;
   margin-top: 10px;
   margin-bottom: 5px;
 }

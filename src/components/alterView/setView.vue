@@ -1,10 +1,10 @@
 
 <template>
     <div class="setAlter" :class="(configFileData.style == 'style1') ? 'backgroundColor1':(configFileData.style == 'style2'?'backgroundColor2':'backgroundColor3')">
-        <div class="closeAlter" @click="closeAlter" ></div>
+        <div class="closeAlter" :class="(configFileData.style == 'style1') ? 'exitBt1':(configFileData.style == 'style2'?'exitBt2':'exitBt3')" @click="closeAlter" ></div>
         <div class="alterTitle" :class="(configFileData.style == 'style1') ? 'textColorStyle1':(configFileData.style == 'style2'?'textColorStyle2':'textColorStyle3')">
           <!-- 标题 -->
-          <div class="titleIcon2"></div>
+          <div class="titleIcon2" :class="(configFileData.style == 'style1') ? 'setBtIcon1':(configFileData.style == 'style2'?'setBtIcon2':'setBtIcon3')"></div>
           <div class="titleText">
               <span class="textNotCopy">{{languageData.ui_text_setting}}</span>
           </div>
@@ -13,7 +13,7 @@
         <div class="alterContent3" :class="(configFileData.style == 'style1') ? 'dataBackgroundColor1':(configFileData.style == 'style2'?'dataBackgroundColor2':'dataBackgroundColor3')">
           <!-- 内容 -->
           <!-- 语言 -->
-          <div class="subSeclet" :class="(configFileData.style == 'style1') ? 'textColorStyle1':(configFileData.style == 'style2'?'textColorStyle2':'textColorStyle3')" >
+          <div class="subSeclet" :class="(configFileData.style == 'style1') ? 'alterTextColorStyle1':(configFileData.style == 'style2'?'alterTextColorStyle2':'alterTextColorStyle3')" >
             <div class="selectBt" :class="languageSettingOf ? 'selectBt_on'+returnOnData(configFileData.style) : 'selectBt_off'+returnOnData(configFileData.style)" @click="setSelectlanguageState()"></div>
             <div class="selectBt languageSetting" @click="setSelectlanguageState()">
               <span class="textNotCopy">{{languageData.ui_text_language}}</span>
@@ -30,7 +30,7 @@
             </div>
           </div>
            <!-- 风格 -->
-          <div class="subSeclet" :class="(configFileData.style == 'style1') ? 'textColorStyle1':(configFileData.style == 'style2'?'textColorStyle2':'textColorStyle3')">
+          <div class="subSeclet" :class="(configFileData.style == 'style1') ? 'alterTextColorStyle1':(configFileData.style == 'style2'?'alterTextColorStyle2':'alterTextColorStyle3')">
             <div class="selectBt" :class="viewStyleSettingOf ? 'selectBt_on'+returnOnData(configFileData.style) : 'selectBt_off'+returnOnData(configFileData.style)" @click="setSelectStyleState()"></div>
             <div class="selectBt languageSetting" @click="setSelectStyleState()">
               <span class="textNotCopy">{{languageData.ui_text_style}}</span>
@@ -54,7 +54,7 @@
             </div>
           </div>
            <!-- 版本更新 -->
-          <div class="subSeclet" :class="(configFileData.style == 'style1') ? 'textColorStyle1':(configFileData.style == 'style2'?'textColorStyle2':'textColorStyle3')">
+          <div class="subSeclet" :class="(configFileData.style == 'style1') ? 'alterTextColorStyle1':(configFileData.style == 'style2'?'alterTextColorStyle2':'alterTextColorStyle3')">
             <div class="selectBt" :class="detectionUpdate ? 'selectBt_on'+returnOnData(configFileData.style) : 'selectBt_off'+returnOnData(configFileData.style)" @click="setUpdateState()"></div>
             <div class="selectBt languageSetting" @click="setUpdateState()">
               <span class="textNotCopy">{{languageData.ui_text_versionUpdata}}</span>
@@ -73,7 +73,7 @@
             </div>
           </div>
           <!-- 关于我们 -->
-          <div class="subSeclet" :class="(configFileData.style == 'style1') ? 'textColorStyle1':(configFileData.style == 'style2'?'textColorStyle2':'textColorStyle3')">
+          <div class="subSeclet" :class="(configFileData.style == 'style1') ? 'alterTextColorStyle1':(configFileData.style == 'style2'?'alterTextColorStyle2':'alterTextColorStyle3')">
             <div class="selectBt" :class="AboutUsOf ? 'selectBt_on'+returnOnData(configFileData.style) : 'selectBt_off'+returnOnData(configFileData.style)" @click="setAboutState()"></div>
             <div class="selectBt languageSetting" @click="setAboutState()">
               <span class="textNotCopy">{{languageData.ui_text_aboutUs}}</span>
@@ -88,9 +88,9 @@
           </div>
         </div>
 
-        <div class="alterBt btSuspensionEvent" @click="setLanguageAndStyle()" :class="(configFileData.style == 'style1') ? 'alterBtBg1':(configFileData.style == 'style2'?'alterBtBg1':'alterBtBg1')">
+        <div class="alterBt btSuspensionEvent" @click="setLanguageAndStyle()" :class="(configFileData.style == 'style1') ? 'alterBtBg1':(configFileData.style == 'style2'?'alterBtBg2':'alterBtBg3')">
           <!-- 按键 -->
-          <span class="alterBtText textNotCopy" :class="(configFileData.style == 'style1') ? 'textColorStyle1':(configFileData.style == 'style2'?'textColorStyle2':'textColorStyle3')">{{languageData.ui_text_confirm}}</span>
+          <span class="alterBtText textNotCopy" :class="(configFileData.style == 'style1') ? 'butColorStyle1':(configFileData.style == 'style2'?'butColorStyle2':'butColorStyle3')">{{languageData.ui_text_confirm}}</span>
         </div>
     </div>
    
@@ -219,7 +219,7 @@
 /* 弹窗统一框 */
 .setAlter{
   width: 300px;
-  height: 300px;
+  height: 275px;
   background-color: rgb(0, 253, 51);
   position: absolute;
   top: 25%;
@@ -233,8 +233,8 @@
   height: 20px;
   /* background-color: rgb(0, 0, 0); */
   position: absolute;
-  top: 2px;
-  right: 3px;
+  top: 5px;
+  right: 5px;
   cursor:pointer;
 }
 /* 弹窗框架 */
@@ -247,7 +247,7 @@
   width: 20px;
   height: 20px;
   /* background-color: aquamarine; */
-  background-image: url('../img/setting.svg');
+  /* background-image: url('../img/setting.svg'); */
   position: relative;
   top: 5px;
   left: 5px;
@@ -310,8 +310,8 @@
 .selectBt_off2{
   width: 6px;
   height: 6px;
-  border-top: 3px solid rgb(255, 255, 255); 
-  border-right: 3px solid rgb(255, 255, 255);
+  border-top: 3px solid rgb(37,96,114); 
+  border-right: 3px solid rgb(37,96,114);
   float: left;
   transform: rotate(45deg);
   position: relative;
@@ -321,8 +321,8 @@
 .selectBt_on2{
   width: 6px;
   height: 6px;
-  border-bottom: 3px solid rgb(255, 255, 255); 
-  border-right: 3px solid rgb(255, 255, 255);
+  border-bottom: 3px solid rgb(37,96,114); 
+  border-right: 3px solid rgb(37,96,114);
   float: left;
   transform: rotate(45deg);
   position: relative;

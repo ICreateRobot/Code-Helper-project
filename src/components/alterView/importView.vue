@@ -2,22 +2,22 @@
 <template>
     <div class="importAlter" :class="(configFileData.style == 'style1') ? 'backgroundColor1':(configFileData.style == 'style2'?'backgroundColor2':'backgroundColor3')">
       
-        <div class="closeAlter" @click="closeAlter">
+        <div class="closeAlter" :class="(configFileData.style == 'style1') ? 'exitBt1':(configFileData.style == 'style2'?'exitBt2':'exitBt3')" @click="closeAlter">
           <!-- 关闭 -->
         </div>
 
         <div class="alterTitle">
           <!-- 标题 -->
-          <div class="titleIcon"></div>
+          <div class="titleIcon" :class="(configFileData.style == 'style1') ? 'importBtIcon1':(configFileData.style == 'style2'?'importBtIcon2':'importBtIcon3')"></div>
           <div class="titleText" :class="(configFileData.style == 'style1') ? 'textColorStyle1':(configFileData.style == 'style2'?'textColorStyle2':'textColorStyle3')">
-              <span class="textNotCopy">{{languageData.ui_text_import}} </span>
+              <span class="textNotCopy" :class="(configFileData.style == 'style1') ? 'titleText1':(configFileData.style == 'style2'?'titleText2':'titleText3')">{{languageData.ui_text_import}} </span>
           </div>
         </div>
 
         <div class="alterContent" :class="(configFileData.style == 'style1') ? 'dataBackgroundColor1':(configFileData.style == 'style2'?'dataBackgroundColor2':'dataBackgroundColor3')">
           <!-- 内容 -->
           <div class="clipBorder" :class="(configFileData.style == 'style1') ? 'dataBackgroundColor1':(configFileData.style == 'style2'?'dataBackgroundColor2':'dataBackgroundColor3')"></div>
-          <div class="selectContent" :class="(configFileData.style == 'style1') ? 'textColorStyle1':(configFileData.style == 'style2'?'textColorStyle2':'textColorStyle3')">
+          <div class="selectContent" :class="(configFileData.style == 'style1') ? 'alterTextColorStyle1':(configFileData.style == 'style2'?'alterTextColorStyle2':'alterTextColorStyle3')">
             <div >
               <!-- 导入 -->
               <input class="btSuspensionEvent" type="radio" id="option1" value="option1" v-model="importType" :disabled="importNumber>=5">
@@ -43,9 +43,9 @@
 
         </div>
 
-        <div class="alterBt btSuspensionEvent" @click="importConfigFile" :class="(configFileData.style == 'style1') ? 'alterBtBg1':(configFileData.style == 'style2'?'alterBtBg1':'alterBtBg1')">
+        <div class="alterBt btSuspensionEvent" @click="importConfigFile" :class="(configFileData.style == 'style1') ? 'alterBtBg1':(configFileData.style == 'style2'?'alterBtBg2':'alterBtBg3')">
           <!-- 按键 -->
-          <span class="alterBtText textNotCopy" :class="(configFileData.style == 'style1') ? 'textColorStyle1':(configFileData.style == 'style2'?'textColorStyle2':'textColorStyle3')">{{languageData.ui_text_confirm}}</span>
+          <span class="alterBtText textNotCopy" :class="(configFileData.style == 'style1') ? 'butColorStyle1':(configFileData.style == 'style2'?'butColorStyle2':'butColorStyle3')">{{languageData.ui_text_confirm}}</span>
         </div>
     </div>
    
@@ -121,11 +121,11 @@
   width: 20px;
   height: 20px;
   /* background-color: rgb(0, 0, 0); */
-  background-image: url('../img/close.svg');
+  /* background-image: url('../img/close.svg'); */
   transform: scaleX(-1);
   position: absolute;
-  top: 2px;
-  right: 3px;
+  top: 5px;
+  right: 5px;
   cursor:pointer;
 }
 .selectContent{
@@ -158,7 +158,7 @@
 .titleIcon{
   width: 20px;
   height: 19px;
-  background-image: url('../img/import.svg');
+  /* background-image: url('../img/import.svg'); */
   position: relative;
   top: 5px;
   left: 5px;
@@ -200,6 +200,15 @@
 }
 .alterBtText{
   line-height: 30px;
+}
+.titleText1{
+  color: rgb(255, 255, 255);
+}
+.titleText1{
+  color: rgb(255, 255, 255);
+}
+.titleText3{
+  color: rgb(2, 2, 2);
 }
 </style>
   

@@ -2,21 +2,21 @@
     <div class="btContent">
       <!-- 导入按钮 -->
         <div class="menuBt importBt" :class="(configFileData.style == 'style1') ? 'menuBt1':(configFileData.style == 'style2'?'menuBt2':'menuBt3')" @click="openImportAlter">
-          <div class="btIcon importBtIcon"></div>
+          <div class="btIcon importBtIcon" :class="(configFileData.style == 'style1') ? 'importBtIcon1':(configFileData.style == 'style2'?'importBtIcon2':'importBtIcon3')"></div>
           <div class="importBtText">
             <span class="textNotCopy" :class="(configFileData.style == 'style1') ? 'testColor1':(configFileData.style == 'style2'?'testColor2':'testColor3')">{{languageData.ui_text_import}}</span>
           </div>
         </div>
       <!-- 模式按钮 -->
         <div class="menuBt ModuleBt" :class="(configFileData.style == 'style1') ? 'menuBt1':(configFileData.style == 'style2'?'menuBt2':'menuBt3')" @click="openSelectModelAlter">
-          <div class="btIcon moduleBtIcon"></div>
+          <div class="btIcon moduleBtIcon" :class="(configFileData.style == 'style1') ? 'moduleBtIcon1':(configFileData.style == 'style2'?'moduleBtIcon2':'moduleBtIcon3')"></div>
           <div class="importBtText">
             <span class="textNotCopy" :class="(configFileData.style == 'style1') ? 'testColor1':(configFileData.style == 'style2'?'testColor2':'testColor3')">{{languageData.ui_text_mode}}</span>
           </div>
         </div>
       <!-- 设置按钮 -->
         <div class="menuBt setBt" :class="(configFileData.style == 'style1') ? 'menuBt1':(configFileData.style == 'style2'?'menuBt2':'menuBt3')" @click="openSetAlter">
-          <div class="btIcon setBtIcon"></div>
+          <div class="btIcon setBtIcon" :class="(configFileData.style == 'style1') ? 'setBtIcon1':(configFileData.style == 'style2'?'setBtIcon2':'setBtIcon3')"></div>
           <div class="importBtText">
             <span class="textNotCopy" :class="(configFileData.style == 'style1') ? 'testColor1':(configFileData.style == 'style2'?'testColor2':'testColor3')">{{languageData.ui_text_setting}}</span>
           </div>
@@ -67,7 +67,6 @@
     position: relative;
     color: rgb(224,230,222);
     top: 6px;
-    left: 20px;
   }
   .menuBt{
     width: auto;
@@ -106,7 +105,7 @@
   }
 
   
-  .menuBt:hover{
+  .menuBt1:hover{
     box-shadow:3px 3px 5px rgb(54, 84, 75);
   }
   .menuBt2:hover{
@@ -138,21 +137,21 @@
   }
   .importBtIcon{
     width: 19px;
-    background-image: url('../img/import.svg');
   }
+ 
   .moduleBtIcon{
     width: 19.5px;
     height: 20px;
     top:3px;
-    background-image: url('../img/mode.svg');
-    /* background-color: aliceblue; */
   }
+ 
   .setBtIcon{
     width: 20px;
     height: 20px;
-    background-image: url('../img/setting.svg');
     top:3px;
     /* background-color: aliceblue; */
   }
+  
+  
 </style>
   
