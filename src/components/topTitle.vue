@@ -253,14 +253,9 @@
 
 /**标题颜色 */
 .titleTextColorStyle3{
-  /* font-size: 16px;
-  font-weight: 900;
-  /* -webkit-text-stroke: 1px rgb(235, 67, 116); */
-  /* color:#ffffff;
--webkit-text-stroke:4px transparent;
-
-background:linear-gradient(90deg,rgb(235, 67, 116),rgb(235, 67, 116)) top left / 100% 100%;
--webkit-background-clip: text; */
+  /**
+  生成网站：https://kusurin.icu/tools/StrokeGenerator/
+  */
 color:#ffffff;
 text-shadow: 3px 0px rgb(235, 67, 116), 2.943px 0.585px rgb(235, 67, 116), 2.7720px 1.149px rgb(235, 67, 116), 2.493px 1.6680px rgb(235, 67, 116), 2.121px 2.121px rgb(235, 67, 116), 1.6680px 2.493px rgb(235, 67, 116), 1.149px 2.7720px rgb(235, 67, 116), 0.585px 2.943px rgb(235, 67, 116), 0px 3px rgb(235, 67, 116), -0.585px 2.943px rgb(235, 67, 116), -1.149px 2.7720px rgb(235, 67, 116), -1.6680px 2.493px rgb(235, 67, 116), -2.121px 2.121px rgb(235, 67, 116), -2.493px 1.6680px rgb(235, 67, 116), -2.7720px 1.149px rgb(235, 67, 116), -2.943px 0.585px rgb(235, 67, 116), -3px 0px rgb(235, 67, 116), -2.943px -0.585px rgb(235, 67, 116), -2.7720px -1.149px rgb(235, 67, 116), -2.493px -1.6680px rgb(235, 67, 116), -2.121px -2.121px rgb(235, 67, 116), -1.6680px -2.493px rgb(235, 67, 116), -1.149px -2.7720px rgb(235, 67, 116), -0.585px -2.943px rgb(235, 67, 116), 0px -3px rgb(235, 67, 116), 0.585px -2.943px rgb(235, 67, 116), 1.149px -2.7720px rgb(235, 67, 116), 1.6680px -2.493px rgb(235, 67, 116), 2.121px -2.121px rgb(235, 67, 116), 2.493px -1.6680px rgb(235, 67, 116), 2.7720px -1.149px rgb(235, 67, 116), 2.943px -0.585px rgb(235, 67, 116);
   /* text-shadow: 3px 1px 1px #ffffff; */
