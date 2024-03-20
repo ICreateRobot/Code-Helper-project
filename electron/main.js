@@ -746,7 +746,7 @@ function internetLink(versions) {
               type: 'info',
               title: showAlterLanguage.warning_title_info,
               defaultId: 0,
-              message: showAlterLanguage.warning_message_updatedContent + receiveData.data.newAppVersion,
+              message: showAlterLanguage.warning_message_updatedContent,
               buttons: [showAlterLanguage.warning_message_besidesUpdataContent,showAlterLanguage.warning_message_goUpdataContent]
             }).then(result => {
               if (result.response === 1) {
@@ -765,10 +765,10 @@ function internetLink(versions) {
               type: 'info',
               title: showAlterLanguage.warning_title_info,
               defaultId: 0,
-              message: showAlterLanguage.warning_message_LatestISContent + receiveData.data.appVersion +showAlterLanguage.warning_message_ContactAdministratorUpdataContent,
+              message: showAlterLanguage.warning_message_CurrentIsTheLatestContent + receiveData.data.appVersion,
               buttons: [showAlterLanguage.warning_message_confirm]
             }).then(result => {
-              app.exit();
+              
             }).catch(err => {
               console.log(err);
             });
@@ -878,17 +878,6 @@ function internetLinkOpen(versions) {
 
           } else {
             //当前版本比更新版本高
-            dialog.showMessageBox({
-              type: 'info',
-              title: showAlterLanguage.warning_title_info,
-              defaultId: 0,
-              message: showAlterLanguage.warning_message_LatestISContent + receiveData.data.appVersion + showAlterLanguage.warning_message_ContactAdministratorUpdataContent,
-              buttons: [showAlterLanguage.warning_message_confirm]
-            }).then(result => {
-              app.exit();
-            }).catch(err => {
-              console.log(err);
-            });
           }
         }
       } else {
