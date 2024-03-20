@@ -882,17 +882,7 @@ function internetLinkOpen(versions) {
         }
       } else {
         // 请求失败
-        dialog.showMessageBox({
-          type: 'info',
-          title: showAlterLanguage.warning_title_info,
-          defaultId: 0,
-          message: showAlterLanguage.warning_message_CheckFailureContent + receiveData.msg + showAlterLanguage.warning_message_ContactAdministratorContent,
-          buttons: [showAlterLanguage.warning_message_confirm]
-        }).then(result => {
-          // app.exit();
-        }).catch(err => {
-          console.log(err);
-        });
+    
       }
       console.log(`Response from ${req.method}:`, JSON.parse(data));
     });
